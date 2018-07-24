@@ -1,0 +1,108 @@
+// 颜色定义规范
+@base: 0.0416;
+@color-background:#222;
+@color-background-d:rgba(0, 0, 0, 0.3);
+@color-highlight-background:#333;
+@color-dialog-background:#666;
+@color-theme:#ffcd32;
+@color-theme-d:rgba(255, 205, 49, 0.5);
+@color-sub-theme:#d93f30;
+@color-text:#fff;
+@color-text-d:rgba(255, 255, 255, 0.3);
+@color-text-l:rgba(255, 255, 255, 0.5);
+@color-text-ll:rgba(255, 255, 255, 0.8);
+//字体定义规范
+@font-size-small-s: @base*20rem;
+@font-size-small: @base*24rem ;
+@font-size-medium: @base*28rem;
+@font-size-medium-x: @base*32rem;
+@font-size-large: @base*36rem;
+@font-size-large-x: @base*44rem;
+/*ul{
+  margin:0;
+  padding:0;
+}*/
+ul{
+  margin:0;
+  padding:0;
+}
+.listview {
+  ul li{
+    list-style: none;
+  }
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: @color-background;
+  .list-group {
+    padding-bottom: @base*60rem;
+    .list-group-title {
+      height: @base*40rem;
+      line-height: @base*40rem;
+      padding-left: @base*20rem;
+      font-size: @font-size-small;
+      color: @color-text-l;
+      background: @color-highlight-background;
+    }
+    .list-group-item{
+      display: flex;
+      align-items: center;
+      -webkit-align-items: center;
+      padding: @base*20rem 0 0 @base*20rem;
+      .avatar{
+        width: @base*68rem;
+        height: @base*68rem;
+        border-radius: 50%;
+      }
+      .name{
+        margin-left: @base*10rem;
+        color: @color-text-l;
+        font-size:14px;
+      }
+    }
+  }
+  .list-shortcut{
+    position: absolute;
+    z-index: 30;
+    right: 0;
+    top: 4%;
+    transform: translateY(-50%);
+    width: @base*40rem;
+    padding: @base*20rem 0;
+    border-radius: @base*10rem;
+    text-align: center;
+    background: @color-background-d;
+    font-family: 'Helvetica';
+    color:rgba(255, 255, 255, 0.5);
+    .item{
+      padding: @base*6rem;
+      line-height: 1;
+      color: @color-text-l;
+      font-size: 14px;
+    }
+    .current{
+      color: @color-theme
+    }
+  }
+  .list-fixed{
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 100%;
+    .fixed-title{
+      height: @base*30rem;
+      line-height: @base*30rem;
+      padding-left: @base*20rem;
+      font-size: @font-size-small;
+      color: @color-text-l;
+      background: @color-highlight-background;
+    }
+  }
+  .loading-container{
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
