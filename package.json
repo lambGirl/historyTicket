@@ -25,5 +25,24 @@
     "husky": "^0.12.0",
     "react-helmet": "^5.2.0",
     "react-intl": "^2.4.0"
-  }
+  },
+  "name": "hotelticket",
+  "version": "1.0.0",
+  "description": "react umi dva ",
+  "main": ".umirc.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/likeDoMine/historyTicket.git"
+  },
+  "keywords": [
+    "react",
+    "umi",
+    "dva"
+  ],
+  "author": "likeDomine",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/likeDoMine/historyTicket/issues"
+  },
+  "homepage": "https://github.com/likeDoMine/historyTicket#readme"
 }
