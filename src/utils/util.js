@@ -70,7 +70,16 @@ const shortcutListData = (list)=>{
     return list.map(group => group.title.substr(0, 1))
 }
 
+const getData = (el,name,val)=>{
+    const prefix = 'data-'
+    if (val){
+        return el.setAttribute(prefix + name,val)
+    }
+    return el.getAttribute(prefix + name)
+}
+
 export {
     redetailSingleData,
-    shortcutListData
+    shortcutListData,
+    getData
 }
