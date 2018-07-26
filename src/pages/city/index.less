@@ -37,7 +37,7 @@ ul li{
   overflow: hidden;
   background: #222;
   .list-group {
-    padding-bottom: @base*60rem;
+    padding-bottom: @base*40rem;
     .list-group-title {
       height: @base*40rem;
       line-height: @base*40rem;
@@ -64,27 +64,30 @@ ul li{
     }
   }
 
-  .list-fixed{
-    position: absolute;
-    top: -1px;
-    left: 0;
-    width: 100%;
-    .fixed-title{
-      height: @base*30rem;
-      line-height: @base*30rem;
-      padding-left: @base*20rem;
-      font-size: @font-size-small;
-      color: @color-text-l;
-      background: @color-highlight-background;
-    }
-  }
-  .loading-container{
-    position: absolute;
-    width: 100%;
-    top: 50%;
-    transform: translateY(-50%);
+
+}
+
+.list-fixed{
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 100%;
+  .fixed-title{
+    height: @base*40rem;
+    line-height: @base*40rem;
+    padding-left: @base*20rem;
+    font-size: @font-size-small;
+    color: @color-text-l;
+    background: @color-highlight-background;
   }
 }
+.loading-container{
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 .list-shortcut{
   position: absolute;
   z-index: 30;
@@ -108,3 +111,4 @@ ul li{
     color: @color-theme
   }
 }
+

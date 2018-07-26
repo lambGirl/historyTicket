@@ -6,8 +6,8 @@ import Styles from './index.less'
 import classNames from 'classnames';
 import Scroll from '../../components/scroll'
 import { getData } from '../../utils/util'
-const ANCHOR_HEIGHT = 18
-const TITLE_HEIGHT = 30
+const ANCHOR_HEIGHT = 18    //索引的高度
+const TITLE_HEIGHT = 4     //title的高度
 @connect(({city,loading})=>({
     city,
 }))
@@ -31,16 +31,17 @@ export  default  class cityChoose  extends  React.Component{
                 y2:'',
             },
 
-            scrollY: -1,
-            currentIndex: 0,
+            scrollY: -1,    //设置滚动高度
+            currentIndex: 0,    //当前选中的key
             diff: -1,
             fixedHeight:0
         }
     }
-
-    componentDidMount(){
+    componentWillMount(){
         //先获取数据
         this.props.dispatch({type: 'city/fetch'})
+    }
+    componentDidMount(){
         this._calculateHeight()
     }
 
@@ -64,7 +65,6 @@ export  default  class cityChoose  extends  React.Component{
     onShortcutTouchMove(e){
         e.stopPropagation();
         e.preventDefault();
-
         let firstTouch =  e.touches[0],
             { touch } =  this.state;
         touch.y2 =  firstTouch.pageY;
@@ -81,6 +81,8 @@ export  default  class cityChoose  extends  React.Component{
 
     _scrollTo(index){
         const DomList = document.getElementsByClassName(Styles['list-group'])
+        // console.log("remove", index, -this.state.listHeight[index])
+        //  return;
         if (!index && index !== 0){
             return
         }
@@ -91,15 +93,14 @@ export  default  class cityChoose  extends  React.Component{
             index = this.state.listHeight.length - 2
         }
 
-        console.log("currentIndex",index);
+
         this.setState({
             "currentIndex":index,
+            "scrollY":-this.state.listHeight[index]
         },function(){
-           // console.log("this.refs",DomList[index]);
             this.refs.listview.scrollToElement(DomList[index],0)
         });
     }
-
 
     componentDidUpdate(prevProps, preState){
       //  console.log("prevProps",this.props.city.singers, prevProps.city.singers);
@@ -109,9 +110,11 @@ export  default  class cityChoose  extends  React.Component{
     }
 
     _calculateHeight(){
-        this.listHeight = []
+       // this.listHeight = []
+        this.state.listHeight = [];
+
         const list = document.getElementsByClassName(Styles['list-group']);
-       // console.log("------------------list---------------", list);
+        //console.log("list",list);
         let height = 0,
         { listHeight } =  this.state;
         listHeight.push(height)
@@ -119,34 +122,83 @@ export  default  class cityChoose  extends  React.Component{
             height += list[i].clientHeight
             listHeight.push(height)
         }
+    }
+
+    renderfixedTitle() {
+        let {currentIndex, scrollY} = this.state;
+        let {singers} = this.props.city
+      //  console.log(currentIndex);
+        let fixedTitle = singers[ currentIndex ] ? singers[ currentIndex ].name : '';
+        return (
+            <div className={Styles["list-fixed"]} ref='fixed'>
+             {/*   <div className={Styles["fixed-title"]}>{fixedTitle}</div>*/}
+            </div>
+        )
+    }
+
+    scrollFun(pos){
+
+        const { listHeight } = this.state;
+     //   console.log("pos", pos,listHeight);
+      //  return;
+        let newY = pos.y
+        //newY 滚动到相应的位置
+        if(newY >= 0){
+            this.setState({
+                "currentIndex":0
+            },()=>{
+                this.refs.listview.refresh();
+            })
+            return;
+        }
+
+       // console.log("newY",newY, listHeight);
+       // return;
+        //设置滚动的纵向距离
        /* this.setState({
-            listHeight: listHeight
-        })*/
+            "scrollY":newY,
+        });*/
+
+        // 在中间部分滚动
+        for(var i = 0; i < listHeight.length - 1; i++) {
+            let height1 = listHeight[i]
+            let height2 = listHeight[i + 1];
+           // console.log("height1-------------------",-newY,height1,height2 );
+           // return;
+            if (-newY >= height1 && -newY < height2){
+
+                this.setState({
+                    "currentIndex":i,
+                    "diff":(height2 + newY)
+                },function(){
+
+                    let {diff} = this.state;
+
+                    if(!this.fixedHeight){
+                        this.fixedHeight=this.refs.fixed.getBoundingClientRect().height;
+                    }
+                    let fixedTop = (diff > 0 && diff < this.fixedHeight) ?
+                        (diff - this.fixedHeight) :
+                        0;
+                    if (this.fixedTop === fixedTop) {
+                        return;
+                    }
+
+                    this.fixedTop = fixedTop;
+                    this.refs.fixed.style.transform = `translate3d(0,${fixedTop}px,0)`
+                });
+                return
+            }
+        }
+        // 当滚动到底部，且-newY大于最后一个元素的上限
+        this.setState({
+            "currentIndex":listHeight.length - 2
+        });
     }
 
     //render的方法
     render(){
-        console.log("index", this.state.currentIndex);
         const { city } = this.props;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         const { singers, shortcutList } = city, _this =  this;
         return <div style={{"height":"100%"}}>
                         <Helmet>
@@ -157,20 +209,26 @@ export  default  class cityChoose  extends  React.Component{
                                  leftContent={<i className="fa fa-angle-left fa-lg"></i>}
                                  onLeftClick={() => window.history.go(-1)}
                         >选择城市</Header>
-                        <div style={{"height":"100%", "position":'relative'}}>
-                             <Scroll class={Styles['listview']} ref="listview">
+                        <div style={{"height":"100%",
+                            "position":'relative'
+                        }} >
+                             <Scroll
+                                 class={Styles['listview']}
+                                 ref="listview"
+                                 scrollFun={this.scrollFun.bind(this)}
+                             >
                                 <ul>
                                     {
                                         singers.map(function(group,groupIndex){
                                             return(
                                                 <li  className={Styles["list-group"]} key={groupIndex + 'listView_/*-'}   >
-                                                    <h2 className={Styles["list-group-title"]}>{group.title}</h2>
+                                                    <h2 className={Styles["list-group-title"]}>{group.name}</h2>
                                                     <ul>
                                                         {
-                                                            group.items.map(function (item,itemIndex) {
+                                                            group.cities.map(function (item,itemIndex) {
                                                                 return (
                                                                     <li key={itemIndex + 'list-group-item' + groupIndex} className={Styles["list-group-item"]} >
-                                                                        <img className={Styles["avatar"]} src={item.avatar}/>
+                                                                      {/*  <img className={Styles["avatar"]} src={item.avatar}/>*/}
                                                                         <span className={Styles["name"]}>{item.name}</span>
                                                                     </li>
                                                                 )
@@ -188,9 +246,10 @@ export  default  class cityChoose  extends  React.Component{
                                  onTouchEnd={this.onShortTouchEnd.bind(this)}>
                                 <ul>
                                     {
-                                        shortcutList.map((item,index)=>{return(
+                                        shortcutList.map((item,index)=>{
+                                            return(
                                             <li
-                                                className={classNames(Styles["item"],{[Styles['current']]:_this.state.currentIndex === index})}
+                                                className={classNames(Styles["item"],{[Styles['current']]:_this.state.currentIndex == index})}
                                                 key={index + 'list-shortcut'}
                                                 data-index={index}
                                             >
@@ -200,7 +259,9 @@ export  default  class cityChoose  extends  React.Component{
                                     }
                                 </ul>
                             </div>
+                            {this.renderfixedTitle()}
                         </div>
+
                     </div>
 
     }

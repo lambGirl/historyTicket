@@ -8,6 +8,7 @@ class Singer{
 }
 //得到城市数据
 const redetailSingleData = (list)=>{
+    return list;
     const HOT_NAME = '热门';
     const HOT_SINGER_LEN = 10;
     let map = {
@@ -67,7 +68,7 @@ const redetailSingleData = (list)=>{
 
 //得到大小写数据
 const shortcutListData = (list)=>{
-    return list.map(group => group.title.substr(0, 1))
+    return list.map(group => group.name.substr(0, 1))
 }
 
 const getData = (el,name,val)=>{

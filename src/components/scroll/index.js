@@ -14,11 +14,11 @@ class Scroll extends React.Component{
     }
 
     componentWillUpdate(){
-      //  this.refresh()
+        this.refresh()
     }
 
     componentDidUpdate(){
-        //this.refresh()
+        this.refresh()
     }
 
     render(){
@@ -32,17 +32,21 @@ class Scroll extends React.Component{
         this.scroll = new BScroll(wrapper,{
             scrollY: true,
             click: true,
-            probeType:2
+            probeType:3
         });
 
         this.scroll.on('scroll',(pos) =>{
-            console.log("----------------pos------------------", pos);
-           // _self.props.scrollFun && _self.props.scrollFun(pos)
+            _self.props.scrollFun && _self.props.scrollFun(pos)
         })
     }
 
     scrollToElement(){
         this.scroll && this.scroll.scrollToElement.apply(this.scroll,arguments)
+    }
+
+    //刷新scroll
+    refresh(){
+        this.scroll && this.scroll.refresh()
     }
 
 }
