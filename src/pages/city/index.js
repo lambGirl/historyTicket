@@ -66,11 +66,17 @@ export  default  class cityChoose  extends  React.Component{
         e.preventDefault();
 
         let firstTouch =  e.touches[0],
-            { touch } =  firstTouch.pageY;
+            { touch } =  this.state;
+        touch.y2 =  firstTouch.pageY;
+        let delta = (touch.y2 - touch.y1) / ANCHOR_HEIGHT | 0;
+        let anchorIndex = parseInt(touch.anchorIndex) + delta;
+        this._scrollTo(anchorIndex)
+
     }
 
     onShortTouchEnd(e){
-
+        e.preventDefault();
+        e.stopPropagation();
     }
 
     _scrollTo(index){
@@ -78,12 +84,14 @@ export  default  class cityChoose  extends  React.Component{
         if (!index && index !== 0){
             return
         }
+
         if (index < 0){
             index = 0
         } else if (index > this.state.listHeight.length - 2){
             index = this.state.listHeight.length - 2
         }
-        //console.log(this.listHeight)
+
+        console.log("currentIndex",index);
         this.setState({
             "currentIndex":index,
         },function(){
@@ -118,7 +126,27 @@ export  default  class cityChoose  extends  React.Component{
 
     //render的方法
     render(){
+        console.log("index", this.state.currentIndex);
         const { city } = this.props;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         const { singers, shortcutList } = city, _this =  this;
         return <div style={{"height":"100%"}}>
                         <Helmet>
