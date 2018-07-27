@@ -3,27 +3,25 @@
 
 @navbar-height: 45*@hd;
 @navbarPrefixCls: am-navbar;
+@navbarPrefixClsAbolute: am-abolute;
 
 .@{navbarPrefixCls} {
-  display: flex;
-  align-items: center;
+
   height: @navbar-height;
-  background-color: @brand-primary;
+  background:rgba(255,255,255,.1);
   color: @fill-base;
 
   &-left,
   &-title,
   &-right {
-    flex: 1;
-    height: 100%;
-    display: flex;
-    align-items: center;
+    display: inline-block;
   }
 
   &-left {
     padding-left: @h-spacing-lg;
     font-size: @link-button-font-size;
-
+    width: 14%;
+    text-align: center;
     &-icon {
       margin-right: @h-spacing-sm;
       display: inherit;
@@ -31,17 +29,18 @@
   }
 
   &-title {
-    justify-content: center;
+    width: 66%;
+    text-align: center;
     font-size: 18 * @hd;
-    white-space: nowrap;
   }
 
   &-right {
-    justify-content: flex-end;
     font-size: @link-button-font-size;
-    margin-right: @h-spacing-lg;
+    width: 20%;
   }
-
+  &-transparent{
+    background: rgba(0,0,0,0,0.2);
+  }
   &-light {
     background-color: @fill-base;
     color: @brand-primary;
@@ -50,5 +49,53 @@
   &-light &-title {
     color: @color-text-base;
   }
+};
 
+.@{navbarPrefixClsAbolute} {
+  position:absolute;
+  height: @navbar-height;
+  background:rgba(0,0,0,0.1);
+  color: @fill-base;
+  z-index: 1000;
+  width:100%;
+  &-left,
+  &-title,
+  &-right {
+    display: inline-block;
+    line-height: @navbar-height;
+  }
+
+  &-left {
+    display: inline-block;
+    font-size: 20px;
+    width: 14%;
+    text-align: center;
+    vertical-align: top;
+  }
+
+  &-title {
+    display: inline-block;
+    width: 66%;
+    text-align: center;
+    font-size: 16 * @hd;
+    vertical-align: top;
+    position:relative;
+  }
+
+  &-right {
+    vertical-align: top;
+    font-size: @link-button-font-size;
+    width: 20%;
+  }
+  &-transparent{
+    background: rgba(0,0,0,0,0.1);
+  }
+  &-light {
+    background-color: @fill-base;
+    color: @brand-primary;
+  }
+
+  &-light &-title {
+    color: @color-text-base;
+  }
 }

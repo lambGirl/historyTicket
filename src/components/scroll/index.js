@@ -7,7 +7,9 @@ class Scroll extends React.Component{
         super(props);
     }
     componentDidMount(){
-        this._initScroll();
+        setTimeout(()=>{
+            this._initScroll();
+        },10)
         window.addEventListener('resize',() =>{
             this.refresh();
         })
@@ -22,22 +24,25 @@ class Scroll extends React.Component{
     }
 
     render(){
-        return <div ref="wrapper"  className={this.props.class}>
+        return <div ref="wrapper"  className={this.props.class||""}>
             {this.props.children}
         </div>
     }
 
     _initScroll(){
         let wrapper = this.refs.wrapper,_self =  this;
+
         this.scroll = new BScroll(wrapper,{
-            scrollY: true,
-            click: true,
-            probeType:3
-        });
+                scrollY: true,
+                click: true,
+                probeType:3
+            });
 
         this.scroll.on('scroll',(pos) =>{
-            _self.props.scrollFun && _self.props.scrollFun(pos)
-        })
+                _self.props.scrollFun && _self.props.scrollFun(pos)
+            })
+
+
     }
 
     scrollToElement(){

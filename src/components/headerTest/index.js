@@ -1,10 +1,10 @@
 import React from 'react'
 import classNames  from 'classnames'
-import './index.less'
+import Styles from './index.less'
 export default  class Header extends React.Component{
     static defaultProps = {
         prefixCls: 'am-navbar',
-        mode: 'dark',
+        mode: '',
         onLeftClick: () => {},
     };
     render(){
@@ -17,29 +17,24 @@ export default  class Header extends React.Component{
             onLeftClick,
             leftContent,
             rightContent,
+            classModel,
             ...restProps
         } = this.props;
-
+       // console.log("classNameModel",classModel);
         return (
             <div
                 {...restProps}
-                className={classNames(className, prefixCls, `${prefixCls}-${mode}`)}
+                className={classNames(Styles[prefixCls],Styles[`${prefixCls}-${mode}`],classModel)}
             >
                 <div
-                    className={`${prefixCls}-left`}
+                    className={Styles[`${prefixCls}-left`]}
                     role="button"
                     onClick={onLeftClick}
                 >
-                    {icon ? (
-                        // tslint:disable-next-line:jsx-no-multiline-js
-                        <span className={`${prefixCls}-left-icon`} aria-hidden="true">
-              {icon}
-            </span>
-                    ) : null}
-                    {leftContent}
+                   {leftContent}
                 </div>
-                <div className={`${prefixCls}-title`}>{children}</div>
-                <div className={`${prefixCls}-right`}>{rightContent}</div>
+                <div className={Styles[`${prefixCls}-title`]}>{children}</div>
+                <div className={Styles[`${prefixCls}-right`]}>{rightContent}</div>
             </div>
         );
     }

@@ -127,7 +127,7 @@ export  default  class cityChoose  extends  React.Component{
     renderfixedTitle() {
         let {currentIndex, scrollY} = this.state;
         let {singers} = this.props.city
-      //  console.log(currentIndex);
+        //  console.log(currentIndex);
         let fixedTitle = singers[ currentIndex ] ? singers[ currentIndex ].name : '';
         return (
             <div className={Styles["list-fixed"]} ref='fixed'>

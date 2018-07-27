@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
-import styles from '../index.css';
+import styles from '../index.less';
 import Router from 'umi/router';
 import {Helmet} from "react-helmet";    //用于修改页面的title
 function IndexPage() {
