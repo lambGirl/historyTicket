@@ -1,0 +1,73 @@
+@import "../../assets/css/var";
+//header 组件开发
+.header-parent{
+  position:relative;
+  width: 100%;
+  height: @base*90rem;
+  .common{
+    background: #0D87E4;
+  }
+  .transparent{
+    background: rgba(255,255,255,0.3);
+  }
+  .light{
+    background: #fff;
+  }
+  .none{
+    background: none;
+  }
+
+  .header-common{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    .left-header{
+      width: 16%;
+      box-sizing: border-box;
+      padding-left:@base*32rem;
+    }
+    .center-header{
+      width: 66%;
+      box-sizing: border-box;
+    }
+    .right-header{
+      width: 18%;
+      text-align: right;
+      padding-right: @base*30rem;
+      box-sizing: border-box;
+    }
+  }
+}
+
+.positionAbolute{
+  position: absolute;
+  z-index:1;
+}
+//header中间的search
+.search-input{
+  height: @base*60rem;
+  width: 100%;
+  background: #fff;
+  border-radius: 8px;
+  padding-left: @base*24rem;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  i{
+    color: #fff;
+    font-size: 1rem;
+    color: #BFBFBF;
+    vert-align: middle;
+  }
+  input{
+    font-size: @base*14rem;
+    height: 100%;
+    width: calc(100% - 16);
+    border: none;
+    outline:none;
+    background: none;
+    vert-align: middle;
+    padding-left: @base*10rem;
+  }
+}

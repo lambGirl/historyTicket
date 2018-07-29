@@ -1,0 +1,42 @@
+@import "../../assets/css/var";
+.photosListShow{
+  width: 100%;
+  height: calc(100% - @base*90rem);
+
+  .photosList-box{
+    overflow: hidden;
+    width: 100%;
+    padding: 4% 0 0 4%;
+    box-sizing: border-box;
+    .photoList-single{
+      float: left;
+      background: #fff;
+      box-sizing: border-box;
+      padding: 2%;
+      margin: 0 4% 4% 0;
+      width: 44%;
+      img{
+        width:100%;
+        min-width: @base*300rem;
+        height: @base*250rem;
+      }
+    }
+
+  }
+}
+
+//滚动的样式处理
+.scroll-content{
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  height: 100%;
+  .wrapper {
+    position: relative;
+    width: 100%;
+    height:100%;
+  }
+  .scroll-cotent-bottom{
+    padding-bottom: 100px;
+  }
+}

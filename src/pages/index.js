@@ -4,10 +4,10 @@ import router from 'umi/router'
 import dynamic from 'umi/dynamic';
 import styles from './index.less';
 import Scroll from '../components/scroll'
-import Header from  '../components/headerTest/index'
+import Header from  '../components/header'
 import classnames from 'classnames'
-import { Carousel } from 'antd-mobile';
 import {Helmet} from "react-helmet";    //用于修改页面的title
+import Router from 'umi/router'
 
 class IndexPage extends React.Component{
     constructor(props) {
@@ -26,6 +26,10 @@ class IndexPage extends React.Component{
             });
         }, 100);
     }
+    goDetail(){
+      //console.log("ticketDetail");
+       Router.push('/ticketDetail/')
+    }
 
     render(){
         return (
@@ -37,9 +41,8 @@ class IndexPage extends React.Component{
                 <div className={styles["index_page"]}>
                     <Scroll class={styles["wrapper"]}>
                         <div  className={styles["wrapper_content"]}>
-
                             <div className={styles["swipper_top"]}>
-                                <Header
+                               {/* <Header
                                          prefixCls='am-abolute'
                                          mode="transparent"
                                          classModel={styles['headerModel']}
@@ -49,23 +52,36 @@ class IndexPage extends React.Component{
                                             <i className="fa fa-search fa-lg"></i>
                                             <input type="text" className={styles["searchInputText"]} name='searchAll' placeholder='景点名称'/>
                                         </div>
-                                </Header>
+                                </Header>*/}
+
+                                <Header
+                                  positionType ='positionAbolute'
+                                  mode="transparent"
+                                  leftContent={ <i className="fa fa-angle-left fa-lg" style={{"color":"#fff"}}></i>}
+                                  rightContent={ <i className="fa fa-angle-right fa-lg" style={{"color":"#fff"}}></i>}
+                                  centerContentType='1'
+                                ></Header>
                                 <div className={styles["index_banner_img"]}>
                                     <img src="https://p0.meituan.net/400.0/hotel/fd8e418933a722e6ca77f918aa553f89135934.jpg" alt=""/>
                                 </div>
                             </div>
-                            <div className={styles["selectBar"]}>
-                                <div>
+                            <div className={styles["selectBarModel"]}>
+                                <div className={styles['selectBar']}>
+                                  <div>
                                     <span>全城</span>
                                     <i className="fa fa-caret-down fa-lg"></i>
-                                </div>
-                                <div>
+                                  </div>
+                                  <div>
                                     <span>智能排序</span>
                                     <i className="fa fa-caret-down fa-lg"></i>
+                                  </div>
+                                </div>
+                                <div className={styles['selectContent']}>
+
                                 </div>
                             </div>
                             <div className={styles["ticketsListArr"]}>
-                                <div className={styles['ticketsList']}>
+                                <div className={styles['ticketsList']} onClick={this.goDetail.bind(this)}>
                                     <img src='https://p0.meituan.net/400.0/travel/9172c05e9077f176ccec489278c553a4149430.jpg'/>
                                     <div>
                                         <p>克罗地亚之海</p>

@@ -1,0 +1,192 @@
+@import '../../assets/css/var';
+
+.ticketDetailContent{
+  height: 100%;
+  width: 100%;
+  .ticketTop{
+    position: relative;
+    height: @base*300rem;
+   /* overflow: hidden;*/
+    .slider-list{
+      height: @base*300rem;
+    }
+    .swiper-single-a{
+      img{
+        width:100%;
+        height: @base*300rem;
+      }
+    }
+    .leftBtnCircle{
+      display: inline-block;
+      width:@base*56rem;
+      height:@base*56rem;
+      line-height: @base*56rem;
+      background:rgba(0,0,0,1);
+      opacity:0.2;
+      color: #fff;
+      border-radius: 50%;
+      text-align: center;
+      i{
+        height: 100%;
+        width: 100%;
+        vertical-align: top;
+        line-height: @base*56rem;
+      }
+    }
+    .swiper-bottom{
+      height: @base*72rem;
+      width:100%;
+      background: rgba(255,255,255,0);
+      color: #fff;
+      position: absolute;
+      bottom:0;
+
+      >div{
+        display: flex;
+        align-items: center;
+
+        width:100%;
+        height:100%;
+        box-sizing: border-box;
+        padding:0 @base*30rem;
+        >:first-child{
+          text-align: left;
+          flex:1;
+        }
+        >:last-child{
+          text-align: right;
+          flex:1;
+        }
+      }
+    }
+  }
+  .wrapper {
+    position: relative;
+    width: 100%;
+    height:100%;
+  }
+}
+//定位地址
+.ticketAddress{
+  display: flex;
+  justify-content: space-between;
+  height:@base*90rem;
+  align-items: center;
+  background: #fff;
+  padding: 0 @base*30rem;
+  margin-bottom: @base*20rem;
+  >:first-child{
+    color:#949494;
+    font-size:@font24;
+  }
+  >:last-child{
+    color:#37A0F1;
+    font-size:@font28;
+  }
+}
+
+//滚动的样式处理
+.scroll-content{
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  height: calc(100% - @base*410rem);
+  .scroll-cotent-bottom{
+    padding-bottom: 100px;
+  }
+}
+
+//card样式
+.card{
+  width: 100%;
+  background: #fff;
+  padding: 0 @base*30rem;
+  box-sizing: border-box;
+  margin-bottom: @base*20rem;
+  .card-Title{
+    width:100%;
+    height: @base*80rem;
+    line-height: @base*80rem;
+    color: #3E3E3E;
+    border-bottom: 1px solid #E5E5E5;
+    font-size: @base*28rem;
+    span{
+      display: inline-block;
+      width: @base*4rem;
+      height: @base*28rem;
+      background: #37A0F1;
+      margin-right: @base*10rem;
+      vertical-align: middle;
+    }
+  }
+  .card-content{
+    width:100%;
+    height: auto;
+  }
+}
+
+//门票
+.door-ticketList-single{
+  display: flex;
+  justify-content: space-between;
+  height: @base*150rem;
+  width: 100%;
+  box-sizing: border-box;
+  &.borderBottom{
+    border-bottom: 1px solid #E5E5E5;
+  }
+  >:first-child{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: @base*33rem 0;
+  }
+  >:last-child{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .ticket-buy{
+      width: @base*140rem;
+      height: @base*60rem;
+      background: #F48831;
+      color: #fff;
+      font-size: @font24;
+      border-radius: @base*4rem;
+      line-height: @base*60rem;
+      text-align: center;
+    }
+  }
+}
+
+//card中的文本显示
+.card-content-text{
+  padding:@base*30rem 0;
+  font-size:@font24;
+  color: #949494;
+}
+//单行box显示
+.line-box{
+  width: 100%;
+  height: @base*100rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 0 @base*30rem;
+  box-sizing: border-box;
+  >:first-child{
+    .line-leftBox-icon{
+      display: inline-block;
+      width: 0.1rem;
+      height: 0.7rem;
+      background: #37A0F1;
+      margin-right: 0.25rem;
+      vertical-align: middle;
+    }
+  }
+  >:last-child{
+    i{
+      padding-left:@base*20rem;
+    }
+  }
+}

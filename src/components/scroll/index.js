@@ -9,7 +9,7 @@ class Scroll extends React.Component{
     componentDidMount(){
         setTimeout(()=>{
             this._initScroll();
-        },10)
+        },20)
         window.addEventListener('resize',() =>{
             this.refresh();
         })
