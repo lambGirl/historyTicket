@@ -1,0 +1,100 @@
+@import "../../global.less";
+.ticketOrderDetail-Main{
+  height:100%;
+  width: 100%;
+  position: relative;
+  .defaultHeight{
+    height: calc(100% - @base*90rem)
+  }
+  .orderDetail-status{
+    background: #0D87E4;
+    color: #fff;
+    padding:0 @base*30rem;
+    //多行
+    .orderDetail-status-Content{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      >:first-child{
+        .font34;
+        .orderStatus{
+          display: inline-block;
+          vertical-align: top;
+          width: @base*37rem;
+          height: @base*37rem;
+          margin-right: @base*15rem;
+        }
+        .used{
+          background: url("../../assets/img/ok@2x.png")no-repeat;
+          background-size: cover;
+        }
+        .retired{
+          background: url("../../assets/img/shibai@2x.png")no-repeat;
+          background-size: cover;
+        }
+        .useing{
+          background: url("../../assets/img/main_btn_time_nor-@2x.png")no-repeat;
+          background-size: cover;
+        }
+        .paying{
+          background: url("../../assets/img/main_btn_time_nor-@2x.png")no-repeat;
+          background-size: cover;
+        }
+      }
+      >:last-child{
+        .font36;
+      }
+    }
+    .mangLine{
+      padding: @base*42rem 0 @base*25rem 0;
+    }
+    .singleLine{
+      height: @base*108rem;
+    }
+
+    .orderDetail-status-detail{
+      padding-bottom: @base*23rem;
+      font-size: @font24;
+      span{
+        color: #FFCC9E;
+      }
+    }
+  }
+
+  .ticketOrderDetail-cardContent{
+    /*padding-top: @base*30rem;*/
+    font-size: @font26;
+    p{
+      padding-bottom: @base*30rem;
+      .name{
+        color:#8C8C8C;
+        padding-right: @base*97rem;
+      }
+    }
+  }
+  .footer-fixed-paying{
+    position: fixed;
+    bottom:0;
+    left:0;
+    width: 100%;
+    >:first-child{
+      display: flex;
+      height: @base*104rem;
+      line-height: @base*104rem;
+      width:100%;
+      >:first-child{
+        text-align:center;
+        color:#3E3E3E;
+        flex:1;
+        background: #fff;
+      }
+      >:last-child{
+        color: #fff;
+        text-align: center;
+        flex:1;
+        background: #F48831;
+      }
+    }
+  }
+}
+

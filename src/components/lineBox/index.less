@@ -1,0 +1,27 @@
+@import "../../assets/css/var";
+//单行box显示
+.line-box{
+  width: 100%;
+  height: @base*100rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 0 @base*30rem;
+  box-sizing: border-box;
+  >:first-child{
+    .line-leftBox-icon{
+      display: inline-block;
+      width: 0.1rem;
+      height: 0.7rem;
+      background: #37A0F1;
+      margin-right: 0.25rem;
+      vertical-align: middle;
+    }
+  }
+  >:last-child{
+    i{
+      padding-left:@base*20rem;
+    }
+  }
+}

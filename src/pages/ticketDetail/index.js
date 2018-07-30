@@ -5,6 +5,7 @@ import Header from '../../components/header'
 import { Carousel } from 'antd-mobile';
 import Scroll from '../../components/scroll'
 import Router from 'umi/router'
+import LineBox from  '../../components/lineBox'
 
 export  default class ticketDetail extends  React.Component{
   constructor(props){
@@ -27,6 +28,10 @@ export  default class ticketDetail extends  React.Component{
   //执行跳转
   showPhotosList(){
     Router.push('/merchantPhotos');
+  }
+  //preOrder 预定
+  preOrder(){
+      Router.push("/fillOrder")
   }
 
   render(){
@@ -80,7 +85,7 @@ export  default class ticketDetail extends  React.Component{
           <i className="fa fa-phone" aria-hidden="true"></i>
         </div>
       </div>
-      <div className={Styles['scroll-content']}>
+      <div className={ClassNames(Styles['scroll-content'],Styles["defaultHeight"])}>
         <Scroll class={Styles['wrapper']}>
           <div className={Styles['scroll-cotent-bottom']}>
             <div className={Styles['card']}>
@@ -99,7 +104,7 @@ export  default class ticketDetail extends  React.Component{
                       </div>
                     </div>
                     <div>
-                        <div className={Styles['ticket-buy']}>立即预订</div>
+                        <div className={Styles['ticket-buy']} onClick={this.preOrder.bind(this)}>立即预订</div>
                     </div>
                   </div>
                   <div className={ClassNames(Styles['door-ticketList-single'],Styles['borderBottom'])}>
@@ -162,7 +167,7 @@ export  default class ticketDetail extends  React.Component{
                 </div>
               </div>
             </div>
-            <div className={Styles['line-box']}>
+            {/*<div className={Styles['line-box']}>
               <div>
                   <span className={Styles['line-leftBox-icon']}></span>
                   <span className={ClassNames(Styles['font28'],Styles['color_3e'])}>安全须知</span>
@@ -171,11 +176,17 @@ export  default class ticketDetail extends  React.Component{
                 <span className={ClassNames(Styles['color_94'],Styles['font28'])}>了解详情</span>
                 <i className="fa fa-angle-right fa-lg" style={{"color":"#cacaca"}}></i>
               </div>
-            </div>
+            </div>*/}
+              <LineBox
+                  leftIcon={true}
+                  leftContent={<span className={ClassNames(Styles['font28'],Styles['color_3e'])}>安全须知</span>}
+                  righIcon={true}
+                  rightContent={<span className={ClassNames(Styles['color_94'],Styles['font28'])}>了解详情</span>}
+              />
           </div>
         </Scroll>
       </div>
-
+        
     </div>
   }
 }

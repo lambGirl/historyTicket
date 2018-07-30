@@ -1,0 +1,195 @@
+@import url('../../global.less');
+
+
+.fillOrder-main{
+  width: 100%;
+  height: 100%;
+  .defaultHeight{
+    height: calc(100% - @base*90rem);
+  }
+  .fillOrder-content-top{
+    padding: 0 @base*30rem;
+    background: #fff;
+    margin: @base*20rem 0;
+
+    .fillOrderTitle{
+      padding: @base*27rem 0 @base*30rem 0;
+      display: flex;flex-direction: column;
+      justify-content: center;
+      align-items:left;
+      .mg_bottom19{
+        margin-bottom: @base*19rem;
+      }
+    }
+    .fillOrderDate{
+      padding-bottom: @base*30rem;
+      .chooseDateList{
+        display: flex;
+        padding: @base*30rem 0;
+        justify-content: space-between;
+        .common{
+          width: 21%;
+          min-width:@base*160rem;
+          height: @base*90rem;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          border-radius: @base*4rem;
+          font-size: @font24
+        }
+        .default{
+          border: 1px solid #A2A2A2;
+          color: #333;
+
+        }
+        .disable{
+          border: 1px solid #ccc;
+          color: #ccc;
+        }
+        .active{
+          border: 1px solid #37A0F1;
+          color: #333;
+          background: rgba(55,160,241,0.28);
+          position:relative;
+          &::after{
+            position:absolute;
+            content:"";
+            background: url("../../assets/img/main_btn_selected@2x.png") no-repeat;
+            background-size: cover;
+            width: @base*32rem;
+            height: @base*32rem;
+            bottom: 0;
+            right: 0;
+          }
+        }
+
+        .moreDate{
+          width: 16%;
+          min-width: @base*120rem;
+          height:@base*90rem;
+          border:1px solid #A2A2A2;
+          .color_333;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: @font24;
+          >:first-child{
+            width: @base*60rem;
+            padding-right: @base*5rem;
+          }
+        }
+
+      }
+    }
+    .buyNum{
+        height: @base*140rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      >:last-child{
+        display: flex;
+        justify-content: space-between;
+        .common{
+          width: @base*80rem;
+          height: @base*80rem;
+          border:1px solid #A2A2A2;
+          color:#A2A2A2;
+          border-radius: @base*4rem;
+
+          line-height: @base*80rem;
+          text-align: center;
+        }
+        .reduce{
+          border:1px solid #A2A2A2;
+          color:#A2A2A2;
+        }
+        .add{
+          border:1px solid #37A0F1;
+          color:#37A0F1;
+        }
+        .numberShow{
+          border:1px solid #A2A2A2;
+          width: @base*100rem;
+          height: @base*80rem;
+          border:1px solid #A2A2A2;
+          color:#3e3e3e;
+          border-radius: @base*4rem;
+          line-height: @base*80rem;
+          text-align: center;
+        }
+      }
+    }
+
+  }
+  .addPassager{
+    span{
+      .font24;
+      color: #a2a2a2;
+      padding-left:@base*26rem;
+      i{
+        color: #37A0F1;
+        font-style: normal;
+      }
+    }
+  }
+  .addPassageBtn{
+    width: @base*148rem;
+    height: @base*68rem;
+    background: #37A0F1;
+    border-radius: @base*4rem;
+    color: #fff;
+    .font24;
+    line-height: @base*68rem;
+    text-align: center;
+  }
+  .passageList{
+    padding-left: @base*30rem;
+    background: #fff;
+    .reduce-passage-Icon{
+      width:@base*44rem;
+      height:@base*44rem;
+      display: inline-block;
+      background: url("../../assets/img/btn_delete_normal_new@2x.png") no-repeat;
+      background-size: contain;
+    }
+    >:last-child{
+      border-bottom: none !important;
+    }
+    .passageList-single{
+      height: @base*140rem;
+      width:100%;
+      display: flex;
+      justify-content: space-between;
+      padding: @base*34rem @base*30rem @base*34rem 0;
+      align-items: center;
+      box-sizing: border-box;
+      border-bottom: 1px solid #E5E5E5;
+      >:first-child{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        color:#2F2F2F;
+        overflow: hidden;
+        .passage-name{
+          .font32;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          padding-bottom:@base*19rem;
+        }
+        .passage-detail{
+          .font24;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          >:first-child{
+            padding-right:@base*38rem;
+          }
+        }
+      }
+    }
+
+  }
+
+}

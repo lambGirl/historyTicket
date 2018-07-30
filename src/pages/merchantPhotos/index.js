@@ -11,7 +11,7 @@ export  default class MerchartPhotos extends  React.Component{
             mode="light"
             leftContent={ <i className="fa fa-angle-left fa-lg" style={{"color":"#3E3E3E"}}></i>}
           >
-            <div style={{"text-align":'center','color':'#3E3E3E'}} >商家相册</div>
+            <div style={{"textAlign":'center','color':'#3E3E3E'}} >商家相册</div>
           </Header>
             <div className={Styles['scroll-content']}>
               <Scroll class={Styles['wrapper']}>

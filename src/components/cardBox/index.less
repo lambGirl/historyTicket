@@ -1,0 +1,38 @@
+@import "../../assets/css/var";
+//card样式
+.card{
+  width: 100%;
+  background: #fff;
+  padding: 0 @base*30rem;
+  box-sizing: border-box;
+  margin-bottom: @base*20rem;
+  .card-Title{
+    width:100%;
+    height: @base*80rem;
+    line-height: @base*80rem;
+    color: #2b2b2b;
+
+    font-size: @base*28rem;
+    span{
+      display: inline-block;
+      width: @base*4rem;
+      height: @base*28rem;
+      background: #37A0F1;
+      margin-right: @base*10rem;
+      vertical-align: middle;
+    }
+  }
+  .disabled{
+      color:#CCC !important;
+      .card-title-leftIcon{
+        background: #CCC !important;
+      }
+  }
+  .borderBottom{
+    border-bottom: 1px solid #E5E5E5;
+  }
+  .card-content{
+    width:100%;
+    height: auto;
+  }
+}

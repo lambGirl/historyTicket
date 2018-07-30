@@ -1,0 +1,162 @@
+@import url('../../assets/css/var');
+.train-pay {
+  height: 2.5rem;
+  background-color: #fff;
+  border-top: 1px solid #e7e7e7;
+  border-bottom: 0;
+  border-left: 0;
+  left: 0;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  line-height: 2.5rem;
+  text-align: left;
+  font-size: .7rem;
+  z-index: 11;
+  div {
+    display: inline-block;
+  }
+  .col-60 {
+    width: 68%;
+    white-space: nowrap;
+  }
+  .col-40 {
+    width: 32%;
+  }
+  .train-footer-pay {
+    background-color: #f48831;
+    text-align: center;
+    color: #fff;
+  }
+  .train-pay-content {
+    color: #000;
+    padding-left: .75rem;
+    display: flex;
+    justify-content: space-between;
+    >div{
+      display: inline-block;
+    }
+    .train-pay-left{
+      display: flex;
+      justify-content: space-between;
+      >:first-child{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        color: #3E3E3E;
+        >:nth-child(2){
+          color: #3E3E3E;
+          font-size: @font24;
+          padding-top: @base*9rem;
+        }
+        >div{
+          line-height:@font30;
+          i{
+            color:#F48831;
+            font-style: normal;
+          }
+          .foot-price-new{
+            font-size: @font36;
+
+          }
+        }
+      }
+    }
+    .foot-price-new {
+      font-style: normal;
+      color: #f56b25;
+      font-size: .65rem;
+      font-weight: 600;
+    }
+    .train-pay-detail {
+      text-align: right;
+      color: #7C7C7C;
+      .ui-icon {
+        width: .8rem;
+        height: .8rem;
+        margin-right: .55rem;
+        margin-left: .25rem;
+        display: inline-block;
+        vertical-align: middle;
+      }
+      .ui-icon-pay-up1 {
+        background: url(../../assets/img/icon_arrowdown@2x.png) no-repeat;
+        background-position-y: center;
+        background-size: @base*22rem @base*12rem;
+      }
+      .ui-icon-pay-down1 {
+        background: url(../../assets/img/icon_arrowdown1@2x.png) no-repeat;
+        background-position-y: center;
+        background-size: @base*22rem @base*12rem;
+      }
+    }
+  }
+  .train-pay-modal {
+    background-color: #000;
+    transition: opacity .75s;
+    top: -2.5rem;
+    left: 0;
+    width: 100%;
+    position: fixed;
+  }
+  .train-paydetail-modal {
+    transition: bottom 0.5s;
+    position: absolute;
+    left: 0;
+    bottom: -400px;
+    width: 100%;
+    color: black;
+    /*border:1px solid red;*/
+    ul {
+      background-color: #fff;
+      width: 100%;
+      padding: @base*35rem 0 @base*35rem @base*32rem;
+      li{
+        /*height: @base*26rem;*/
+        height:.75rem;
+        overflow: hidden;
+        font-size: @font26;
+        margin-bottom: .6rem;
+        div{
+          display: inline-block;
+          height: .9rem;
+          float: left;
+          line-height: .9rem;
+          text-align: left;
+          >span{
+            font-size: @font28;
+          }
+        }
+        &>:first-child{
+          width: @base*158rem;
+          white-space: nowrap;
+          overflow: hidden;
+          margin-right: @base*55rem;
+        }
+      }
+      &>:last-child{
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .train-paydetail-modal .item-title {
+    /*width: 50%;*/
+    text-align: left;
+  }
+  .train-paydetail-modal .item-content {
+    //min-height: 2.2rem;
+    //padding-left: .75rem;
+    width: 100%;
+  }
+  .train-paydetail-modal .item-title:nth-child(2) {
+    text-align: left;
+    /*width: 50%;*/
+  }
+  .train-paydetail-modal .item-title:nth-child(2) span {
+    color: #3e3e3e;
+  }
+  .train-paydetail-modal .item-title:nth-child(2) span.redfs {
+    color: #f56b25;
+  }
+}
