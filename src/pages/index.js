@@ -3,11 +3,11 @@ import { connect } from 'dva';
 import router from 'umi/router'
 import dynamic from 'umi/dynamic';
 import styles from './index.less';
-import Scroll from '../components/scroll'
-import Header from  '../components/header'
-import classnames from 'classnames'
+import Scroll from '../components/scroll';
+import Header from  '../components/header';
+import classnames from 'classnames';
 import {Helmet} from "react-helmet";    //用于修改页面的title
-import Router from 'umi/router'
+import Router from 'umi/router';
 
 class IndexPage extends React.Component{
     constructor(props) {
@@ -22,9 +22,9 @@ class IndexPage extends React.Component{
             headerConfig:{
                 mode:"transparent",
                 color:'#fff'
-            }
+            },
+            selectBarModelFixed:false
         }
-
     }
 
     componentDidMount(){
@@ -58,13 +58,14 @@ class IndexPage extends React.Component{
         })
        // console.log("clientHeight", (pos.y+(-38)));
        // return;
-        console.log("clientHeight", (pos.y+(-40)),(-clientHeight),tag);
+       //  console.log("clientHeight", (pos.y),(-clientHeight),tag);
         if((pos.y+(-40))<(-clientHeight)){
             this.setState({
                 headerConfig:{
                     mode:"light",
                     color:'#3E3E3E'
-                }
+                },
+              selectBarModelFixed:true
             })
             return;
         }
@@ -75,33 +76,37 @@ class IndexPage extends React.Component{
                 headerConfig:{
                     mode:"transparent",
                     color:'#fff'
-                }
+                },
+              selectBarModelFixed:false
             })
         }
     }
 
     //点击seachBar
-    selectBar(tag) {
-        let {searchBarModel,indexScroll,indexSwiper} = this.refs,
+    selectBar(tag,e) {
+      //console.log(tag);
+      let {searchBarModel,indexScroll,indexSwiper} = this.refs,
             {clientWidth, clientHeight} = indexSwiper,
             searchBarHeight =  searchBarModel.clientHeight,
             { currPageY } = this.state.pageStatus;
-        //console.log("-------------tag--------", currPageY, clientWidth,clientHeight );
+        // console.log("-------------tag--------", currPageY, clientWidth,clientHeight );
         //首先判断当前这个y坐标是否已经超过了searchBarModel的y坐标+他当前的高度，如果超过了就不用执行
         // return;
         //if()
       //  console.log("scrollTop",currPageY,clientHeight,this.refs.indexSwiper.clientHeight);
         if(currPageY > -(clientHeight)) {
-            indexScroll.scrollToElement(this.refs.searchBarModel, 10, 0, -searchBarHeight + 6);
-            this.setState({
+         // indexScroll.scrollToElement(this.refs.searchBarModel, 300, 0);
+          indexScroll.scrollToElement(this.refs.searchBarModel, 300, 0, -searchBarHeight + 6);
+         // indexScroll.scrollTo(clientHeight);
+           /* this.setState({
                 headerConfig:{
                     mode:"light",
                     color:'#3E3E3E'
                 }
-            })
+            },()=>{
+              //indexScroll.scrollToElement(this.refs.searchBarModel, 10, 0, -searchBarHeight + 6);
+            });*/
         }
-
-
     }
 
     render(){
@@ -147,7 +152,9 @@ class IndexPage extends React.Component{
                                     <img src="https://p0.meituan.net/400.0/hotel/fd8e418933a722e6ca77f918aa553f89135934.jpg" alt=""/>
                                 </div>
                             </div>
-                            <div className={styles["selectBarModel"]} ref='searchBarModel'>
+                            <div className={classnames(styles["selectBarModel"],{
+                              [styles["selectBarModelFixed"]]:this.state.selectBarModelFixed
+                            })} ref='searchBarModel'>
                                 <div className={styles['selectBar']}>
                                   <div onClick={this.selectBar.bind(this, 'all')}>
                                     <span>全城</span>

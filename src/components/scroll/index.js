@@ -34,12 +34,20 @@ class Scroll extends React.Component{
 
         this.scroll = new BScroll(wrapper,{
                 scrollY: true,
-                click: false,
+                click: true,
                 probeType:3,
-                momentumLimitDistance:1
-            });
+               /* flickLimitDistance:10000,*/
+                bounce:false,
+                momentum:true,
+                /*flickLimitDistance:200,*/
+              preventDefault:true
+        });
+        this.scroll.on("beforeScrollStart",()=>{
+
+        })
 
         this.scroll.on('scroll',(pos) =>{
+               // console.log("pos",pos);
                 _self.props.scrollFun && _self.props.scrollFun(pos)
             })
         this.scroll.on('scrollEnd',(pos) =>{
@@ -50,7 +58,9 @@ class Scroll extends React.Component{
     scrollToElement(){
         this.scroll && this.scroll.scrollToElement.apply(this.scroll,arguments)
     }
-
+  scrollTo(){
+    this.scroll && this.scroll.scrollTo.apply(this.scroll,arguments)
+  }
     //刷新scroll
     refresh(){
         this.scroll && this.scroll.refresh()
