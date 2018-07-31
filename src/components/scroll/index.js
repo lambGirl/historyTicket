@@ -36,7 +36,7 @@ class Scroll extends React.Component{
                 scrollY: true,
                 click: false,
                 probeType:3,
-                eventPassthrough:'vertical'
+                momentumLimitDistance:1
             });
 
         this.scroll.on('scroll',(pos) =>{
