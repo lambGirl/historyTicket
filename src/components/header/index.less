@@ -16,6 +16,9 @@
   .none{
     background: none;
   }
+  .colorE6e6e6{
+    background: #e6e6e6;
+  }
 
   .header-common{
     display: flex;
@@ -23,7 +26,7 @@
     height: 100%;
     align-items: center;
     .left-header{
-      width: 16%;
+      width: 14%;
       box-sizing: border-box;
       padding-left:@base*32rem;
     }
@@ -32,7 +35,7 @@
       box-sizing: border-box;
     }
     .right-header{
-      width: 18%;
+      width: 20%;
       text-align: right;
       padding-right: @base*30rem;
       box-sizing: border-box;
@@ -44,12 +47,16 @@
   position: absolute;
   z-index:1;
 }
+.positionFixed{
+  position: fixed;
+  z-index:1;
+}
 //header中间的search
 .search-input{
   height: @base*60rem;
   width: 100%;
-  background: #fff;
-  border-radius: 8px;
+  background: #f5f5f9;
+  border-radius: 30px;
   padding-left: @base*24rem;
   box-sizing: border-box;
   display: flex;

@@ -3,7 +3,13 @@ import ClassNames from 'classnames'
 import Styles from './index.less'
 import Scroll from '../../components/scroll'
 import Header from '../../components/header'
+import Router from 'umi/router'
 export  default class MerchartPhotos extends  React.Component{
+
+  showPhoto(){
+      Router.push("/showPhotos");
+  }
+
   render(){
     return (
       <div className={Styles['photosListShow']}>
@@ -17,7 +23,7 @@ export  default class MerchartPhotos extends  React.Component{
               <Scroll class={Styles['wrapper']}>
                 <div className={Styles['scroll-cotent-bottom']}>
                   <div className={Styles['photosList-box']}>
-                    <div className={Styles['photoList-single']}>
+                    <div className={Styles['photoList-single']} onClick={this.showPhoto.bind(this)}>
                       <img src='https://p0.meituan.net/400.0/travel/9172c05e9077f176ccec489278c553a4149430.jpg'/>
                     </div>
                     <div className={Styles['photoList-single']}>

@@ -16,7 +16,15 @@ class IndexPage extends React.Component{
             slideIndex: 2,
             imgHeight: 0.025*340+"rem",
             data: ['1', '2', '3'],
+            pageStatus:{
+                currPageY: 0
+            },
+            headerConfig:{
+                mode:"transparent",
+                color:'#fff'
+            }
         }
+
     }
 
     componentDidMount(){
@@ -31,6 +39,71 @@ class IndexPage extends React.Component{
        Router.push('/ticketDetail/')
     }
 
+    //监听scroll的滚动
+    onScroll(pos,tag){
+        /**
+         * searchBarModel: 代表selectBar,
+         * indexScroll: 代表滚动scroll
+         * indexSwiper: 代表背景图片
+         * header: 代表header
+         */
+
+        let { pageStatus,headerConfig } =  this.state,
+            {searchBarModel,indexScroll,indexSwiper,headers} = this.refs,
+            {clientHeight} = indexSwiper;  //滚动图片的高度,如果小于这个都需要重新设置header
+
+        pageStatus.currPageY =  pos.y;
+        this.setState({
+            pageStatus:pageStatus
+        })
+       // console.log("clientHeight", (pos.y+(-38)));
+       // return;
+        console.log("clientHeight", (pos.y+(-40)),(-clientHeight),tag);
+        if((pos.y+(-40))<(-clientHeight)){
+            this.setState({
+                headerConfig:{
+                    mode:"light",
+                    color:'#3E3E3E'
+                }
+            })
+            return;
+        }
+       // console.log("clientHeight", (pos.y+(-40)),(-clientHeight));
+
+        if(headerConfig.mode != "transparent"){
+            this.setState({
+                headerConfig:{
+                    mode:"transparent",
+                    color:'#fff'
+                }
+            })
+        }
+    }
+
+    //点击seachBar
+    selectBar(tag) {
+        let {searchBarModel,indexScroll,indexSwiper} = this.refs,
+            {clientWidth, clientHeight} = indexSwiper,
+            searchBarHeight =  searchBarModel.clientHeight,
+            { currPageY } = this.state.pageStatus;
+        //console.log("-------------tag--------", currPageY, clientWidth,clientHeight );
+        //首先判断当前这个y坐标是否已经超过了searchBarModel的y坐标+他当前的高度，如果超过了就不用执行
+        // return;
+        //if()
+      //  console.log("scrollTop",currPageY,clientHeight,this.refs.indexSwiper.clientHeight);
+        if(currPageY > -(clientHeight)) {
+            indexScroll.scrollToElement(this.refs.searchBarModel, 10, 0, -searchBarHeight + 6);
+            this.setState({
+                headerConfig:{
+                    mode:"light",
+                    color:'#3E3E3E'
+                }
+            })
+        }
+
+
+    }
+
     render(){
         return (
             <div className={styles["container_page"]}>
@@ -39,9 +112,26 @@ class IndexPage extends React.Component{
                     <title>首页</title>
                 </Helmet>
                 <div className={styles["index_page"]}>
-                    <Scroll class={styles["wrapper"]}>
+                    <div  ref='headers'>
+                        <Header
+                            positionType ='positionAbolute'
+                            mode={this.state.headerConfig.mode}
+                            leftContent={ <i className="fa fa-angle-left fa-lg" style={{"color":`${this.state.headerConfig.color}`}}></i>}
+                            rightContent={
+                                <span style={{"color":`${this.state.headerConfig.color}`}}>
+                                    <span style={{"paddingRight":'4px'}}>成都</span>
+                                    <i className="fa fa-angle-down fa-lg"></i>
+                               </span>
+                            }
+                            centerContentType='1'
+                        ></Header>
+                    </div>
+                    <Scroll class={styles["wrapper"]}
+                            ref='indexScroll'
+                            scrollFun={this.onScroll.bind(this)}
+                    >
                         <div  className={styles["wrapper_content"]}>
-                            <div className={styles["swipper_top"]}>
+                            <div className={styles["swipper_top"]} ref='indexSwiper'>
                                {/* <Header
                                          prefixCls='am-abolute'
                                          mode="transparent"
@@ -53,31 +143,22 @@ class IndexPage extends React.Component{
                                             <input type="text" className={styles["searchInputText"]} name='searchAll' placeholder='景点名称'/>
                                         </div>
                                 </Header>*/}
-
-                                <Header
-                                  positionType ='positionAbolute'
-                                  mode="transparent"
-                                  leftContent={ <i className="fa fa-angle-left fa-lg" style={{"color":"#fff"}}></i>}
-                                  rightContent={ <i className="fa fa-angle-right fa-lg" style={{"color":"#fff"}}></i>}
-                                  centerContentType='1'
-                                ></Header>
                                 <div className={styles["index_banner_img"]}>
                                     <img src="https://p0.meituan.net/400.0/hotel/fd8e418933a722e6ca77f918aa553f89135934.jpg" alt=""/>
                                 </div>
                             </div>
-                            <div className={styles["selectBarModel"]}>
+                            <div className={styles["selectBarModel"]} ref='searchBarModel'>
                                 <div className={styles['selectBar']}>
-                                  <div>
+                                  <div onClick={this.selectBar.bind(this, 'all')}>
                                     <span>全城</span>
                                     <i className="fa fa-caret-down fa-lg"></i>
                                   </div>
-                                  <div>
+                                  <div onClick={this.selectBar.bind(this, 'all')}>
                                     <span>智能排序</span>
                                     <i className="fa fa-caret-down fa-lg"></i>
                                   </div>
                                 </div>
                                 <div className={styles['selectContent']}>
-
                                 </div>
                             </div>
                             <div className={styles["ticketsListArr"]}>

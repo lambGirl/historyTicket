@@ -6,13 +6,14 @@ import { Carousel } from 'antd-mobile';
 import Scroll from '../../components/scroll'
 import Router from 'umi/router'
 import LineBox from  '../../components/lineBox'
-
+import CardBox from  '../../components/cardBox'
 export  default class ticketDetail extends  React.Component{
   constructor(props){
     super(props);
     this.state = {
       slideIndex:0,
-      data:[]
+      data:[],
+      showModel: false
     }
   }
   componentDidMount(){
@@ -30,10 +31,24 @@ export  default class ticketDetail extends  React.Component{
     Router.push('/merchantPhotos');
   }
   //preOrder 预定
-  preOrder(){
-      Router.push("/fillOrder")
+  preOrder(tag){
+    //  Router.push("/fillOrder")
+      this.setState({
+          "showModel": tag
+      })
   }
-
+  renderBaseInfo(){
+      return <div className={Styles['writeOrder-cardContent']}>
+          <p>
+              <span className={Styles["name"]}>商品名称</span>
+              <span>安仁古镇门票</span>
+          </p>
+          <p>
+              <span className={Styles["name"]}>商品名称</span>
+              <span>安仁古镇门票</span>
+          </p>
+      </div>
+  }
   render(){
     var _this = this;
     return <div className={ClassNames(Styles['ticketDetailContent'])}>
@@ -104,7 +119,7 @@ export  default class ticketDetail extends  React.Component{
                       </div>
                     </div>
                     <div>
-                        <div className={Styles['ticket-buy']} onClick={this.preOrder.bind(this)}>立即预订</div>
+                        <div className={Styles['ticket-buy']} onClick={this.preOrder.bind(this,true)}>立即预订</div>
                     </div>
                   </div>
                   <div className={ClassNames(Styles['door-ticketList-single'],Styles['borderBottom'])}>
@@ -186,7 +201,86 @@ export  default class ticketDetail extends  React.Component{
           </div>
         </Scroll>
       </div>
-        
+
+        {
+            this.state.showModel&&<div className={ClassNames(Styles[ 'ticketDetail_model' ])}>
+                <div className={Styles[ 'model' ]}></div>
+                <div className={Styles[ 'ticketDetail_model_show' ]}>
+                    <div className={Styles[ 'close' ]} onClick={this.preOrder.bind(this,false)}>
+                        <i className="fa fa-close fa-lg" style={{"color": "#000"}}></i>
+                    </div>
+                    <div className={Styles[ 'detail_title' ]}>
+                        <div>
+                            <img src="https://p0.meituan.net/200.0/hotel/02f2d6bb35c32ef9c2248c17654579e310396909.png.webp"
+                                 alt=""/>
+                        </div>
+                        <div>三和老爷车博物馆门票成人票，入
+                            园前均可购买
+                        </div>
+                    </div>
+                    <div className={ClassNames(Styles[ 'scroll-content' ], Styles[ "defaultHeight_detail" ])}>
+                        <Scroll class={Styles[ 'wrapper' ]}>
+                            <div className={Styles[ 'scroll-cotent-bottom' ]}>
+                                <div className={Styles[ 'writeOrder_detail_content' ]}>
+                                    <div className={Styles[ 'mgtop20' ]}>
+                                        <CardBox
+                                            cardTitleIcon={true}
+                                            cardTitle="购票须知"
+                                            content={this.renderBaseInfo()}
+                                        />
+                                    </div>
+                                    <div className={Styles[ 'mgtop20' ]}>
+                                        <CardBox
+                                            cardTitleIcon={true}
+                                            cardTitle="费用包含"
+                                            content={this.renderBaseInfo()}
+                                        />
+                                    </div>
+                                    <div className={Styles[ 'mgtop20' ]}>
+                                        <CardBox
+                                            cardTitleIcon={true}
+                                            cardTitle="费用包含"
+                                            content={this.renderBaseInfo()}
+                                        />
+                                    </div>
+                                    <div className={Styles[ 'mgtop20' ]}>
+                                        <CardBox
+                                            cardTitleIcon={true}
+                                            cardTitle="费用包含"
+                                            content={this.renderBaseInfo()}
+                                        />
+                                    </div>
+                                    <div className={Styles[ 'mgtop20' ]}>
+                                        <CardBox
+                                            cardTitleIcon={true}
+                                            cardTitle="费用包含"
+                                            content={this.renderBaseInfo()}
+                                        />
+                                    </div>
+                                    <div className={Styles[ 'mgtop20' ]}>
+                                        <CardBox
+                                            cardTitleIcon={true}
+                                            cardTitle="费用包含"
+                                            content={this.renderBaseInfo()}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </Scroll>
+                    </div>
+                    <div className={Styles[ 'writerOrder-btn' ]}>
+                        <div>
+                            <div>
+                                <span className={ClassNames(Styles[ 'color_F48831' ], Styles[ 'font24' ])}>¥</span>
+                                <span className={ClassNames(Styles[ 'color_F48831' ], Styles[ 'font40' ])}>50</span>
+                                <span className={ClassNames(Styles[ 'color_94' ], Styles[ 'font24' ])}>起</span>
+                            </div>
+                            <div>填写订单</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
   }
 }

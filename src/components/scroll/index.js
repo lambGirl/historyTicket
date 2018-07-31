@@ -34,17 +34,19 @@ class Scroll extends React.Component{
 
         this.scroll = new BScroll(wrapper,{
                 scrollY: true,
-                click: true,
-                probeType:3
+                click: false,
+                probeType:3,
+                eventPassthrough:'vertical'
             });
 
         this.scroll.on('scroll',(pos) =>{
                 _self.props.scrollFun && _self.props.scrollFun(pos)
             })
-
+        this.scroll.on('scrollEnd',(pos) =>{
+            _self.props.scrollFun && _self.props.scrollFun(pos,'end')
+        })
 
     }
-
     scrollToElement(){
         this.scroll && this.scroll.scrollToElement.apply(this.scroll,arguments)
     }

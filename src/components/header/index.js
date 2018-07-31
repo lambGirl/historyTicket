@@ -3,13 +3,15 @@ import classnames from 'classnames';
 import styles from "./index.less";
 class Header extends  React.Component{
   render(){
-    let {parentOutClass,positionType,mode,leftContent, rightContent,centerContentType} =  this.props;
-    return  <div className={classnames(styles["header-parent"],{
-      [styles["positionAbolute"]]:positionType == 'positionAbolute'
+    let {parentOutClass,positionType,mode,leftContent, rightContent,centerContentType,ref} =  this.props;
+    return  <div ref={ref} className={classnames(styles["header-parent"],{
+      [styles["positionAbolute"]]:positionType == 'positionAbolute',
+      [styles["positionFixed"]]:positionType == 'positionFixed'
     },parentOutClass)}>
       <div className={classnames(styles['header-common'],{
         [styles["transparent"]]: mode=="transparent"||false,
         [styles["light"]]: mode == 'light',
+        [styles["colorE6e6e6"]]: mode == 'colorE6e6e6',
         [styles["common"]]:(mode == 'common'||!mode)||false,
         [styles["none"]]:mode == 'none'
       })}>
