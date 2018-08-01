@@ -1,0 +1,44 @@
+@import "../../assets/css/var";
+@import '../../global.less';
+
+.tabContent{
+  overflow: hidden;
+  height: calc(100% - @base*90rem);
+  .buttons-tab{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    font-size: @font30;
+    color:#949494;
+    >div{
+     height: @base*80rem;
+      text-align: center;
+      flex: 1;
+      line-height: @base*80rem;
+      box-sizing: border-box;
+    }
+    .tab-link{
+      border-bottom: @base*8rem solid #fff;
+    }
+    .active{
+      color:#0D87E4;
+      border-bottom: @base*8rem solid #0D87E4;
+    }
+  }
+
+  .tabs{
+    height: calc(100% - @base*170rem);
+  }
+  .tab{
+    height: calc(100% - @base*170rem);
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+}
+.defaultHeight{
+  height: calc(100% - @base*170rem);
+}
+
+

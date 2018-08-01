@@ -5,8 +5,20 @@ import PropTypes from 'prop-types';
 class Scroll extends React.Component{
     constructor(props){
         super(props);
+        this.state = {
+            pullUpTxt:'',
+            pullUpDirty:''
+        }
     }
     componentDidMount(){
+        let {pullUpLoad} =  this.props;
+        const moreTxt = (pullUpLoad && pullUpLoad.txt && pullUpLoad.txt.more) ||""
+
+        const noMoreTxt = (pullUpLoad && pullUpLoad.txt && pullUpLoad.noMore) || this.$i18n.t('scrollComponent.defaultLoadTxtNoMore')
+        this.setState({
+            pullUpTxt: this.state.pullUpDirty ? moreTxt : noMoreTxt
+        });
+
         setTimeout(()=>{
             this._initScroll();
         },20)
@@ -26,11 +38,19 @@ class Scroll extends React.Component{
     render(){
         return <div ref="wrapper"  className={this.props.class||""}>
             {this.props.children}
+            <div class="pullup-wrapper" v-if="pullUpLoad">
+                <div class="before-trigger" v-if="!isPullUpLoad">
+                    <span>{this.state.pullUpTxt}</span>
+                </div>
+                <div class="after-trigger" v-else>
+                    <loading></loading>
+                </div>
+            </div>
         </div>
     }
 
     _initScroll(){
-        let wrapper = this.refs.wrapper,_self =  this;
+        let wrapper = this.refs.wrapper,_self =  this, {pullUpLoad} =  this.props;
 
         this.scroll = new BScroll(wrapper,{
                 scrollY: true,
@@ -39,20 +59,15 @@ class Scroll extends React.Component{
                /* flickLimitDistance:10000,*/
                 bounce:false,
                 momentum:true,
-                /*flickLimitDistance:200,*/
-              preventDefault:true
+                pullUpLoad:pullUpLoad
         });
-        this.scroll.on("beforeScrollStart",()=>{
-
-        })
-
         this.scroll.on('scroll',(pos) =>{
                // console.log("pos",pos);
                 _self.props.scrollFun && _self.props.scrollFun(pos)
             })
-        this.scroll.on('scrollEnd',(pos) =>{
+        /*this.scroll.on('scrollEnd',(pos) =>{
             _self.props.scrollFun && _self.props.scrollFun(pos,'end')
-        })
+        })*/
 
     }
     scrollToElement(){

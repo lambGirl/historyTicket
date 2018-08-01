@@ -1,0 +1,45 @@
+@import "../../assets/css/var";
+//选择bar
+.selectBarModel{
+  width: 100%;
+  position:relative;
+  height: calc(100% - @base*340rem);
+  overflow: hidden;
+  .selectBar{
+    display: flex;
+    width: 100%;
+    height: @base*100rem;
+    line-height: @base*100rem;
+    border-top:1px solid #e6e6e6;
+    border-bottom:1px solid #e6e6e6;
+    background: #fff;
+    /*  margin-top: 1px;*/
+    div{
+      flex:1;
+      text-align: center;
+      span{
+        color: #3E3E3E;
+        font-size: @base*30rem;
+        padding-right:5px;
+      }
+      i{
+        color: #DBDBDB;
+        font-size: 10px;
+      }
+    }
+
+  }
+
+  .selectContent{
+    width:100%;
+    position:absolute;
+    top: @base*100rem;
+    height: 100%;
+    z-index:1000;
+  }
+}
+.selectBarModelFixed{
+  position:fixed;
+  z-index: 1000;
+  /* top:@base*190rem;*/
+}

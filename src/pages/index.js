@@ -8,22 +8,39 @@ import Header from  '../components/header';
 import classnames from 'classnames';
 import {Helmet} from "react-helmet";    //用于修改页面的title
 import Router from 'umi/router';
+import IndexModelSelectBar from '../components/indexModeSelectBarContent';
+import IndexSelectBar from '../components/indexSelectBar'
 
 class IndexPage extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            slideIndex: 2,
-            imgHeight: 0.025*340+"rem",
-            data: ['1', '2', '3'],
             pageStatus:{
-                currPageY: 0
+                currPageY: 0    //当前页面滚动的Y坐标
             },
-            headerConfig:{
+            headerConfig:{          //headerConfig配置
                 mode:"transparent",
                 color:'#fff'
             },
-            selectBarModelFixed:false
+            IndexModelSelectBarStatus: false, //IndexModelSelectBar，model什么时候显示
+            SelectBarData:{
+                "all":{
+                    activeIndex:0,
+                    parentIndex: false,
+                    data:[
+                        {key:'qc', val:'全城'},
+                        {key:'qc', val:'武侯区'},
+                    ]
+                },
+                'zlpx':{
+                    activeIndex:0,
+                    parentIndex: false,
+                    data:[
+                        {key:'0', val:'智能排序'},
+                        {key:'1', val:'由近到远'},
+                    ]
+                }
+            }
         }
     }
 
@@ -65,7 +82,7 @@ class IndexPage extends React.Component{
                     mode:"light",
                     color:'#3E3E3E'
                 },
-              selectBarModelFixed:true
+              /*selectBarModelFixed:true*/
             })
             return;
         }
@@ -89,27 +106,46 @@ class IndexPage extends React.Component{
             {clientWidth, clientHeight} = indexSwiper,
             searchBarHeight =  searchBarModel.clientHeight,
             { currPageY } = this.state.pageStatus;
-        // console.log("-------------tag--------", currPageY, clientWidth,clientHeight );
-        //首先判断当前这个y坐标是否已经超过了searchBarModel的y坐标+他当前的高度，如果超过了就不用执行
-        // return;
-        //if()
-      //  console.log("scrollTop",currPageY,clientHeight,this.refs.indexSwiper.clientHeight);
+
         if(currPageY > -(clientHeight)) {
-         // indexScroll.scrollToElement(this.refs.searchBarModel, 300, 0);
-          indexScroll.scrollToElement(this.refs.searchBarModel, 300, 0, -searchBarHeight + 6);
-         // indexScroll.scrollTo(clientHeight);
-           /* this.setState({
-                headerConfig:{
-                    mode:"light",
-                    color:'#3E3E3E'
-                }
-            },()=>{
-              //indexScroll.scrollToElement(this.refs.searchBarModel, 10, 0, -searchBarHeight + 6);
-            });*/
+            //设置滚动
+            indexScroll.scrollToElement(this.refs.searchBarModel, 300, 0, -searchBarHeight + 6);
         }
+
+        let {SelectBarData } =  this.state;
+        //清空全部parentIndex 为false，在把对应的设置成true
+        Object.keys(SelectBarData).forEach((item)=>{
+            SelectBarData[item].parentIndex = false;
+        });
+        SelectBarData[tag].parentIndex =  true
+        this.setState({
+           // IndexModelSelectBarStatus:true,
+            SelectBarData: SelectBarData
+        });
+        //显示selectBar数据
+        setTimeout(()=>{
+            this.setState({
+                IndexModelSelectBarStatus:true,
+            });
+        },250)
+    }
+
+    //重新初始化数据selectBar的数据
+    reInitSelect(e){
+        if(e){
+            this.setState({
+                SelectBarData:e
+            })
+        }
+        this.setState({
+            IndexModelSelectBarStatus:false
+        })
     }
 
     render(){
+        let { IndexModelSelectBarStatus,SelectBarData } =  this.state,
+            allBarColor = (SelectBarData["all"].activeIndex||IndexModelSelectBarStatus)&&SelectBarData["all"].parentIndex?'#37A0F1':"#DBDBDB",
+            zlpxColor =  (SelectBarData["zlpx"].activeIndex||IndexModelSelectBarStatus)&&SelectBarData["zlpx"].parentIndex?'#37A0F1':"#DBDBDB";
         return (
             <div className={styles["container_page"]}>
                 <Helmet>
@@ -137,38 +173,44 @@ class IndexPage extends React.Component{
                     >
                         <div  className={styles["wrapper_content"]}>
                             <div className={styles["swipper_top"]} ref='indexSwiper'>
-                               {/* <Header
-                                         prefixCls='am-abolute'
-                                         mode="transparent"
-                                         classModel={styles['headerModel']}
-                                         leftContent={<i className="fa fa-angle-left fa-lg"></i>}
-                                         onLeftClick={() => window.history.go(-1)}>
-                                        <div  className={styles['searchInputBar']}>
-                                            <i className="fa fa-search fa-lg"></i>
-                                            <input type="text" className={styles["searchInputText"]} name='searchAll' placeholder='景点名称'/>
-                                        </div>
-                                </Header>*/}
                                 <div className={styles["index_banner_img"]}>
                                     <img src="https://p0.meituan.net/400.0/hotel/fd8e418933a722e6ca77f918aa553f89135934.jpg" alt=""/>
                                 </div>
                             </div>
-                            <div className={classnames(styles["selectBarModel"],{
+                            <div  ref='searchBarModel'>
+                                <IndexSelectBar
+                                    selectBarModelFixed={this.state.selectBarModelFixed}
+                                    SelectBarData={SelectBarData}
+                                    allBarColor={allBarColor}
+                                    zlpxColor={zlpxColor}
+                                    selectBar={this.selectBar.bind(this)}
+                                    IndexModelSelectBarStatus={this.state.IndexModelSelectBarStatus}
+                                ></IndexSelectBar>
+                            </div>
+                            {/*<div className={classnames(styles["selectBarModel"],{
                               [styles["selectBarModelFixed"]]:this.state.selectBarModelFixed
                             })} ref='searchBarModel'>
                                 <div className={styles['selectBar']}>
                                   <div onClick={this.selectBar.bind(this, 'all')}>
-                                    <span>全城</span>
-                                    <i className="fa fa-caret-down fa-lg"></i>
+                                    <span>{ SelectBarData["all"].data[SelectBarData["all"].activeIndex].val}</span>
+                                    <i className={classnames("fa fa-caret-down fa-lg", {
+                                        "fa-caret-up": SelectBarData["all"].parentIndex&&this.state.IndexModelSelectBarStatus
+                                    })}
+                                     style={{
+                                         "color":`${allBarColor}`
+                                     }}
+                                    ></i>
                                   </div>
-                                  <div onClick={this.selectBar.bind(this, 'all')}>
-                                    <span>智能排序</span>
-                                    <i className="fa fa-caret-down fa-lg"></i>
+                                  <div onClick={this.selectBar.bind(this, 'zlpx')}>
+                                    <span>{ SelectBarData["zlpx"].data[SelectBarData["zlpx"].activeIndex].val}</span>
+                                      <i className={classnames("fa fa-caret-down fa-lg", {
+                                          "fa-caret-up": SelectBarData["zlpx"].parentIndex&&this.state.IndexModelSelectBarStatus
+                                      })}
+                                    style={{"color":`${zlpxColor}`}}></i>
                                   </div>
                                 </div>
-                                <div className={styles['selectContent']}>
-                                </div>
-                            </div>
-                            <div className={styles["ticketsListArr"]}>
+                            </div>*/}
+                            <div className={styles["ticketsListArr"]} style={{"height":"1000px"}}>
                                 <div className={styles['ticketsList']} onClick={this.goDetail.bind(this)}>
                                     <img src='https://p0.meituan.net/400.0/travel/9172c05e9077f176ccec489278c553a4149430.jpg'/>
                                     <div>
@@ -198,68 +240,13 @@ class IndexPage extends React.Component{
                                     </div>
                                 </div>
                             </div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
-                            <div>sdfsdfsdfsdf</div>
                         </div>
 
 
                     </Scroll>
                 </div>
+
+                {IndexModelSelectBarStatus&&<IndexModelSelectBar selectBarData={SelectBarData} barClick={this.reInitSelect.bind(this)}/>}
             </div>
         );
     }
