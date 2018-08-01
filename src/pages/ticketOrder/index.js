@@ -2,51 +2,30 @@ import React from 'react'
 import ClassNames from 'classnames'
 import Styles from './index.less'
 import Header from '../../components/header'
-import ScrollRefresh from '../../components/refreshScroll'
+import Scroll from '../../components/demo/index'
 import Router from 'umi/router'
 import Tab from '../../components/tab'
+import OrderItem from "./component/orderItem"
 export default class TicketOrder extends React.Component{
 
     renderTab(index){
-        return <ScrollRefresh>
-            <div>12123123123</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>sdfserwer</div>
-            <div>111111111111111111111</div>
-            <div>111111111111111111111</div>
-            <div>111111111111111111111</div>
-            <div>111111111111111111111</div>
-        </ScrollRefresh>
+        return <div className={ClassNames(Styles['scroll-content'],Styles["defaultHeight"])}>
+            <Scroll>
+                <div className={Styles['scroll-cotent-bottom']}>
+                    <ul className={Styles["orderList"]}>
+                        <OrderItem></OrderItem>
+                        <OrderItem></OrderItem>
+                        <OrderItem></OrderItem>
+                        <OrderItem></OrderItem>
+                        <OrderItem></OrderItem>
+                        <OrderItem></OrderItem>
+                        <OrderItem></OrderItem>
+                    </ul>
+                </div>
+            </Scroll>
+        </div>
     }
+
     render(){
         let activeIndex = 0;
         return <div className={Styles["ticketOrder-Main"]}>

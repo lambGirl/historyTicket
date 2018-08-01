@@ -3,3 +3,94 @@
   height: 100%;
   width: 100%;
 }
+.defaultHeight{
+  height:calc(100% - @base*90rem);
+}
+orderList{
+  background: none;
+}
+//orderItemde的设置
+.orderListSingle{
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  margin-top: @base*20rem;
+  >div{
+    padding: 0 @base*30rem;
+  }
+  .orderListStatus{
+    height: @base*74rem;
+    line-height: @base*74rem;
+    text-align: right;
+    border-bottom: 1px solid #E5E5E5;
+    color: #3e3e3e;
+    font-size: @font28;
+    .state-default {
+      color: @base-bg;
+    }
+    .state-active {
+      color: #ff6137;
+    }
+    .state-cancel {
+      color: #cacaca;
+    }
+    .state-fail {
+      color: #f00;
+    }
+  }
+  >:nth-child(2){
+    display: flex;
+    box-sizing: border-box;
+    justify-content: space-between;
+    height:@base*132rem;
+    padding: @base*30rem;
+    >:first-child{
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    >:nth-child(2){
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  }
+  >:nth-child(3){
+    height: @base*74rem;
+    line-height: @base*74rem;
+    text-align: right;
+    border-top: 1px solid #E5E5E5;
+    >div{
+      display: inline-block;
+      width: @base*136rem;
+      height: @base*50;
+      margin-left: @base*50rem;
+    }
+    >:last-child{
+      margin-right:0;
+    }
+    .remove, .cancel {
+      width: @base*116rem;
+      color: #cacaca;
+      border: 1px solid #cacaca;
+      font-size: @font24;
+      line-height: @base*50rem;
+      text-align: center;
+      border-radius: @base*8rem;
+    }
+    .payment {
+      width: @base*136rem;
+      color: #ff6137;
+      border: 1px solid #ff6137;
+      font-size: @font24;
+      line-height: @base*50rem;
+      text-align: center;
+      border-radius: @base*10rem;
+    }
+
+
+  }
+}

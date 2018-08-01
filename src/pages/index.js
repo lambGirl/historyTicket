@@ -3,13 +3,14 @@ import { connect } from 'dva';
 import router from 'umi/router'
 import dynamic from 'umi/dynamic';
 import styles from './index.less';
-import Scroll from '../components/scroll';
+/*import Scroll from '../components/scroll';*/
 import Header from  '../components/header';
 import classnames from 'classnames';
 import {Helmet} from "react-helmet";    //用于修改页面的title
 import Router from 'umi/router';
 import IndexModelSelectBar from '../components/indexModeSelectBarContent';
 import IndexSelectBar from '../components/indexSelectBar'
+import Scroll from '../components/demo/index'
 
 class IndexPage extends React.Component{
     constructor(props) {
@@ -64,18 +65,16 @@ class IndexPage extends React.Component{
          * indexSwiper: 代表背景图片
          * header: 代表header
          */
-
+        //console.log("po---------------s",pos);
         let { pageStatus,headerConfig } =  this.state,
-            {searchBarModel,indexScroll,indexSwiper,headers} = this.refs,
+            {searchBarModel,indexSwiper,headers} = this.refs,
             {clientHeight} = indexSwiper;  //滚动图片的高度,如果小于这个都需要重新设置header
 
         pageStatus.currPageY =  pos.y;
         this.setState({
             pageStatus:pageStatus
         })
-       // console.log("clientHeight", (pos.y+(-38)));
-       // return;
-       //  console.log("clientHeight", (pos.y),(-clientHeight),tag);
+
         if((pos.y+(-40))<(-clientHeight)){
             this.setState({
                 headerConfig:{
@@ -106,10 +105,11 @@ class IndexPage extends React.Component{
             {clientWidth, clientHeight} = indexSwiper,
             searchBarHeight =  searchBarModel.clientHeight,
             { currPageY } = this.state.pageStatus;
-
+     // console.log("indexScroll",indexScroll);
+     // return;
         if(currPageY > -(clientHeight)) {
             //设置滚动
-            indexScroll.scrollToElement(this.refs.searchBarModel, 300, 0, -searchBarHeight + 6);
+            indexScroll.refs.scrollSwipe.scrollToElement(this.refs.searchBarModel, 300, 0, -searchBarHeight + 6);
         }
 
         let {SelectBarData } =  this.state;
@@ -169,7 +169,9 @@ class IndexPage extends React.Component{
                     </div>
                     <Scroll class={styles["wrapper"]}
                             ref='indexScroll'
-                            scrollFun={this.onScroll.bind(this)}
+                            needMore={true}
+                            height="100%"
+                            doScroll={this.onScroll.bind(this)}
                     >
                         <div  className={styles["wrapper_content"]}>
                             <div className={styles["swipper_top"]} ref='indexSwiper'>
@@ -210,7 +212,7 @@ class IndexPage extends React.Component{
                                   </div>
                                 </div>
                             </div>*/}
-                            <div className={styles["ticketsListArr"]} style={{"height":"1000px"}}>
+                            <div className={styles["ticketsListArr"]} style={{"minHeight":"800px"}}>
                                 <div className={styles['ticketsList']} onClick={this.goDetail.bind(this)}>
                                     <img src='https://p0.meituan.net/400.0/travel/9172c05e9077f176ccec489278c553a4149430.jpg'/>
                                     <div>

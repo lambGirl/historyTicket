@@ -29,19 +29,6 @@ class Scroll extends React.Component{
         let { pullUpLoad } =  this.props;
         return <div ref="wrapper"  className={this.props.class||""}>
             {this.props.children}
-            {
-                pullUpLoad&&<div className="pullup-wrapper">
-                    {!this.state.isPullUpLoad ? (
-                        <div className="before-trigger">
-                            <span>加载中</span>
-                        </div>
-                    ) : (
-                        <div className="after-trigger">
-                           加载更多
-                        </div>
-                    )}
-                </div>
-            }
         </div>
     }
 
