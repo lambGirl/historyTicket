@@ -29,8 +29,26 @@ class VerticalScrollPage extends Component {
 
     loadMoreData = () => {
         // 更新数据
-        return new Promise( resolve => {
-            console.log('pulling up and load data')
+        return new Promise( (resolve,reject) => {
+            if(this.state.listData.length >=20){
+                this.setState({
+                    currPage: 10,
+                    totalPage:10
+                });
+                resolve({
+                    currentPage:10,
+                    totalPage:10
+                })
+                return;
+                /*resolve({
+                    currentPage:10,
+                    totalPage:10
+                })*/
+                /*this.setState({
+                    currPage: 10,
+                    totalPage:10
+                })*/
+            }
             setTimeout(() => {
                 if (Math.random() > 0) {
                     // 如果有新数据
@@ -43,9 +61,14 @@ class VerticalScrollPage extends Component {
                             ...this.state.listData,
                             ...newPage
                         ],
+                        currPage: 1,
+                        totalPage:10
                     })
                 }
-                resolve()
+                resolve({
+                    currentPage:1,
+                    totalPage:10
+                })
             }, 1000)
         })
     }
@@ -56,7 +79,7 @@ class VerticalScrollPage extends Component {
 
     render () {
         return (
-            <div>
+            <div style={{"height":'100%'}}>
                 <div className={Styles["container"]}>
                     <Scroll
                         needMore={true}

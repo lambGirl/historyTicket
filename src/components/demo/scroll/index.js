@@ -145,7 +145,7 @@ class Scroll extends Component {
       preventDefaultException,
       eventPassthrough,
       bounce:false,
-      momentum:true,
+      momentum:true
     }
 
     let wrapper = document.querySelector("."+`${Styles['b-wrapper']}`)
@@ -269,22 +269,20 @@ class Scroll extends Component {
      * @private
      */
   _initPullUpLoad = () => {
-
+     var _this =  this;
     //scroll 监听向上滚动
     this.scroll.on('pullingUp', () => {
       this.setState({
         isPullUpLoad: true,
       });
+      //console.log("--------------------")
         this.props.pullUpLoadMoreData().then((result) => {
             //console.log("")
-            let now_isPullUpLoad =  result={
-                currentPage:1,
-                totalPage:10
-            };
+            let now_isPullUpLoad =  result;
             //否则继续滚动
             if(now_isPullUpLoad.currentPage < now_isPullUpLoad.totalPage){
-                this.scroll.finishPullUp()
-                this.scroll.refresh()
+                this.scroll.finishPullUp();
+                this.scroll.refresh();
             }
            // console.log("sdfsdf", )
            //滚动的页数如果等于当前页面了则结束滚动
@@ -315,8 +313,6 @@ class Scroll extends Component {
     }
 
     if(currPage >= totalPage ){
-
-
         return (
             <div className= {Styles["b-pullup-wrapper"]}>
                 <div className={Styles["before-trigger"]}>

@@ -8,14 +8,24 @@ import Header from  '../components/header';
 import classnames from 'classnames';
 import {Helmet} from "react-helmet";    //用于修改页面的title
 import Router from 'umi/router';
-import IndexModelSelectBar from '../components/indexModeSelectBarContent';
-import IndexSelectBar from '../components/indexSelectBar'
-import Scroll from '../components/demo/index'
+import IndexModelSelectBar from '../components/indexModeSelectBarContent';  //点击select 弹出的model
+import IndexSelectBar from '../components/indexSelectBar'   //selectBar
+import Scroll from '../components/demo/index' //分页滚动
+import AttractionSingle from '../components/indexAttractionSingle'
+
+const Data = []
+let NEWDATAINDEX = 1
+for (let i = 0; i < 10; i++) {
+    Data.push(i)
+}
 
 class IndexPage extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
+            listData: Data,
+            currPage:1,
+            totalPage:10,
             pageStatus:{
                 currPageY: 0    //当前页面滚动的Y坐标
             },
@@ -74,7 +84,7 @@ class IndexPage extends React.Component{
         this.setState({
             pageStatus:pageStatus
         })
-
+        //console.log("123123", (pos.y+(-40)),(-clientHeight))
         if((pos.y+(-40))<(-clientHeight)){
             this.setState({
                 headerConfig:{
@@ -109,6 +119,7 @@ class IndexPage extends React.Component{
      // return;
         if(currPageY > -(clientHeight)) {
             //设置滚动
+        //    indexScroll.scrollToElement(this.refs.searchBarModel, 300, 0, -searchBarHeight + 6);
             indexScroll.refs.scrollSwipe.scrollToElement(this.refs.searchBarModel, 300, 0, -searchBarHeight + 6);
         }
 
@@ -141,11 +152,61 @@ class IndexPage extends React.Component{
             IndexModelSelectBarStatus:false
         })
     }
+    //初始化底部实际数据渲染的高度
+    initticketsListArrHeight(){
+        let bodyHeight =  document.body.clientHeight,
+        {searchBarModel,indexSwiper,headers} = this.refs;
+        if(searchBarModel&&indexSwiper){
+            return bodyHeight-searchBarModel.clientHeight-indexSwiper.clientHeight+(indexSwiper.clientHeight-40);
+        }
+        return "";
+
+    }
+
+    loadMoreData = () => {
+        // 更新数据
+        return new Promise( (resolve,reject) => {
+            if(this.state.listData.length >=30){
+                this.setState({
+                    currPage: 10,
+                    totalPage:10
+                });
+                resolve({
+                    currentPage:10,
+                    totalPage:10
+                })
+                return;
+            }
+            setTimeout(() => {
+                if (Math.random() > 0) {
+                    // 如果有新数据
+                    let newPage = []
+                    for (let i = 0; i < 9; i++) {
+                        newPage.push(`我是新数据${NEWDATAINDEX++}`)
+                    }
+                    this.setState({
+                        listData: [
+                            ...this.state.listData,
+                            ...newPage
+                        ],
+                        currPage: 1,
+                        totalPage:10
+                    })
+                }
+                resolve({
+                    currentPage:1,
+                    totalPage:10
+                })
+            }, 1000)
+        })
+    }
 
     render(){
         let { IndexModelSelectBarStatus,SelectBarData } =  this.state,
             allBarColor = (SelectBarData["all"].activeIndex||IndexModelSelectBarStatus)&&SelectBarData["all"].parentIndex?'#37A0F1':"#DBDBDB",
             zlpxColor =  (SelectBarData["zlpx"].activeIndex||IndexModelSelectBarStatus)&&SelectBarData["zlpx"].parentIndex?'#37A0F1':"#DBDBDB";
+        let ListArrHeight = this.initticketsListArrHeight();
+       // console.log("ListArrHeight",ListArrHeight);
         return (
             <div className={styles["container_page"]}>
                 <Helmet>
@@ -170,6 +231,9 @@ class IndexPage extends React.Component{
                     <Scroll class={styles["wrapper"]}
                             ref='indexScroll'
                             needMore={true}
+                            currPage={this.state.currPage}
+                            totalPage={this.state.totalPage}
+                            loadMoreData={this.loadMoreData.bind(this)}
                             height="100%"
                             doScroll={this.onScroll.bind(this)}
                     >
@@ -189,62 +253,16 @@ class IndexPage extends React.Component{
                                     IndexModelSelectBarStatus={this.state.IndexModelSelectBarStatus}
                                 ></IndexSelectBar>
                             </div>
-                            {/*<div className={classnames(styles["selectBarModel"],{
-                              [styles["selectBarModelFixed"]]:this.state.selectBarModelFixed
-                            })} ref='searchBarModel'>
-                                <div className={styles['selectBar']}>
-                                  <div onClick={this.selectBar.bind(this, 'all')}>
-                                    <span>{ SelectBarData["all"].data[SelectBarData["all"].activeIndex].val}</span>
-                                    <i className={classnames("fa fa-caret-down fa-lg", {
-                                        "fa-caret-up": SelectBarData["all"].parentIndex&&this.state.IndexModelSelectBarStatus
-                                    })}
-                                     style={{
-                                         "color":`${allBarColor}`
-                                     }}
-                                    ></i>
-                                  </div>
-                                  <div onClick={this.selectBar.bind(this, 'zlpx')}>
-                                    <span>{ SelectBarData["zlpx"].data[SelectBarData["zlpx"].activeIndex].val}</span>
-                                      <i className={classnames("fa fa-caret-down fa-lg", {
-                                          "fa-caret-up": SelectBarData["zlpx"].parentIndex&&this.state.IndexModelSelectBarStatus
-                                      })}
-                                    style={{"color":`${zlpxColor}`}}></i>
-                                  </div>
-                                </div>
-                            </div>*/}
-                            <div className={styles["ticketsListArr"]} style={{"minHeight":"800px"}}>
-                                <div className={styles['ticketsList']} onClick={this.goDetail.bind(this)}>
-                                    <img src='https://p0.meituan.net/400.0/travel/9172c05e9077f176ccec489278c553a4149430.jpg'/>
-                                    <div>
-                                        <p>克罗地亚之海</p>
-                                        <div>
-                                            <div className={classnames(styles['font24'],styles['color_CCC'])}>双流，距我79km</div>
-                                            <div>
-                                                <span className={classnames(styles["font20"], styles["color_F60"])}>¥</span>
-                                                <span className={classnames(styles["font40"], styles["color_F60"])}>9346</span>
-                                                <span className={classnames(styles["font20"], styles["color_fff"])}>起</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className={styles['ticketsList']}>
-                                    <img src='https://p0.meituan.net/400.0/travel/9172c05e9077f176ccec489278c553a4149430.jpg'/>
-                                    <div>
-                                        <p>克罗地亚之海</p>
-                                        <div>
-                                            <div>双流，距我79km</div>
-                                            <div>
-                                                <span className={classnames(styles["font20"], styles["color_F60"])}>¥</span>
-                                                <span className={classnames(styles["font40"], styles["color_F60"])}>9346</span>
-                                                <span className={classnames(styles["font20"], styles["color_fff"])}>起</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+
+                            <div className={styles["ticketsListArr"]} style={{"minHeight":`${ListArrHeight}px`}}>
+                                {
+                                    this.state.listData.map((item,index)=>{
+                                        return  <AttractionSingle key={index}/>
+                                    })
+                                }
+
                             </div>
                         </div>
-
-
                     </Scroll>
                 </div>
 

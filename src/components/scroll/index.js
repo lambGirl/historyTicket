@@ -1,69 +1,70 @@
 import React from 'react';
 import  BScroll from 'better-scroll';
 import PropTypes from 'prop-types';
-/*import Styles from './index.less'*/
-class Scroll extends React.Component{
-    constructor(props){
+import Styles from './index.less'
+class Scroll extends React.Component {
+    constructor(props) {
         super(props);
         this.state = {
+            pullupLoadStatus: false,
+            pullupLoad: {
+                moreDate: ''
+            }
         }
     }
-    componentDidMount(){
-        setTimeout(()=>{
+
+    componentDidMount() {
+        setTimeout(() => {
             this._initScroll();
-        },20)
-        window.addEventListener('resize',() =>{
+        }, 20)
+        window.addEventListener('resize', () => {
             this.refresh();
         })
     }
 
-    componentWillUpdate(){
+    componentWillUpdate() {
         this.refresh()
     }
 
-    componentDidUpdate(){
+    componentDidUpdate() {
         this.refresh()
     }
 
-    render(){
-        let { pullUpLoad } =  this.props;
-        return <div ref="wrapper"  className={this.props.class||""}>
-            {this.props.children}
+    render() {
+        return <div ref="wrapper" className={this.props.class || ""}>
+                {this.props.children}
         </div>
     }
 
-    _initScroll(){
-        let wrapper = this.refs.wrapper,_self =  this;
-        this.scroll = new BScroll(wrapper,{
-                scrollY: true,
-                click: true,
-                probeType:3,
-               /* flickLimitDistance:10000,*/
-                bounce:false,
-                momentum:true,
+    _initScroll() {
+        let wrapper = this.refs.wrapper, _self = this;
+        this.scroll = new BScroll(wrapper, {
+            scrollY: true,
+            click: true,
+            probeType: 3,
+            startY: 0,
+            /* flickLimitDistance:10000,*/
+            bounce: false,
+            momentum: true,
         });
-        this.scroll.on('scroll',(pos) =>{
-               // console.log("pos",pos);
-                _self.props.scrollFun && _self.props.scrollFun(pos)
-            })
-
-        /*this.scroll.on('scrollEnd',(pos) =>{
-            _self.props.scrollFun && _self.props.scrollFun(pos,'end')
-        })*/
-
+        this.scroll.on('scroll', (pos) => {
+            // console.log("pos",pos);
+            _self.props.scrollFun && _self.props.scrollFun(pos)
+        })
     }
 
-    scrollToElement(){
-        this.scroll && this.scroll.scrollToElement.apply(this.scroll,arguments)
+    scrollToElement() {
+        this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
     }
-    scrollTo(){
-      this.scroll && this.scroll.scrollTo.apply(this.scroll,arguments)
+
+    scrollTo() {
+        this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments)
     }
+
     //刷新scroll
-    refresh(){
+    refresh() {
         this.scroll && this.scroll.refresh()
     }
-
 }
 
 //props过来定义规范
