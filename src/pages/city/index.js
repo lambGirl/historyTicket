@@ -11,6 +11,7 @@ const TITLE_HEIGHT = 4     //title的高度
 @connect(({city,loading})=>({
     city,
 }))
+
 export  default  class cityChoose  extends  React.Component{
 
     constructor(props){
@@ -34,7 +35,8 @@ export  default  class cityChoose  extends  React.Component{
             scrollY: -1,    //设置滚动高度
             currentIndex: 0,    //当前选中的key
             diff: -1,
-            fixedHeight:0
+            fixedHeight:0,
+            noLocal:'',//search搜索框的
         }
     }
     componentWillMount(){
@@ -195,6 +197,23 @@ export  default  class cityChoose  extends  React.Component{
             "currentIndex":listHeight.length - 2
         });
     }
+    searchFous(){
+
+    }
+    searchInput(){
+
+    }
+
+    keywordChange(e){
+        this.setState({
+            "noLocal":e.target.value
+        })
+    }
+    keywordClear(){
+        this.setState({
+            "noLocal":""
+        })
+    }
 
     //render的方法
     render(){
@@ -209,36 +228,69 @@ export  default  class cityChoose  extends  React.Component{
                                  leftContent={<i className="fa fa-angle-left fa-lg"></i>}
                                  onLeftClick={() => window.history.go(-1)}
                         >选择城市</Header>
-                        <div style={{"height":"100%",
-                            "position":'relative'
-                        }} >
+                        <div  className={classNames(Styles["bar"],Styles["bar-header-secondary"])}>
+                            <div className={classNames(Styles["searchbar"],Styles["searchbar-active"])}>
+                                <div className={classNames(Styles["search-input"])}>
+                                    <label className={classNames(Styles["icon"],Styles["icon-search"])} htmlFor="search"></label>
+                                    <input ref="search" onFocus={this.searchFous.bind(this)}
+                                           onBlur={this.searchInput.bind(this)} type="search"
+                                           maxLength="20"
+                                           value={this.state.noLocal}
+                                           onChange={this.keywordChange.bind(this)} name="search" id='search'
+                                           placeholder='成都，chengdu，cd'/>
+                                    <label className={classNames(Styles["icon"], Styles["icon-close"])}  style={{display:this.state.noLocal == "" ? "none" : ""}}
+                                           onClick={this.keywordClear.bind(this)}></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className={classNames(Styles['scroll-content'],Styles["defaultHeight"])}>
                              <Scroll
-                                 class={Styles['listview']}
+                                 class={classNames(Styles['listview'],Styles["wrap"])}
                                  ref="listview"
                                  scrollFun={this.scrollFun.bind(this)}
                              >
-                                <ul>
-                                    {
-                                        singers.map(function(group,groupIndex){
-                                            return(
-                                                <li  className={Styles["list-group"]} key={groupIndex + 'listView_/*-'}   >
-                                                    <h2 className={Styles["list-group-title"]}>{group.name}</h2>
-                                                    <ul>
-                                                        {
-                                                            group.cities.map(function (item,itemIndex) {
-                                                                return (
-                                                                    <li key={itemIndex + 'list-group-item' + groupIndex} className={Styles["list-group-item"]} >
-                                                                      {/*  <img className={Styles["avatar"]} src={item.avatar}/>*/}
-                                                                        <span className={Styles["name"]}>{item.name}</span>
-                                                                    </li>
-                                                                )
-                                                            })
-                                                        }
-                                                    </ul>
-                                                </li>
-                                            )})
-                                    }
-                                </ul>
+                                 <div className={Styles['scroll-cotent-bottom']}>
+                                    <ul>
+                                        {/*定位导航栏*/}
+                                        <li  className={Styles["list-group"]}>
+                                            <h2 className={Styles["list-group-title"]}>热门</h2>
+                                            <div>
+                                                <span>重庆</span>
+                                                <span>成都</span>
+                                                <span>贵阳</span>
+                                                <span>昆明</span>
+                                                <span>雅安</span>
+                                                <span>巴中</span>
+                                                <span>南充</span>
+                                                <span>泸州</span>
+                                                <span>绵阳</span>
+                                                <span>眉山</span>
+                                            </div>
+                                        </li>
+                                        {/*热门城市*/}
+                                        {
+                                            singers.map(function(group,groupIndex){
+                                                return(
+                                                    <li  className={Styles["list-group"]} key={groupIndex + 'listView_/*-'}   >
+                                                        <h2 className={Styles["list-group-title"]}>{group.name}</h2>
+                                                        <ul>
+                                                            {
+                                                                group.cities.map(function (item,itemIndex) {
+                                                                    return (
+                                                                        <li key={itemIndex + 'list-group-item' + groupIndex} className={Styles["list-group-item"]} >
+                                                                          {/*  <img className={Styles["avatar"]} src={item.avatar}/>*/}
+                                                                            <span className={Styles["name"]}>{item.name}</span>
+                                                                        </li>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </ul>
+                                                    </li>
+                                                )})
+                                        }
+                                    </ul>
+                                 </div>
                             </Scroll>
                             <div className={Styles["list-shortcut"]}
                                  onTouchStart={this.onShortcutTouchStart.bind(this)}

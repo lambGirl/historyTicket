@@ -2,6 +2,17 @@ import React from 'react';
 import classnames from 'classnames';
 import styles from "./index.less";
 class Header extends  React.Component{
+
+  //右击
+  rightClick(){
+        let { rightClick } =  this.props;
+        if(rightClick){
+            rightClick();
+            return;
+        }
+        return false;
+  }
+
   render(){
     let {parentOutClass,positionType,mode,leftContent, rightContent,centerContentType,ref} =  this.props;
     return  <div ref={ref} className={classnames(styles["header-parent"],{
@@ -30,7 +41,7 @@ class Header extends  React.Component{
             (!centerContentType||!parseInt(centerContentType))&&this.props.children
           }
         </div>
-        <div className={styles['right-header']}>
+        <div className={styles['right-header']} onClick={this.rightClick.bind(this)}>
          {/* <i className="fa fa-angle-right fa-lg" style={{"color":"#fff"}}></i>*/}
           {rightContent}
         </div>

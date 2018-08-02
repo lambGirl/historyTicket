@@ -200,7 +200,10 @@ class IndexPage extends React.Component{
             }, 1000)
         })
     }
-
+    //header 右边点击
+    rightClick(){
+        router.push("/city")
+    }
     render(){
         let { IndexModelSelectBarStatus,SelectBarData } =  this.state,
             allBarColor = (SelectBarData["all"].activeIndex||IndexModelSelectBarStatus)&&SelectBarData["all"].parentIndex?'#37A0F1':"#DBDBDB",
@@ -226,6 +229,7 @@ class IndexPage extends React.Component{
                                </span>
                             }
                             centerContentType='1'
+                            rightClick={this.rightClick.bind(this)}
                         ></Header>
                     </div>
                     <Scroll class={styles["wrapper"]}
