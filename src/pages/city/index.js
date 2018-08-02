@@ -1,6 +1,6 @@
 import React from 'react'
 import {Helmet} from "react-helmet";    //用于修改页面的title
-import Header from 'tz_mobile/lib/header'
+import Header from '../../components/header'
 import { connect } from 'dva'
 import Styles from './index.less'
 import classNames from 'classnames';
@@ -8,6 +8,7 @@ import Scroll from '../../components/scroll'
 import { getData } from '../../utils/util'
 const ANCHOR_HEIGHT = 18    //索引的高度
 const TITLE_HEIGHT = 4     //title的高度
+
 @connect(({city,loading})=>({
     city,
 }))
@@ -215,6 +216,10 @@ export  default  class cityChoose  extends  React.Component{
         })
     }
 
+    locationPos(){
+
+    }
+
     //render的方法
     render(){
         const { city } = this.props;
@@ -227,7 +232,7 @@ export  default  class cityChoose  extends  React.Component{
                         <Header  mode="light"
                                  leftContent={<i className="fa fa-angle-left fa-lg"></i>}
                                  onLeftClick={() => window.history.go(-1)}
-                        >选择城市</Header>
+                        ><div style={{"textAlign":"center"}}>选择城市</div></Header>
                         <div  className={classNames(Styles["bar"],Styles["bar-header-secondary"])}>
                             <div className={classNames(Styles["searchbar"],Styles["searchbar-active"])}>
                                 <div className={classNames(Styles["search-input"])}>
@@ -254,21 +259,28 @@ export  default  class cityChoose  extends  React.Component{
                                     <ul>
                                         {/*定位导航栏*/}
                                         <li  className={Styles["list-group"]}>
-                                            <h2 className={Styles["list-group-title"]}>热门</h2>
-                                            <div>
-                                                <span>重庆</span>
-                                                <span>成都</span>
-                                                <span>贵阳</span>
-                                                <span>昆明</span>
-                                                <span>雅安</span>
-                                                <span>巴中</span>
-                                                <span>南充</span>
-                                                <span>泸州</span>
-                                                <span>绵阳</span>
-                                                <span>眉山</span>
+                                            <h2 className={Styles["list-group-title"]}>定位</h2>
+                                            <div className={Styles['positionAdress']}>
+                                                <div>定位</div>
+                                                <div><i className={Styles["locationIocn"]} onClick={this.locationPos.bind(this,true)}></i></div>
                                             </div>
                                         </li>
                                         {/*热门城市*/}
+                                        <li  className={Styles["list-group"]}>
+                                            <h2 className={Styles["list-group-title"]}>热门</h2>
+                                            <div className={Styles['hotCityList']}>
+                                                <span className={Styles["caseCitySpan"]}>重庆</span>
+                                                <span className={Styles["caseCitySpan"]}>成都</span>
+                                                <span className={Styles["caseCitySpan"]}>贵阳</span>
+                                                <span className={Styles["caseCitySpan"]}>昆明</span>
+                                                <span className={Styles["caseCitySpan"]}>雅安</span>
+                                                <span className={Styles["caseCitySpan"]}>巴中</span>
+                                                <span className={Styles["caseCitySpan"]}>南充</span>
+                                                <span className={Styles["caseCitySpan"]}>泸州</span>
+                                                <span className={Styles["caseCitySpan"]}>绵阳</span>
+                                                <span className={Styles["caseCitySpan"]}>眉山</span>
+                                            </div>
+                                        </li>
                                         {
                                             singers.map(function(group,groupIndex){
                                                 return(

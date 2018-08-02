@@ -2,6 +2,7 @@ import React from 'react';
 import withRouter from 'umi/withRouter';
 import { connect } from 'dva';
 import { TransitionGroup, CSSTransition } from "react-transition-group";
+import '@babel/polyfill';
 /*import { IntlProvider } from 'react-intl';*/
 
 /*const app = ({globalAct,children,location})=>{

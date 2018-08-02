@@ -68,7 +68,9 @@ const redetailSingleData = (list)=>{
 
 //得到大小写数据
 const shortcutListData = (list)=>{
-    return list.map(group => group.name.substr(0, 1))
+    let List = ["定","热"];
+    let ListArry = list.map(group => group.name.substr(0, 1));
+    return List.concat(ListArry);
 }
 
 const getData = (el,name,val)=>{
