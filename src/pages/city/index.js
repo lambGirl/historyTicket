@@ -11,6 +11,7 @@ const TITLE_HEIGHT = 4     //title的高度
 
 @connect(({city,loading})=>({
     city,
+    fetchCityData: loading.effects['city/fetch']
 }))
 
 export  default  class cityChoose  extends  React.Component{
@@ -41,8 +42,8 @@ export  default  class cityChoose  extends  React.Component{
         }
     }
     componentWillMount(){
-        //先获取数据
-        this.props.dispatch({type: 'city/fetch'})
+        this.props.dispatch({type: 'city/fetch'});
+        console.log("this.props.fetchCityData",this.props.fetchCityData);
     }
     componentDidMount(){
         this._calculateHeight()
@@ -224,11 +225,13 @@ export  default  class cityChoose  extends  React.Component{
     render(){
         const { city } = this.props;
         const { singers, shortcutList } = city, _this =  this;
+        console.log("this.props.fetchCityData",this.props.fetchCityData)
         return <div style={{"height":"100%"}}>
                         <Helmet>
                             <meta charSet="utf-8" />
                             <title>选择城市</title>
                         </Helmet>
+
                         <Header  mode="light"
                                  leftContent={<i className="fa fa-angle-left fa-lg"></i>}
                                  onLeftClick={() => window.history.go(-1)}
@@ -325,6 +328,12 @@ export  default  class cityChoose  extends  React.Component{
                             </div>
                             {this.renderfixedTitle()}
                         </div>
+                            {
+
+                                this.props.fetchCityData&&<div className={classNames(Styles["loading"])}>
+                                <div>loading</div>
+                            </div>
+                            }
 
                     </div>
 
