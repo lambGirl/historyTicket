@@ -204,12 +204,19 @@ class IndexPage extends React.Component{
     rightClick(){
         router.push("/city")
     }
+
+    //选择景区门票
+    chooseTicket(item){
+        //console.log("-----------------item----------------",item);
+        router.push("/ticketDetail")
+    }
+
     render(){
         let { IndexModelSelectBarStatus,SelectBarData } =  this.state,
             allBarColor = (SelectBarData["all"].activeIndex||IndexModelSelectBarStatus)&&SelectBarData["all"].parentIndex?'#37A0F1':"#DBDBDB",
             zlpxColor =  (SelectBarData["zlpx"].activeIndex||IndexModelSelectBarStatus)&&SelectBarData["zlpx"].parentIndex?'#37A0F1':"#DBDBDB";
         let ListArrHeight = this.initticketsListArrHeight();
-       // console.log("ListArrHeight",ListArrHeight);
+        //console.log("ListArrHeight",ListArrHeight);
         return (
             <div className={styles["container_page"]}>
                 <Helmet>
@@ -261,10 +268,9 @@ class IndexPage extends React.Component{
                             <div className={styles["ticketsListArr"]} style={{"minHeight":`${ListArrHeight}px`}}>
                                 {
                                     this.state.listData.map((item,index)=>{
-                                        return  <AttractionSingle key={index}/>
+                                        return  <AttractionSingle key={index} item={item} clickItem={this.chooseTicket.bind(this)}/>
                                     })
                                 }
-
                             </div>
                         </div>
                     </Scroll>

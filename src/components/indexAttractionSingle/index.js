@@ -2,8 +2,12 @@ import React from 'react'
 import classnames from 'classnames'
 import styles from './index.less'
 export default class AttractTionSingle extends React.Component{
+
     render (){
-        return <div className={styles['ticketsList']}>
+
+        let {clickItem, item} =  this.props;
+
+        return <div className={styles['ticketsList']} onClick={()=>{this.props.clickItem(item)}}>
             <img src='https://p0.meituan.net/400.0/travel/9172c05e9077f176ccec489278c553a4149430.jpg'/>
             <div>
                 <p>克罗地亚之海</p>

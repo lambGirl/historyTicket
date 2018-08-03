@@ -27,6 +27,7 @@
     "husky": "^0.12.0",
     "react-helmet": "^5.2.0",
     "react-intl": "^2.4.0",
+    "tz_mobile": "^1.0.2",
     "umi-plugin-es5-imcompatible-versions": "^0.1.0",
     "umi-plugin-polyfill": "^0.2.0"
   },
