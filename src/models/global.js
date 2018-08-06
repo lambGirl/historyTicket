@@ -10,8 +10,8 @@ export default {
       point:baseUtil.getSession("locationPoint")||'',   //当前定位的坐标
       currentCity:{status: false, cityNo:'51000', cityName:"成都"},
       doorList:'' , //首页门票的列表
-      currPage:0,   //门票的分页初始页
-      totalPage:0,  //门票分页的总页数
+      currPage:1,   //门票的分页初始页
+      totalPage:10,  //门票分页的总页数
   },
 
   subscriptions: {

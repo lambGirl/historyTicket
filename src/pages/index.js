@@ -256,7 +256,7 @@ class IndexPage extends React.Component{
         let ListArrHeight = this.initticketsListArrHeight(),
             {doorList,currPage,totalPage} = this.props.globalAct;
         //console.log("ListArrHeight",ListArrHeight);
-        console.log("listData", doorList);
+        console.log("listData---------------------", this.props.globalAct);
         return (
             <div className={styles["container_page"]}>
                 <Helmet>
