@@ -1,7 +1,12 @@
 import request from '../utils/request';
+import {getLocation} from "../utils/util";
 
-function query({id}) {
-  return request('/api/users');
+function query({payload}) {
+   // console.log("payload",payload);
+  return request('/ticketList',{
+      method: "post",
+      body:JSON.stringify(payload)
+  });
 }
 
 function queryM(){
@@ -16,8 +21,12 @@ function queryM(){
         })
     })
 }
+function location(){
+    return getLocation()
+}
 
 export {
     query,
-    queryM
+    queryM,
+    location
 }

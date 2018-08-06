@@ -23,11 +23,13 @@ export default  class PayFooter extends  React.Component{
         }
         modal.display = this.state.isShow ? "block" : "none";
         modal.opacity = this.state.isShow ? "0.7" : "0";
+        var bottom =  this.state.isShow?"2.5rem":'-400px';
+
         this.firstChange();
         return <div>
-            <div style={this.state.isShow?{height:modal.height,display:modal.display,opacity:modal.opacity}:{display:"none",height:modal.height,display:modal.display,opacity:modal.opacity}} className="notmove train-pay-modal" ></div>
-            <div style={this.state.isShow?{bottom:"2.5rem"}:{display:"none",bottom:"-400px"}}  className={Styles["train-paydetail-modal"]}>
 
+            { this.state.isShow&&<div style={{height:modal.height,display:modal.display,opacity:modal.opacity}} className={ClassNames(Styles["notmove"], Styles["train-pay-modal"])}></div>}
+            {this.state.isShow&&<div style={{bottom:bottom}}  className={Styles["train-paydetail-modal"]}>
                 <ul >
                     {
                         this.props.priceDetails&&this.props.priceDetails.map(function (item,index) {
@@ -49,7 +51,7 @@ export default  class PayFooter extends  React.Component{
                         })
                     }
                 </ul>
-            </div>
+            </div>}
         </div>
     }
     render(){

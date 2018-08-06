@@ -4,10 +4,9 @@ import { connect } from 'dva';
 import createLoading from 'dva-loading';
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import '@babel/polyfill';
+import {baseUtil} from "../utils/util";
+
 /*import { IntlProvider } from 'react-intl';*/
-/*const app = ({globalAct,children,location})=>{
-    return
-}*/
 
 class App extends React.Component{
 
@@ -17,9 +16,21 @@ class App extends React.Component{
             window.scrollTo(0, 0);  //路由切换都初始化刚刚那个路由的顶部
         }
     }
+    componentDidMount(){
+       // console.log("------------globalAct---------------", this.props.globalAct);
+        /**
+         * 处理定位
+         */
+        if(!baseUtil.getSession("locationPoint")){
+            this.props.dispatch({
+                type:'globalAct/getLocation'
+            })
+        }
+    }
 
     render(){
         let {globalAct, location, children} = this.props;
+        //console.log("定位结果",globalAct.point);
         return <div style={{height:"100%"}}>
                {/* <TransitionGroup>
                     <CSSTransition key={location.key}
@@ -37,4 +48,4 @@ class App extends React.Component{
             </div>
     }
 }
-export default withRouter(connect(({globalAct})=>({globalAct}))(App));
+export default withRouter(connect(({globalAct,loading})=>({globalAct,loading}))(App));

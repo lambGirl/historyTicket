@@ -11,21 +11,25 @@ import Router from 'umi/router';
 import IndexModelSelectBar from '../components/indexModeSelectBarContent';  //点击select 弹出的model
 import IndexSelectBar from '../components/indexSelectBar'   //selectBar
 import Scroll from '../components/demo/index' //分页滚动
-import AttractionSingle from '../components/indexAttractionSingle'
+import AttractionSingle from '../components/indexAttractionSingle';
+import Dynamic from 'umi/dynamic';
 
 const Data = []
 let NEWDATAINDEX = 1
 for (let i = 0; i < 10; i++) {
     Data.push(i)
 }
+@connect(({globalAct})=>({
+    globalAct
+}))
 
 class IndexPage extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            listData: Data,
-            currPage:1,
-            totalPage:10,
+            listData: props.globalAct.doorList, //页面滚动的数据
+            currPage:props.globalAct.currPage, //默认当前是第几页
+            totalPage:props.globalAct.totalPage,   //总共的语文书
             pageStatus:{
                 currPageY: 0    //当前页面滚动的Y坐标
             },
@@ -34,12 +38,13 @@ class IndexPage extends React.Component{
                 color:'#fff'
             },
             IndexModelSelectBarStatus: false, //IndexModelSelectBar，model什么时候显示
+            selectBarModelFixed:false,      //设置toolBar悬浮动画
             SelectBarData:{
                 "all":{
                     activeIndex:0,
                     parentIndex: false,
                     data:[
-                        {key:'qc', val:'全城'},
+                        {key:'all', val:'全城'},
                         {key:'qc', val:'武侯区'},
                     ]
                 },
@@ -47,8 +52,8 @@ class IndexPage extends React.Component{
                     activeIndex:0,
                     parentIndex: false,
                     data:[
-                        {key:'0', val:'智能排序'},
-                        {key:'1', val:'由近到远'},
+                        {key:'1', val:'智能排序'},
+                        {key:'2', val:'由近到远'},
                     ]
                 }
             }
@@ -61,12 +66,40 @@ class IndexPage extends React.Component{
                 data: ['AiyWuByWklrrUDlFignR', 'TekJlZRVCjLFexlOCuWn', 'IJOtIlfsYdTyaDTRVrLI'],
             });
         }, 100);
+        //拿去定位结果，如果定位成功则去请求，获取城市的接口。得到城市之后，去查询所有的门票的列表
+
+        //定位的坐标点,默认坐标点
+       // console.log("currentCity",currentCity);
+        this.getDoorTicketList();
+
     }
     goDetail(){
       //console.log("ticketDetail");
        Router.push('/ticketDetail/')
     }
-
+    //获取门票列表的接口
+    getDoorTicketList(){
+        let {point,currentCity}  = this.props.globalAct,
+            { SelectBarData,currPage } =  this.state,
+        zlpx = SelectBarData["zlpx"],
+        all = SelectBarData["all"];
+        //初始化查询
+        this.props.dispatch({
+            type: 'globalAct/getPoints',
+            payload: {
+                postData:{
+                    sortType: zlpx.data[zlpx.activeIndex].key,
+                    longitude: point.data&&point.data.lng||"",
+                    latitude: point.data&&point.data.lat||"",
+                    key:'',
+                    pageNo: currPage,
+                    pageSize:20,
+                    cityNo:'all'    //这里到时候要改
+                },
+                currentCity: currentCity
+            },
+        });
+    }
     //监听scroll的滚动
     onScroll(pos,tag){
         /**
@@ -84,14 +117,15 @@ class IndexPage extends React.Component{
         this.setState({
             pageStatus:pageStatus
         })
+
         //console.log("123123", (pos.y+(-40)),(-clientHeight))
-        if((pos.y+(-40))<(-clientHeight)){
+        if((pos.y+(-40))<(-clientHeight)+5){
             this.setState({
                 headerConfig:{
                     mode:"light",
                     color:'#3E3E3E'
                 },
-              /*selectBarModelFixed:true*/
+              selectBarModelFixed:true
             })
             return;
         }
@@ -112,15 +146,18 @@ class IndexPage extends React.Component{
     selectBar(tag,e) {
       //console.log(tag);
       let {searchBarModel,indexScroll,indexSwiper} = this.refs,
+          {selectBarModelFixed} =  this.state,
             {clientWidth, clientHeight} = indexSwiper,
             searchBarHeight =  searchBarModel.clientHeight,
-            { currPageY } = this.state.pageStatus;
-     // console.log("indexScroll",indexScroll);
+            { currPageY } = this.state.pageStatus,time = !selectBarModelFixed&&100||0;
+     // console.log("indexScroll",selectBarModelFixed);
      // return;
-        if(currPageY > -(clientHeight)) {
+        if(currPageY >= -(clientHeight)) {
             //设置滚动
-        //    indexScroll.scrollToElement(this.refs.searchBarModel, 300, 0, -searchBarHeight + 6);
+            //indexScroll.scrollToElement(this.refs.searchBarModel, 300, 0, -searchBarHeight + 6);
             indexScroll.refs.scrollSwipe.scrollToElement(this.refs.searchBarModel, 300, 0, -searchBarHeight + 6);
+            //time =  400;
+            //console.log("000", time);
         }
 
         let {SelectBarData } =  this.state;
@@ -133,12 +170,13 @@ class IndexPage extends React.Component{
            // IndexModelSelectBarStatus:true,
             SelectBarData: SelectBarData
         });
+       // console.log("time", time);
         //显示selectBar数据
         setTimeout(()=>{
             this.setState({
                 IndexModelSelectBarStatus:true,
             });
-        },250)
+        },time)
     }
 
     //重新初始化数据selectBar的数据
@@ -213,10 +251,12 @@ class IndexPage extends React.Component{
 
     render(){
         let { IndexModelSelectBarStatus,SelectBarData } =  this.state,
-            allBarColor = (SelectBarData["all"].activeIndex||IndexModelSelectBarStatus)&&SelectBarData["all"].parentIndex?'#37A0F1':"#DBDBDB",
-            zlpxColor =  (SelectBarData["zlpx"].activeIndex||IndexModelSelectBarStatus)&&SelectBarData["zlpx"].parentIndex?'#37A0F1':"#DBDBDB";
-        let ListArrHeight = this.initticketsListArrHeight();
+            allBarColor = (SelectBarData["all"].activeIndex||IndexModelSelectBarStatus)?'#37A0F1':"#DBDBDB",
+            zlpxColor =  (SelectBarData["zlpx"].activeIndex||IndexModelSelectBarStatus)?'#37A0F1':"#DBDBDB";
+        let ListArrHeight = this.initticketsListArrHeight(),
+            {doorList,currPage,totalPage} = this.props.globalAct;
         //console.log("ListArrHeight",ListArrHeight);
+        console.log("listData", doorList);
         return (
             <div className={styles["container_page"]}>
                 <Helmet>
@@ -242,8 +282,8 @@ class IndexPage extends React.Component{
                     <Scroll class={styles["wrapper"]}
                             ref='indexScroll'
                             needMore={true}
-                            currPage={this.state.currPage}
-                            totalPage={this.state.totalPage}
+                            currPage={currPage}
+                            totalPage={totalPage}
                             loadMoreData={this.loadMoreData.bind(this)}
                             height="100%"
                             doScroll={this.onScroll.bind(this)}
@@ -256,7 +296,7 @@ class IndexPage extends React.Component{
                             </div>
                             <div  ref='searchBarModel'>
                                 <IndexSelectBar
-                                    selectBarModelFixed={this.state.selectBarModelFixed}
+                                    selectBarModelFixed={false}
                                     SelectBarData={SelectBarData}
                                     allBarColor={allBarColor}
                                     zlpxColor={zlpxColor}
@@ -267,7 +307,7 @@ class IndexPage extends React.Component{
 
                             <div className={styles["ticketsListArr"]} style={{"minHeight":`${ListArrHeight}px`}}>
                                 {
-                                    this.state.listData.map((item,index)=>{
+                                    doorList&&doorList.data.map((item,index)=>{
                                         return  <AttractionSingle key={index} item={item} clickItem={this.chooseTicket.bind(this)}/>
                                     })
                                 }
@@ -276,7 +316,18 @@ class IndexPage extends React.Component{
                     </Scroll>
                 </div>
 
+                {
+                    this.state.selectBarModelFixed&&<IndexSelectBar
+                        selectBarModelFixed={this.state.selectBarModelFixed}
+                        SelectBarData={SelectBarData}
+                        allBarColor={allBarColor}
+                        zlpxColor={zlpxColor}
+                        selectBar={this.selectBar.bind(this)}
+                        IndexModelSelectBarStatus={this.state.IndexModelSelectBarStatus}
+                    ></IndexSelectBar>
+                }
                 {IndexModelSelectBarStatus&&<IndexModelSelectBar selectBarData={SelectBarData} barClick={this.reInitSelect.bind(this)}/>}
+
             </div>
         );
     }
