@@ -83,7 +83,6 @@ const getData = (el,name,val)=>{
 }
 const getLocation  =  ()=>{
     var mapObj = new AMap.Map('iCenter'),geolocation='', promise='';
-    //console.log("mapObj",mapObj);
     return promise =  new Promise ((resolve,reject)=>{
             mapObj.plugin('AMap.Geolocation', function () {
                 geolocation = new AMap.Geolocation({

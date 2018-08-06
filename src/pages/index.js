@@ -112,7 +112,6 @@ class IndexPage extends React.Component{
         let { pageStatus,headerConfig } =  this.state,
             {searchBarModel,indexSwiper,headers} = this.refs,
             {clientHeight} = indexSwiper;  //滚动图片的高度,如果小于这个都需要重新设置header
-
         pageStatus.currPageY =  pos.y;
         this.setState({
             pageStatus:pageStatus
@@ -256,7 +255,6 @@ class IndexPage extends React.Component{
         let ListArrHeight = this.initticketsListArrHeight(),
             {doorList,currPage,totalPage} = this.props.globalAct;
         //console.log("ListArrHeight",ListArrHeight);
-        console.log("listData---------------------", this.props.globalAct);
         return (
             <div className={styles["container_page"]}>
                 <Helmet>
@@ -264,8 +262,9 @@ class IndexPage extends React.Component{
                     <title>首页</title>
                 </Helmet>
                 <div className={styles["index_page"]}>
-                    <div  ref='headers'>
+                   <div  ref='headers'>
                         <Header
+                          id='headers'
                             positionType ='positionAbolute'
                             mode={this.state.headerConfig.mode}
                             leftContent={ <i className="fa fa-angle-left fa-lg" style={{"color":`${this.state.headerConfig.color}`}}></i>}

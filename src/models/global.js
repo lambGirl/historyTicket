@@ -1,5 +1,7 @@
 import { query, queryM,location } from '../services/global'
 import {baseUtil} from "../utils/util";
+import { Toast } from 'antd-mobile';
+
 var _this =  this;
 export default {
 
@@ -16,6 +18,7 @@ export default {
 
   subscriptions: {
     setup({ dispatch, history }) {
+
     },
   },
 
@@ -29,36 +32,50 @@ export default {
         });
     },
     //获取所有的门票景点
-    *getPoints({payload}, {call,put}){
-        /**
-         *1.首次定位，会根据定位的情况去获取对应的城市编码，并设置编码 current， status为false初始化数据， true，表示已经根据定位修改过了
-         */
-        let {currentCity, postData} =  payload;
-        if(!currentCity.status){
-            //根据坐标去请求获取城市编码,无论是否获取成功都去设置一下为true
-            currentCity.status =  true;
-            //在验证定位是否成功，如果定位成功在去获取城市，否则不需要执行
-        }
-        //根据当前的城市去得到对应的景区门票的列表
-        /**
-         *请求的参数
-         */
-        postData = Object.assign({},postData,{cityNo:currentCity.cityNo})
-       // console.log("--------postData---------",postData);
-         var pointes =  yield  call(query,{payload:postData});
-       //  console.log("pointes",pointes);
+    *getPoints({payload}, {call,put, select}){
+      /**
+       *1.首次定位，会根据定位的情况去获取对应的城市编码，并设置编码 current， status为false初始化数据， true，表示已经根据定位修改过了
+       */
+      const {currentCity} = yield select(_=>_.globalAct);
+      let {postData} =  payload;
+      if(!currentCity.status){
+          //根据坐标去请求获取城市编码,无论是否获取成功都去设置一下为true
+          currentCity.status =  true;
+          //在验证定位是否成功，如果定位成功在去获取城市，否则不需要执行
+      }
+      //根据当前的城市去得到对应的景区门票的列表
+      /**
+       *请求的参数
+       */
+      postData = Object.assign({},postData,{cityNo:currentCity.cityNo});
+      var {data} =  yield  call(query,{payload:postData});
+
+
+
+      if(data.pubResponse.code === '0000') {
+        Toast.info('ok', 2);
         yield put({
-            type:'setDoorList',
-            data: pointes.data
+          type:'setDoorList',
+          data: data
         })
+      } else {
+        Toast.info('error', 2);
+      }
+
     },
     *getLocation({ payload }, { call, put }){
         //全局默认开启定位
         var getLocation =  yield call(location);//获取坐标定位之后
-        yield put({
+      console.log(getLocation);
+      yield put({
             type:'setPoint',
             data: getLocation
         })
+    },
+
+
+    *test({ payload }, { call, put }){
+      console.log(123123);
     },
 
   },
@@ -77,7 +94,6 @@ export default {
         }
     },
     setDoorList(state, action){
-        console.log("action",action);
         /**
          * action
          */
