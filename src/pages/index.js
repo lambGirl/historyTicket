@@ -196,8 +196,7 @@ class IndexPage extends React.Component{
 
     //选择景区门票
     chooseTicket(item){
-        //console.log("-----------------item----------------",item);
-        router.push("/ticketDetail")
+       router.push(`/ticketDetail?point=${item.pointNo}`)
     }
 
     render(){
@@ -205,7 +204,7 @@ class IndexPage extends React.Component{
             allBarColor = (SelectBarData["all"].activeIndex||IndexModelSelectBarStatus[0])?'#37A0F1':"#DBDBDB",
             zlpxColor =  (SelectBarData["zlpx"].activeIndex||IndexModelSelectBarStatus[1])?'#37A0F1':"#DBDBDB";
         let ListArrHeight = this.initticketsListArrHeight();
-      //  console.log("SelectBarData",SelectBarData);
+        //console.log("SelectBarData",SelectBarData);
         return (
             <div className={styles["container_page"]}>
                 <Helmet>

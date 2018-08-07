@@ -57,6 +57,7 @@ export  default class ticketDetail extends  React.Component{
             positionType ='positionAbolute'
             mode="none"
             leftContent={ <span className={Styles['leftBtnCircle']}><i className="fa fa-angle-left fa-lg" style={{"color":"#fff"}}></i></span>}
+            leftClick={()=>{window.history.go(-1)}}
           ></Header>
           <Carousel
             autoplay={true}
