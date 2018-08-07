@@ -264,6 +264,27 @@ class Scroll extends Component {
   _needMoreData(){
 
   }
+
+  componentDidUpdate(nextProps, prevState){
+      //console.log("componentDidUpdate", nextProps, prevState)
+      let {currPage,totalPage } = nextProps
+      //否则继续滚动
+      if(currPage < totalPage){
+          this.scroll.finishPullUp();
+          this.scroll.refresh();
+      }
+      // console.log("sdfsdf", )
+      //滚动的页数如果等于当前页面了则结束滚动
+      // console.log("水电费水电费11111", now_isPullUpLoad);
+      //console.log("currPage",currPage, totalPage)
+      if(currPage >= totalPage){
+         /* this.setState({
+              isPullUpLoad: false,
+          });*/
+          this.scroll.off("pullingUp");
+      }
+  }
+
     /**
      * 上拉滚动的事件
      * @private
@@ -276,7 +297,7 @@ class Scroll extends Component {
         isPullUpLoad: true,
       });
       //console.log("--------------------")
-        this.props.pullUpLoadMoreData().then((result) => {
+        this.props.pullUpLoadMoreData();/*.then((result) => {
             //console.log("")
             let now_isPullUpLoad =  result;
             //否则继续滚动
@@ -295,7 +316,7 @@ class Scroll extends Component {
             }
         }).then(()=>{
 
-        })
+        })*/
     })
   }
 

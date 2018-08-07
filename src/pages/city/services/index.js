@@ -1,12 +1,8 @@
 import request from '../../../utils/request';
 
-function querySingle(){
-    return request('/singer')
+function queryAllCitys(){
+    return request('/getAllCitys',{method:'post'})
 }
-function query({id}) {
-    return request('/api/users');
-}
-
 function queryM(){
     return request('/api?server=tz_visit',{
         method: "post",
@@ -21,7 +17,6 @@ function queryM(){
 }
 
 export {
-    query,
     queryM,
-    querySingle
+    queryAllCitys
 }

@@ -21,11 +21,14 @@ class App extends React.Component{
         /**
          * 处理定位
          */
-        if(!baseUtil.getSession("locationPoint")){
+       /* if(!baseUtil.getSession("locationPoint")){
             this.props.dispatch({
                 type:'globalAct/getLocation'
             })
-        }
+        }*/
+        this.props.dispatch({
+            type:'globalAct/getInit',
+        });
     }
 
     render(){

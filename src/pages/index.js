@@ -27,9 +27,6 @@ class IndexPage extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            listData: props.globalAct.doorList, //页面滚动的数据
-            currPage:props.globalAct.currPage, //默认当前是第几页
-            totalPage:props.globalAct.totalPage,   //总共的语文书
             pageStatus:{
                 currPageY: 0    //当前页面滚动的Y坐标
             },
@@ -37,26 +34,8 @@ class IndexPage extends React.Component{
                 mode:"transparent",
                 color:'#fff'
             },
-            IndexModelSelectBarStatus: false, //IndexModelSelectBar，model什么时候显示
+            IndexModelSelectBarStatus: [false,false], //IndexModelSelectBar，model什么时候显示
             selectBarModelFixed:false,      //设置toolBar悬浮动画
-            SelectBarData:{
-                "all":{
-                    activeIndex:0,
-                    parentIndex: false,
-                    data:[
-                        {key:'all', val:'全城'},
-                        {key:'qc', val:'武侯区'},
-                    ]
-                },
-                'zlpx':{
-                    activeIndex:0,
-                    parentIndex: false,
-                    data:[
-                        {key:'1', val:'智能排序'},
-                        {key:'2', val:'由近到远'},
-                    ]
-                }
-            }
         }
     }
 
@@ -67,11 +46,7 @@ class IndexPage extends React.Component{
             });
         }, 100);
         //拿去定位结果，如果定位成功则去请求，获取城市的接口。得到城市之后，去查询所有的门票的列表
-
-        //定位的坐标点,默认坐标点
-       // console.log("currentCity",currentCity);
-        this.getDoorTicketList();
-
+        //console.log("sdfsdfsdfsdfsdf", this.props);
     }
     goDetail(){
       //console.log("ticketDetail");
@@ -79,10 +54,14 @@ class IndexPage extends React.Component{
     }
     //获取门票列表的接口
     getDoorTicketList(){
-        let {point,currentCity}  = this.props.globalAct,
-            { SelectBarData,currPage } =  this.state,
+        let {point,currentCity,currPage,pageNum,totalPage,SelectBarData}  = this.props.globalAct,
         zlpx = SelectBarData["zlpx"],
         all = SelectBarData["all"];
+        //执行这里就去负责加一个页
+        currPage++;
+        if(currPage>totalPage){
+            return;
+        }
         //初始化查询
         this.props.dispatch({
             type: 'globalAct/getPoints',
@@ -143,50 +122,61 @@ class IndexPage extends React.Component{
 
     //点击seachBar
     selectBar(tag,e) {
-      //console.log(tag);
       let {searchBarModel,indexScroll,indexSwiper} = this.refs,
-          {selectBarModelFixed} =  this.state,
+          {selectBarModelFixed,IndexModelSelectBarStatus} =  this.state,
             {clientWidth, clientHeight} = indexSwiper,
             searchBarHeight =  searchBarModel.clientHeight,
             { currPageY } = this.state.pageStatus,time = !selectBarModelFixed&&100||0;
-     // console.log("indexScroll",selectBarModelFixed);
-     // return;
         if(currPageY >= -(clientHeight)) {
             //设置滚动
-            //indexScroll.scrollToElement(this.refs.searchBarModel, 300, 0, -searchBarHeight + 6);
             indexScroll.refs.scrollSwipe.scrollToElement(this.refs.searchBarModel, 300, 0, -searchBarHeight + 6);
-            //time =  400;
-            //console.log("000", time);
         }
 
-        let {SelectBarData } =  this.state;
+        let {SelectBarData } =  this.props.globalAct;
         //清空全部parentIndex 为false，在把对应的设置成true
-        Object.keys(SelectBarData).forEach((item)=>{
+        ["all","zlpx"].forEach((item)=>{
             SelectBarData[item].parentIndex = false;
         });
+
         SelectBarData[tag].parentIndex =  true
         this.setState({
-           // IndexModelSelectBarStatus:true,
             SelectBarData: SelectBarData
         });
-       // console.log("time", time);
+        //设置SelectBarData的数据
+        this.props.dispatch({
+            type:'globalAct/getSelectBarData',
+            payload: {
+                SelectBarData
+            }
+        })
         //显示selectBar数据
+        var num =  tag=="all"?0:1;
+        //还原设置bard
         setTimeout(()=>{
+            Object.keys(IndexModelSelectBarStatus).map(function(item){
+                IndexModelSelectBarStatus[item] =  false;
+            })
+            IndexModelSelectBarStatus[num] =  true;
             this.setState({
-                IndexModelSelectBarStatus:true,
+                IndexModelSelectBarStatus:IndexModelSelectBarStatus,
             });
         },time)
     }
 
     //重新初始化数据selectBar的数据
     reInitSelect(e){
+        console.log("e",e);
         if(e){
-            this.setState({
-                SelectBarData:e
+            //设置SelectBarData的数据
+            this.props.dispatch({
+                type:'globalAct/getSelectBarData',
+                payload: {
+                    SelectBarData:e
+                }
             })
         }
         this.setState({
-            IndexModelSelectBarStatus:false
+            IndexModelSelectBarStatus:[false,false]
         })
     }
     //初始化底部实际数据渲染的高度
@@ -198,44 +188,6 @@ class IndexPage extends React.Component{
         }
         return "";
 
-    }
-
-    loadMoreData = () => {
-        // 更新数据
-        return new Promise( (resolve,reject) => {
-            if(this.state.listData.length >=30){
-                this.setState({
-                    currPage: 10,
-                    totalPage:10
-                });
-                resolve({
-                    currentPage:10,
-                    totalPage:10
-                })
-                return;
-            }
-            setTimeout(() => {
-                if (Math.random() > 0) {
-                    // 如果有新数据
-                    let newPage = []
-                    for (let i = 0; i < 9; i++) {
-                        newPage.push(`我是新数据${NEWDATAINDEX++}`)
-                    }
-                    this.setState({
-                        listData: [
-                            ...this.state.listData,
-                            ...newPage
-                        ],
-                        currPage: 1,
-                        totalPage:10
-                    })
-                }
-                resolve({
-                    currentPage:1,
-                    totalPage:10
-                })
-            }, 1000)
-        })
     }
     //header 右边点击
     rightClick(){
@@ -249,12 +201,11 @@ class IndexPage extends React.Component{
     }
 
     render(){
-        let { IndexModelSelectBarStatus,SelectBarData } =  this.state,
-            allBarColor = (SelectBarData["all"].activeIndex||IndexModelSelectBarStatus)?'#37A0F1':"#DBDBDB",
-            zlpxColor =  (SelectBarData["zlpx"].activeIndex||IndexModelSelectBarStatus)?'#37A0F1':"#DBDBDB";
-        let ListArrHeight = this.initticketsListArrHeight(),
-            {doorList,currPage,totalPage} = this.props.globalAct;
-        //console.log("ListArrHeight",ListArrHeight);
+        let {SelectBarData,doorList,currPage,totalPage} =  this.props.globalAct,{ IndexModelSelectBarStatus } =  this.state,
+            allBarColor = (SelectBarData["all"].activeIndex||IndexModelSelectBarStatus[0])?'#37A0F1':"#DBDBDB",
+            zlpxColor =  (SelectBarData["zlpx"].activeIndex||IndexModelSelectBarStatus[1])?'#37A0F1':"#DBDBDB";
+        let ListArrHeight = this.initticketsListArrHeight();
+      //  console.log("SelectBarData",SelectBarData);
         return (
             <div className={styles["container_page"]}>
                 <Helmet>
@@ -270,7 +221,7 @@ class IndexPage extends React.Component{
                             leftContent={ <i className="fa fa-angle-left fa-lg" style={{"color":`${this.state.headerConfig.color}`}}></i>}
                             rightContent={
                                 <span style={{"color":`${this.state.headerConfig.color}`}}>
-                                    <span style={{"paddingRight":'4px'}}>成都</span>
+                                    <span style={{"paddingRight":'4px'}}>{SelectBarData.cityName}</span>
                                     <i className="fa fa-angle-down fa-lg"></i>
                                </span>
                             }
@@ -278,12 +229,12 @@ class IndexPage extends React.Component{
                             rightClick={this.rightClick.bind(this)}
                         ></Header>
                     </div>
-                    <Scroll class={styles["wrapper"]}
+                    {SelectBarData.cityName&&<Scroll class={styles["wrapper"]}
                             ref='indexScroll'
                             needMore={true}
                             currPage={currPage}
                             totalPage={totalPage}
-                            loadMoreData={this.loadMoreData.bind(this)}
+                            loadMoreData={this.getDoorTicketList.bind(this)}
                             height="100%"
                             doScroll={this.onScroll.bind(this)}
                     >
@@ -306,13 +257,13 @@ class IndexPage extends React.Component{
 
                             <div className={styles["ticketsListArr"]} style={{"minHeight":`${ListArrHeight}px`}}>
                                 {
-                                    doorList&&doorList.data.map((item,index)=>{
+                                    doorList&&doorList.map((item,index)=>{
                                         return  <AttractionSingle key={index} item={item} clickItem={this.chooseTicket.bind(this)}/>
                                     })
                                 }
                             </div>
                         </div>
-                    </Scroll>
+                    </Scroll>}
                 </div>
 
                 {
@@ -325,7 +276,7 @@ class IndexPage extends React.Component{
                         IndexModelSelectBarStatus={this.state.IndexModelSelectBarStatus}
                     ></IndexSelectBar>
                 }
-                {IndexModelSelectBarStatus&&<IndexModelSelectBar selectBarData={SelectBarData} barClick={this.reInitSelect.bind(this)}/>}
+                {(IndexModelSelectBarStatus[0]||IndexModelSelectBarStatus[1])&&<IndexModelSelectBar selectBarData={SelectBarData} barClick={this.reInitSelect.bind(this)}/>}
 
             </div>
         );

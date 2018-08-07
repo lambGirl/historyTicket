@@ -1,55 +1,41 @@
 import AMap from 'AMap'
 class Singer{
-    constructor({id,name,mid}) {
-        this.id=id;
-        this.mid=mid;
-        this.name=name;
-        this.avatar = `https://y.gtimg.cn/music/photo_new/T001R300x300M000${mid}.jpg?max_age=2592000`;
+    constructor({cityNo,cityName,parentRegion,chidrens}) {
+        this.cityNo = cityNo;
+        this.cityName = cityName,
+        this.parentRegion = parentRegion,
+        this.chidrens = chidrens||[]
     }
 }
 //得到城市数据
 const redetailSingleData = (list)=>{
-    return list;
-    const HOT_NAME = '热门';
-    const HOT_SINGER_LEN = 10;
     let map = {
-        hot: {
-            title: HOT_NAME,
-            items: []
-        },
         other: {
             title: '其他',
             items: []
         }
     };
-
     for (let [index,item] of Array.entries(list)) {
-//                   热门
-        if (index < HOT_SINGER_LEN) {
-            map.hot.items.push(new Singer({
-                id: item.Fsinger_id,
-                name: item.Fsinger_name,
-                mid: item.Fsinger_mid
-            }));
-        }
-//                  a-z
-        if (!map[item.Findex] && /[a-zA-Z]/.test(item.Findex)) {
-            map[item.Findex] = {
-                title: item.Findex,
+        var first =  item.shortName.substr(0,1).toLocaleUpperCase()
+        if (!map[first]) {
+            map[first] = {
+                title: first,
                 items: []
             }
         }
-        if (/[a-zA-Z]/.test(item.Findex)) {
-            map[item.Findex].items.push(new Singer({
-                id: item.Fsinger_id,
-                name: item.Fsinger_name,
-                mid: item.Fsinger_mid
+        if (/[a-zA-Z]/.test(first)) {
+            map[first].items.push(new Singer({
+                cityNo: item.cityNo,
+                cityName: item.cityName,
+                parentRegion: item.parentRegion,
+                chidrens:item.chidrens||[]
             }));
         } else {
             map.other.items.push(new Singer({
-                id: item.Fsinger_id,
-                name: item.Fsinger_name,
-                mid: item.Fsinger_mid
+                cityNo: item.cityNo,
+                cityName: item.cityName,
+                parentRegion: item.parentRegion,
+                chidrens:item.chidrens||[]
             }))
         }
     }
@@ -63,14 +49,14 @@ const redetailSingleData = (list)=>{
     ret.sort((a, b) => {
         return a.title.charCodeAt(0) - b.title.charCodeAt(0)
     });
-    //console.log("redetailSingleData",map);
-    return [map.hot, ...ret, map.other];
+    return [...ret];
 }
 
 //得到大小写数据
 const shortcutListData = (list)=>{
-    let List = ["定","热"];
-    let ListArry = list.map(group => group.name.substr(0, 1));
+    let List = ["定"];
+    let ListArry = list.map(group => {return group.title.substr(0,1)});
+ //   console.log("ListArry",ListArry);
     return List.concat(ListArry);
 }
 

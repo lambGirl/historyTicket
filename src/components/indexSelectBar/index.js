@@ -14,9 +14,9 @@ export  default  class IndexSelectBar extends  React.Component{
         })}>
             <div className={styles['selectBar']}>
                 <div onClick={()=>{selectBar('all')}}>
-                    <span>{ SelectBarData["all"].data[SelectBarData["all"].activeIndex].val}</span>
+                    <span>{ SelectBarData["all"].data[SelectBarData["all"].activeIndex].cityName}</span>
                     <i className={classnames("fa fa-caret-down fa-lg", {
-                        "fa-caret-up": SelectBarData["all"].parentIndex&&IndexModelSelectBarStatus
+                        "fa-caret-up": SelectBarData["all"].parentIndex&&IndexModelSelectBarStatus[0]
                     })}
                        style={{
                            "color":`${allBarColor}`
@@ -24,9 +24,9 @@ export  default  class IndexSelectBar extends  React.Component{
                     ></i>
                 </div>
                 <div onClick={()=>{selectBar('zlpx')}}>
-                    <span>{ SelectBarData["zlpx"].data[SelectBarData["zlpx"].activeIndex].val}</span>
+                    <span>{ SelectBarData["zlpx"].data[SelectBarData["zlpx"].activeIndex].cityName}</span>
                     <i className={classnames("fa fa-caret-down fa-lg", {
-                        "fa-caret-up": SelectBarData["zlpx"].parentIndex&&IndexModelSelectBarStatus
+                        "fa-caret-up": SelectBarData["zlpx"].parentIndex&&IndexModelSelectBarStatus[1]
                     })}
                        style={{"color":`${zlpxColor}`}}></i>
                 </div>

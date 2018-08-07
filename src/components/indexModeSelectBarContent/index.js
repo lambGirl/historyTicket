@@ -11,13 +11,14 @@ export  default class IndexModelSelectBar extends React.Component{
         e.preventDefault();
         e.stopPropagation();
         let {selectBarData, barClick} =  this.props;
-        if(item){
+       if(item){
            // console.log("parentType", item);
             selectBarData[item.parentType].activeIndex = item.index
             barClick(selectBarData);
         }
         barClick();
     }
+
     render(){
         let {selectBarData, barClick} =  this.props,
         parentType = "";
@@ -48,7 +49,7 @@ export  default class IndexModelSelectBar extends React.Component{
                         return (<div className={classnames(Styles['selectModelList-single'],{
                             [Styles["active"]]:selectBarData[parentType].activeIndex == index
                         })} key={index} onClick={this.selectItem.bind(this, {index, parentType})}>
-                            <div >{item.val}</div>
+                            <div >{item.cityName}</div>
                             {selectBarData[parentType].activeIndex == index&&<div>√</div>}
                         </div>)
                     })

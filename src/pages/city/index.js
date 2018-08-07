@@ -39,11 +39,11 @@ export  default  class cityChoose  extends  React.Component{
             diff: -1,
             fixedHeight:0,
             noLocal:'',//search搜索框的
+            filterData:[]   //过滤数据
         }
     }
     componentWillMount(){
         this.props.dispatch({type: 'city/fetch'});
-        console.log("this.props.fetchCityData",this.props.fetchCityData);
     }
     componentDidMount(){
         this._calculateHeight()
@@ -85,8 +85,7 @@ export  default  class cityChoose  extends  React.Component{
 
     _scrollTo(index){
         const DomList = document.getElementsByClassName(Styles['list-group'])
-        // console.log("remove", index, -this.state.listHeight[index])
-        //  return;
+
         if (!index && index !== 0){
             return
         }
@@ -107,8 +106,7 @@ export  default  class cityChoose  extends  React.Component{
     }
 
     componentDidUpdate(prevProps, preState){
-      //  console.log("prevProps",this.props.city.singers, prevProps.city.singers);
-        if(prevProps.city.singers.length){
+        if(prevProps.city.cityList.length){
             this._calculateHeight()
         }
     }
@@ -118,7 +116,6 @@ export  default  class cityChoose  extends  React.Component{
         this.state.listHeight = [];
 
         const list = document.getElementsByClassName(Styles['list-group']);
-        //console.log("list",list);
         let height = 0,
         { listHeight } =  this.state;
         listHeight.push(height)
@@ -130,12 +127,12 @@ export  default  class cityChoose  extends  React.Component{
 
     renderfixedTitle() {
         let {currentIndex, scrollY} = this.state;
-        let {singers} = this.props.city
+        let {cityList} = this.props.city
         //  console.log(currentIndex);
-        let fixedTitle = singers[ currentIndex ] ? singers[ currentIndex ].name : '';
+        let fixedTitle = cityList[ currentIndex ] ? cityList[ currentIndex ].cityName : '';
         return (
             <div className={Styles["list-fixed"]} ref='fixed'>
-             {/*   <div className={Styles["fixed-title"]}>{fixedTitle}</div>*/}
+                <div className={Styles["fixed-title"]}>{fixedTitle}</div>
             </div>
         )
     }
@@ -176,10 +173,10 @@ export  default  class cityChoose  extends  React.Component{
                     "diff":(height2 + newY)
                 },function(){
 
-                    let {diff} = this.state;
+                    /*let {diff} = this.state;
 
                     if(!this.fixedHeight){
-                        this.fixedHeight=this.refs.fixed.getBoundingClientRect().height;
+                        //this.fixedHeight=this.refs.fixed.getBoundingClientRect().height;
                     }
                     let fixedTop = (diff > 0 && diff < this.fixedHeight) ?
                         (diff - this.fixedHeight) :
@@ -189,7 +186,7 @@ export  default  class cityChoose  extends  React.Component{
                     }
 
                     this.fixedTop = fixedTop;
-                    this.refs.fixed.style.transform = `translate3d(0,${fixedTop}px,0)`
+                    this.refs.fixed.style.transform = `translate3d(0,${fixedTop}px,0)`*/
                 });
                 return
             }
@@ -205,11 +202,38 @@ export  default  class cityChoose  extends  React.Component{
     searchInput(){
 
     }
+    //按照汉字排序
+    localeCompare(a,b){
+        if(!a&&!b){
+            return;
+        }
+        return a.shortName.localeCompare(b.shortName);
+    }
 
     keywordChange(e){
         this.setState({
             "noLocal":e.target.value
         })
+        let { cityListInit } =  this.props.city, val =  e.target.value.toLowerCase();
+        if(!cityListInit.length){
+            return;
+        }
+
+        var newCity =  cityListInit.filter(function(product){
+            //console.log("product",product);
+            return Object.keys(product).some(function(item){
+              //  console.log("item", item);
+                return product['shortName'].indexOf(val) == 0 ||
+                    product['fullName'].indexOf(val) == 0 ||
+                    product['alias'].indexOf(val) != -1
+
+            })
+        });
+       // console.log("------newCity------",newCity.sort(this.localeCompare));
+        this.setState({
+            "filterData":newCity.sort(this.localeCompare),
+        })
+
     }
     keywordClear(){
         this.setState({
@@ -223,18 +247,29 @@ export  default  class cityChoose  extends  React.Component{
 
     //render的方法
     render(){
-        const { city } = this.props;
-        const { singers, shortcutList } = city, _this =  this;
-        console.log("this.props.fetchCityData",this.props.fetchCityData)
+        const { cityList, shortcutList } = this.props.city, _this =  this;
+        //console.log("cityList",this.props.city.cityList);
+        if(!cityList.length){
+            return <div style={{"height":"100%"}}>
+                <Helmet>
+                    <meta charSet="utf-8" />
+                    <title>选择城市</title>
+                </Helmet>
+                <Header  mode="light"
+                         leftContent={<i className="fa fa-angle-left fa-lg"></i>}
+                         leftClick={() => window.history.go(-1)}
+                ><div style={{"textAlign":"center"}}>选择城市</div></Header>
+            </div>
+        }
+       // console.log("cityList",this.state.filterData);
         return <div style={{"height":"100%"}}>
                         <Helmet>
                             <meta charSet="utf-8" />
                             <title>选择城市</title>
                         </Helmet>
-
                         <Header  mode="light"
                                  leftContent={<i className="fa fa-angle-left fa-lg"></i>}
-                                 onLeftClick={() => window.history.go(-1)}
+                                 leftClick={() => window.history.go(-1)}
                         ><div style={{"textAlign":"center"}}>选择城市</div></Header>
                         <div  className={classNames(Styles["bar"],Styles["bar-header-secondary"])}>
                             <div className={classNames(Styles["searchbar"],Styles["searchbar-active"])}>
@@ -258,7 +293,7 @@ export  default  class cityChoose  extends  React.Component{
                                  ref="listview"
                                  scrollFun={this.scrollFun.bind(this)}
                              >
-                                 <div className={Styles['scroll-cotent-bottom']}>
+                                 <div style={{"paddingBottom":"200px"}}>
                                     <ul>
                                         {/*定位导航栏*/}
                                         <li  className={Styles["list-group"]}>
@@ -269,7 +304,7 @@ export  default  class cityChoose  extends  React.Component{
                                             </div>
                                         </li>
                                         {/*热门城市*/}
-                                        <li  className={Styles["list-group"]}>
+                                       {/* <li  className={Styles["list-group"]}>
                                             <h2 className={Styles["list-group-title"]}>热门</h2>
                                             <div className={Styles['hotCityList']}>
                                                 <span className={Styles["caseCitySpan"]}>重庆</span>
@@ -283,19 +318,20 @@ export  default  class cityChoose  extends  React.Component{
                                                 <span className={Styles["caseCitySpan"]}>绵阳</span>
                                                 <span className={Styles["caseCitySpan"]}>眉山</span>
                                             </div>
-                                        </li>
+                                        </li>*/}
                                         {
-                                            singers.map(function(group,groupIndex){
+                                            cityList.map(function(group,groupIndex){
                                                 return(
                                                     <li  className={Styles["list-group"]} key={groupIndex + 'listView_/*-'}   >
-                                                        <h2 className={Styles["list-group-title"]}>{group.name}</h2>
+                                                        <h2 className={Styles["list-group-title"]}>{group.title}</h2>
                                                         <ul>
                                                             {
-                                                                group.cities.map(function (item,itemIndex) {
+                                                                group.items.map(function (item,itemIndex) {
                                                                     return (
                                                                         <li key={itemIndex + 'list-group-item' + groupIndex} className={Styles["list-group-item"]} >
                                                                           {/*  <img className={Styles["avatar"]} src={item.avatar}/>*/}
-                                                                            <span className={Styles["name"]}>{item.name}</span>
+                                                                            <span className={Styles["name"]}>{item.cityName}</span>
+                                                                            <span className={Styles['parentRegion']}>{item.parentRegion}</span>
                                                                         </li>
                                                                     )
                                                                 })
@@ -326,16 +362,36 @@ export  default  class cityChoose  extends  React.Component{
                                     }
                                 </ul>
                             </div>
-                            {this.renderfixedTitle()}
+
                         </div>
                             {
 
                                 this.props.fetchCityData&&<div className={classNames(Styles["loading"])}>
                                 <div>loading</div>
-                            </div>
-                            }
+                                </div>
 
+                            }
+                            {this.renderOrid()}
                     </div>
+
+    }
+
+    renderOrid(){
+        let { filterData } =  this.state;
+     //   console.log("--------------filterData",filterData);
+        var defaultStyle = {transition:'top 1s',overflowX:'hidden',padding:'0'};
+        return <div className={Styles["ui-standard-top"]} style={{display:this.state.noLocal ? "block" : "none"}}>
+            <ul style={{transition:'top 1s',overflowX:'hidden',padding:'0',"height":"80%"}}>
+                {this.noDatas()}
+                {
+                    filterData.length&&filterData.map((item,index)=>{
+                        return <li key={`filterData-${index}`} className={Styles['cityList-li']}>{item.cityName}</li>
+                    })
+                }
+            </ul>
+        </div>
+    }
+    noDatas(){
 
     }
 }

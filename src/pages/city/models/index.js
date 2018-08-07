@@ -1,12 +1,12 @@
-import { querySingle } from '../services/index'
-import { redetailSingleData,shortcutListData } from '../../../utils/util'
+import { queryAllCitys } from '../services/index'
+import { redetailSingleData,shortcutListData, baseUtil} from '../../../utils/util'
 export default {
 
     namespace: 'city',
-
     state: {
-        singers:[],
-        shortcutList:[],
+        cityListInit: baseUtil.getSession("cityListInit")||[],    //没有加工过的数据列表
+        cityList:[],    //加工后的数据列表
+        shortcutList:[],    //city层面显示的右边的shortKey
     },
 
     subscriptions: {
@@ -17,24 +17,33 @@ export default {
 
     effects: {
         //获取所有的singles
-        *fetch({ payload }, { call, put }) {
-            let initData =  yield call(querySingle, payload);
-           //console.log("initData------------",initData);
+        *fetch({ payload }, { call, put,select }) {
+            let {cityListInit} =  yield select(_=>_.city),initData;
+            if(!cityListInit){
+                initData =  yield call(queryAllCitys, payload);
+            }
+
+            //initData =  yield call(queryAllCitys, payload);
             yield put({
                 type: 'save',
-                data: initData.data.result.data.list
+                data: !cityListInit.length&&initData.data.body.data||cityListInit
             });
         },
+
     },
 
     reducers: {
         save(state,{data}) {
             //设置城市
-            state.singers = redetailSingleData(data);
+            state.cityList = redetailSingleData(data);
             //设置右边的悬浮条
-            state.shortcutList =  shortcutListData(state.singers);
-
-            return { ...state};
+            state.shortcutList =  shortcutListData(state.cityList);
+            //console.log("cityList", state.cityList);
+            baseUtil.setSession("cityListInit",data);
+            return {
+                ...state,
+                cityListInit: data
+            };
         },
     },
 

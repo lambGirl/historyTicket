@@ -58,6 +58,7 @@ ul li{
   height: 2.2rem;
   justify-content: space-between;
   align-items: center;
+  padding-right: @base*40rem;
   .locationIocn{
     width: 1rem;
     height: 1rem;
@@ -114,6 +115,10 @@ ul li{
         color:#3e3e3e;
         font-size:14px;
       }
+      .parentRegion{
+        padding-left: @base*40rem;
+        color: #adadad;
+      }
     }
   }
 
@@ -145,7 +150,7 @@ ul li{
   position: absolute;
   z-index: 30;
   right: 0;
-  top: 50%;
+  top: 45%;
   transform: translateY(-50%);
   width: @base*40rem;
   padding: @base*20rem 0;
@@ -155,11 +160,12 @@ ul li{
   font-family: 'Helvetica';
   color:rgba(255, 255, 255, 0.5);
   .item{
-    padding: @base*6rem;
+    padding: 10% 0;
     line-height: 1;
     color: @color-text-l;
     font-size: 14px;
   }
+
   .current{
     color: @color-theme
   }
@@ -260,4 +266,20 @@ ul li{
   justify-content: center;
   align-items: center;
   color: #fff;
+}
+
+.ui-standard-top{
+  height:100%;
+  position:absolute;
+  width: 100%;
+  z-index:1000;
+  background: #fff;
+  top: @base*105rem;
+
+  .cityList-li{
+    height: 30px;
+    line-height:  30px;
+    margin-left: .5rem;
+    border-bottom: 1px solid #f5f5f5;
+  }
 }
