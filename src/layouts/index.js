@@ -26,9 +26,9 @@ class App extends React.Component{
                 type:'globalAct/getLocation'
             })
         }*/
-        this.props.dispatch({
+       /*this.props.dispatch({
             type:'globalAct/getInit',
-        });
+        });*/
     }
 
     render(){

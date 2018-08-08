@@ -1,4 +1,39 @@
 import AMap from 'AMap'
+
+Date.prototype.format = function (format) {
+    var o = {
+        "M+": this.getMonth() + 1, //month
+        "d+": this.getDate(), //day
+        "H+": this.getHours(), //hour
+        "m+": this.getMinutes(), //minute
+        "s+": this.getSeconds(), //second
+        "q+": Math.floor((this.getMonth() + 3) / 3), //quarter
+        "S": this.getMilliseconds() //millisecond
+    }
+
+    if (/(y+)/.test(format)) {
+        format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    }
+
+    for (var k in o) {
+        if (new RegExp("(" + k + ")").test(format)) {
+            format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+        }
+    }
+    return format;
+};
+Date.prototype.addMilliseconds = function (value) {
+    this.setMilliseconds(this.getMilliseconds() + value);
+    return this;
+};
+Date.prototype.add = function (value) { return this.addMilliseconds(value * 86400000); };
+Date.prototype.addDays = Date.prototype.add;
+Date.parseTimeStr = function (datestr) {//ios 专用
+    datestr = datestr.replace(/-/g, "/");
+    return new Date(datestr);
+}
+Date.parse1=Date.parseTimeStr;
+
 class Singer{
     constructor({cityNo,cityName,parentRegion,chidrens}) {
         this.cityNo = cityNo;
@@ -7,6 +42,9 @@ class Singer{
         this.chidrens = chidrens||[]
     }
 }
+
+
+
 //得到城市数据
 const redetailSingleData = (list)=>{
     let map = {
@@ -152,6 +190,26 @@ const baseUtil = {
             sessionStorage.setItem(key2,value);
         }
     },
+    getHours(num){
+        /**
+         * 设置多少小时可以用
+         */
+        var hour =  parseInt(num/60); //多少小时
+        var min =  num-hour*60; //分钟
+        return `${hour&&hour+"小时"||""}${min&&min+"分钟"}`
+    },
+    productRefundRule(tag){
+        let val = "";
+        switch (tag){
+            case 1:val='随时可退，过期自动退';
+                    break;
+            case 2:val='退票收取手续费';
+                break;
+            case 3:val='购买后不可退票';
+                break;
+        }
+        return val;
+    }
 }
 
 export {
@@ -159,5 +217,6 @@ export {
     shortcutListData,
     getData,
     getLocation,
-    baseUtil
+    baseUtil,
+    Date
 }

@@ -3,20 +3,24 @@ import Router from 'umi/router'
 import ClassNames  from 'classnames';
 import { Carousel } from 'antd-mobile';
 import Styles from './index.less'
+import { connect } from 'dva'
+@connect(({ticketDetail,loading})=>({
+    ticketDetail,
+    loading
+}))
+
 export default class ShowPhotos extends React.Component{
     constructor(props){
         super(props);
         this.state = {
             slideIndex:2,
-            data:[]
         }
     }
     componentDidMount(){
-        setTimeout(() => {
-            this.setState({
-                data: ['AiyWuByWklrrUDlFignR', 'TekJlZRVCjLFexlOCuWn', 'IJOtIlfsYdTyaDTRVrLI'],
-            });
-        }, 100);
+        let {index} =  Router.location.query;
+        this.setState({
+            "slideIndex": index
+        })
     }
 
     reback(){
@@ -25,9 +29,10 @@ export default class ShowPhotos extends React.Component{
 
     render(){
         let _this =  this;
+        let {images} =  this.props.ticketDetail.ticketDetail
         return <div className={Styles['photos_model']} onClick={this.reback.bind(this)}>
                 <div className={Styles['photos_center_show']}>
-                    <div className={Styles['photos_marks']}>{parseInt(this.state.slideIndex)+1}/{this.state.data.length}</div>
+                    <div className={Styles['photos_marks']}>{parseInt(this.state.slideIndex)+1}/{images.length}</div>
                     <Carousel
                         autoplay={false}
                         infinite
@@ -37,20 +42,22 @@ export default class ShowPhotos extends React.Component{
                         beforeChange={(from, to) => console.log(`slide from ${from} to ${to}`)}
                         afterChange={index => {this.setState({"slideIndex": index})}}
                     >
-                        {this.state.data.map((val, index) => (
+                        {images.map((val, index) => (
                             <a
                                 key={val + index}
                                 href="javascript:;"
                                 className={Styles['swiper-single-a']}
                             >
                                 <img
-                                    src={`https://zos.alipayobjects.com/rmsportal/${val}.png`}
+                                    src={val}
                                     alt=""
                                     onLoad={() => {
                                         // fire window resize event to change height
                                         window.dispatchEvent(new Event('resize'));
                                         this.setState({ imgHeight: 'auto' });
                                     }}
+                                    style={{    "height": "180px",
+                                        "width": "100%"}}
                                 />
                             </a>
                         ))}

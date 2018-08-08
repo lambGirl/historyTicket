@@ -4,18 +4,28 @@ import Styles from './index.less'
 import Scroll from '../../components/scroll'
 import Header from '../../components/header'
 import Router from 'umi/router'
+import { connect } from 'dva'
+
+@connect(({ticketDetail,loading})=>({
+    ticketDetail,
+    loading
+}))
 export  default class MerchartPhotos extends  React.Component{
 
-  showPhoto(){
-      Router.push("/showPhotos");
+  showPhoto(index){
+      console.log("index",index);
+      //显示的图片
+      Router.push(`/showPhotos?index=${index}`);
   }
 
   render(){
+      let {ticketDetail} =  this.props.ticketDetail;
     return (
       <div className={Styles['photosListShow']}>
           <Header
             mode="light"
             leftContent={ <i className="fa fa-angle-left fa-lg" style={{"color":"#3E3E3E"}}></i>}
+            leftClick={()=>{window.history.go(-1)}}
           >
             <div style={{"textAlign":'center','color':'#3E3E3E'}} >商家相册</div>
           </Header>
@@ -23,40 +33,18 @@ export  default class MerchartPhotos extends  React.Component{
               <Scroll class={Styles['wrapper']}>
                 <div className={Styles['scroll-cotent-bottom']}>
                   <div className={Styles['photosList-box']}>
-                    <div className={Styles['photoList-single']} onClick={this.showPhoto.bind(this)}>
-                      <img src='https://p0.meituan.net/400.0/travel/9172c05e9077f176ccec489278c553a4149430.jpg'/>
-                    </div>
-                    <div className={Styles['photoList-single']}>
-                      <img src='https://p0.meituan.net/400.0/travel/9172c05e9077f176ccec489278c553a4149430.jpg'/>
-                    </div>
-                    <div className={Styles['photoList-single']}>
-                      <img src='https://p0.meituan.net/400.0/travel/9172c05e9077f176ccec489278c553a4149430.jpg'/>
-                    </div>
-                    <div className={Styles['photoList-single']}>
-                      <img src='https://p0.meituan.net/400.0/travel/9172c05e9077f176ccec489278c553a4149430.jpg'/>
-                    </div>
-                  <div className={Styles['photoList-single']}>
-                    <img src='https://p0.meituan.net/400.0/travel/9172c05e9077f176ccec489278c553a4149430.jpg'/>
-                  </div>
-                  <div className={Styles['photoList-single']}>
-                    <img src='https://p0.meituan.net/400.0/travel/9172c05e9077f176ccec489278c553a4149430.jpg'/>
-                  </div>
-                  <div className={Styles['photoList-single']}>
-                    <img src='https://p0.meituan.net/400.0/travel/9172c05e9077f176ccec489278c553a4149430.jpg'/>
-                  </div>
-                  <div className={Styles['photoList-single']}>
-                    <img src='https://p0.meituan.net/400.0/travel/9172c05e9077f176ccec489278c553a4149430.jpg'/>
-                  </div>
-                  <div className={Styles['photoList-single']}>
-                    <img src='https://p0.meituan.net/400.0/travel/9172c05e9077f176ccec489278c553a4149430.jpg'/>
-                  </div>
+                      {
+                          ticketDetail.images.map((item,index)=>{
+                              return <div key={"item"+index} className={Styles['photoList-single']} onClick={this.showPhoto.bind(this,index)}>
+                                  <img src={item}/>
+                              </div>
+                          })
+                      }
                 </div>
-
                </div>
             </Scroll>
           </div>
       </div>
-
     )
   }
 }

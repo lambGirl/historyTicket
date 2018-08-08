@@ -7,8 +7,11 @@
     position: relative;
     height: @base*300rem;
    /* overflow: hidden;*/
+    .slider-frame{
+      overflow: inherit !important;
+    }
     .slider-list{
-      height: @base*300rem;
+      height: @base*300rem !important;
     }
     .swiper-single-a{
       img{
@@ -281,9 +284,20 @@
 
 //cardBox下中的信息
 .writeOrder-cardContent{
-  p{
-    padding-bottom: @base*22rem;
-    font-size: @font24;
+  div{
+    margin-bottom:5px;
     color:#949494;
+    display: flex;
+    min-height: @base*60rem;
+    >:first-child{
+      width: @base*180rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex:1
+    }
+    >:last-child{
+      flex:2
+      }
   }
 }

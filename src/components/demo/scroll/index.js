@@ -333,7 +333,7 @@ class Scroll extends Component {
       )
     }
 
-    if(currPage >= totalPage ){
+    if(pullUpLoad&&currPage >= totalPage ){
         return (
             <div className= {Styles["b-pullup-wrapper"]}>
                 <div className={Styles["before-trigger"]}>
@@ -422,8 +422,9 @@ class Scroll extends Component {
         <div className={Styles["b-scroll-content"]}>
           {this.props.children}
           {this.renderPullUpLoad()}
+          {this.renderPullUpDown()}
         </div>
-        {this.renderPullUpDown()}
+
       </div>
     )
   }

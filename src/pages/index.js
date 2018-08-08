@@ -45,6 +45,9 @@ class IndexPage extends React.Component{
                 data: ['AiyWuByWklrrUDlFignR', 'TekJlZRVCjLFexlOCuWn', 'IJOtIlfsYdTyaDTRVrLI'],
             });
         }, 100);
+        this.props.dispatch({
+            type:'globalAct/getInit',
+        });
         //拿去定位结果，如果定位成功则去请求，获取城市的接口。得到城市之后，去查询所有的门票的列表
         //console.log("sdfsdfsdfsdfsdf", this.props);
     }
@@ -71,7 +74,7 @@ class IndexPage extends React.Component{
                     longitude: point.data&&point.data.lng||"",
                     latitude: point.data&&point.data.lat||"",
                     key:'',
-                    pageNo: currPage,
+                    pageNum: currPage,
                     pageSize:20,
                     cityNo:'all'    //这里到时候要改
                 },
@@ -165,7 +168,7 @@ class IndexPage extends React.Component{
 
     //重新初始化数据selectBar的数据
     reInitSelect(e){
-        console.log("e",e);
+       // console.log("e",e);
         if(e){
             //设置SelectBarData的数据
             this.props.dispatch({
@@ -181,12 +184,12 @@ class IndexPage extends React.Component{
     }
     //初始化底部实际数据渲染的高度
     initticketsListArrHeight(){
-        let bodyHeight =  document.body.clientHeight,
-        {searchBarModel,indexSwiper,headers} = this.refs;
+        let bodyHeight =  document.body.clientHeight;
+        /*{searchBarModel,indexSwiper,headers} = this.refs;
         if(searchBarModel&&indexSwiper){
             return bodyHeight-searchBarModel.clientHeight-indexSwiper.clientHeight+(indexSwiper.clientHeight-40);
-        }
-        return "";
+        }*/
+        return bodyHeight+140;
 
     }
     //header 右边点击
@@ -237,7 +240,7 @@ class IndexPage extends React.Component{
                             height="100%"
                             doScroll={this.onScroll.bind(this)}
                     >
-                        <div  className={styles["wrapper_content"]}>
+                        <div  className={styles["wrapper_content"]} style={{"minHeight":`${ListArrHeight}px`}}>
                             <div className={styles["swipper_top"]} ref='indexSwiper'>
                                 <div className={styles["index_banner_img"]}>
                                     <img src="https://p0.meituan.net/400.0/hotel/fd8e418933a722e6ca77f918aa553f89135934.jpg" alt=""/>
@@ -254,7 +257,7 @@ class IndexPage extends React.Component{
                                 ></IndexSelectBar>
                             </div>
 
-                            <div className={styles["ticketsListArr"]} style={{"minHeight":`${ListArrHeight}px`}}>
+                            <div className={styles["ticketsListArr"]}>
                                 {
                                     doorList&&doorList.map((item,index)=>{
                                         return  <AttractionSingle key={index} item={item} clickItem={this.chooseTicket.bind(this)}/>

@@ -1,7 +1,7 @@
 import request from '../../../utils/request';
 
 function queryAllCitys(){
-    return request('/getAllCitys',{method:'post'})
+    return request('/api?server=trip_getAllCitys',{method:'post'})
 }
 function queryM(){
     return request('/api?server=tz_visit',{

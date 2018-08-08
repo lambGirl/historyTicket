@@ -5,11 +5,13 @@ import { connect } from 'dva'
 import Styles from './index.less'
 import classNames from 'classnames';
 import Scroll from '../../components/scroll'
-import { getData } from '../../utils/util'
+import { getData, baseUtil } from '../../utils/util'
+import router from 'umi/router';
 const ANCHOR_HEIGHT = 18    //索引的高度
 const TITLE_HEIGHT = 4     //title的高度
 
-@connect(({city,loading})=>({
+@connect(({city,globalAct,loading})=>({
+    globalAct,
     city,
     fetchCityData: loading.effects['city/fetch']
 }))
@@ -225,8 +227,7 @@ export  default  class cityChoose  extends  React.Component{
               //  console.log("item", item);
                 return product['shortName'].indexOf(val) == 0 ||
                     product['fullName'].indexOf(val) == 0 ||
-                    product['alias'].indexOf(val) != -1
-
+                    product['cityName'].indexOf(val) != -1
             })
         });
        // console.log("------newCity------",newCity.sort(this.localeCompare));
@@ -247,8 +248,8 @@ export  default  class cityChoose  extends  React.Component{
 
     //render的方法
     render(){
-        const { cityList, shortcutList } = this.props.city, _this =  this;
-        //console.log("cityList",this.props.city.cityList);
+        const { cityList, shortcutList } = this.props.city, _this =  this,{ point,SelectBarData} =  this.props.globalAct;
+       //console.log("point", point, SelectBarData);
         if(!cityList.length){
             return <div style={{"height":"100%"}}>
                 <Helmet>
@@ -299,7 +300,7 @@ export  default  class cityChoose  extends  React.Component{
                                         <li  className={Styles["list-group"]}>
                                             <h2 className={Styles["list-group-title"]}>定位</h2>
                                             <div className={Styles['positionAdress']}>
-                                                <div>定位</div>
+                                                <div>{point.code&&SelectBarData.cityName||'定位失败'}</div>
                                                 <div><i className={Styles["locationIocn"]} onClick={this.locationPos.bind(this,true)}></i></div>
                                             </div>
                                         </li>
@@ -328,7 +329,7 @@ export  default  class cityChoose  extends  React.Component{
                                                             {
                                                                 group.items.map(function (item,itemIndex) {
                                                                     return (
-                                                                        <li key={itemIndex + 'list-group-item' + groupIndex} className={Styles["list-group-item"]} >
+                                                                        <li onClick={_this.switchCity.bind(_this, item)} key={itemIndex + 'list-group-item' + groupIndex} className={Styles["list-group-item"]} >
                                                                           {/*  <img className={Styles["avatar"]} src={item.avatar}/>*/}
                                                                             <span className={Styles["name"]}>{item.cityName}</span>
                                                                             <span className={Styles['parentRegion']}>{item.parentRegion}</span>
@@ -376,16 +377,37 @@ export  default  class cityChoose  extends  React.Component{
 
     }
 
+    //选择却换城市
+    switchCity(item){
+       // console.log("item", item);
+        /**
+         * 设置对应的首页查询条件
+         * @type {string}
+         */
+        let jqmp_IndexInit =  baseUtil.getSession("jqmp_IndexInit");
+        jqmp_IndexInit.cityName =  item.cityName;
+        jqmp_IndexInit.cityNo =  item.cityNo;
+       // baseUtil.setSession("jqmp_IndexInit",jqmp_IndexInit);
+        this.props.dispatch({
+            type:'globalAct/getSelectBarData',
+            payload:{
+                SelectBarData:jqmp_IndexInit
+            }
+        })
+       router.push("/");
+        // window.location.href='/';
+    }
+
     renderOrid(){
         let { filterData } =  this.state;
-     //   console.log("--------------filterData",filterData);
+       // console.log("--------------filterData",filterData);
         var defaultStyle = {transition:'top 1s',overflowX:'hidden',padding:'0'};
         return <div className={Styles["ui-standard-top"]} style={{display:this.state.noLocal ? "block" : "none"}}>
             <ul style={{transition:'top 1s',overflowX:'hidden',padding:'0',"height":"80%"}}>
                 {this.noDatas()}
                 {
                     filterData.length&&filterData.map((item,index)=>{
-                        return <li key={`filterData-${index}`} className={Styles['cityList-li']}>{item.cityName}</li>
+                        return <li onClick={this.switchCity.bind(this, item)} key={`filterData-${index}`} className={Styles['cityList-li']}>{item.cityName}</li>
                     })
                 }
             </ul>

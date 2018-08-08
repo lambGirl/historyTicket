@@ -19,17 +19,16 @@ export default {
         //获取所有的singles
         *fetch({ payload }, { call, put,select }) {
             let {cityListInit} =  yield select(_=>_.city),initData;
-            if(!cityListInit){
+            if(!cityListInit.length){
                 initData =  yield call(queryAllCitys, payload);
             }
-
             //initData =  yield call(queryAllCitys, payload);
+            //console.log("initData",initData);
             yield put({
                 type: 'save',
-                data: !cityListInit.length&&initData.data.body.data||cityListInit
+                data: !cityListInit.length&&initData.data.body.citys||cityListInit
             });
         },
-
     },
 
     reducers: {

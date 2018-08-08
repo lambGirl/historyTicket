@@ -8,10 +8,9 @@ export default {
   "proxy": {        //配置代理
       "/api": {
           //"target": "http://jsonplaceholder.typicode.com/",
-          "target": "http://localhost:8001/",
+          "target": "http://localhost:5000/",
           "changeOrigin": true,
           "pathRewrite": { "^/api" : "/api" }
       },
-
   }
 }

@@ -29,7 +29,7 @@ export default {
                 "startRow": 5526,           //起始行
                 "endRow":"1",               //末行
                 "total":'1190910',          //总条数
-                "pages":1,                 //总页数
+                "pages":10,                 //总页数
             },
             "pubResponse":{
                 code:'0000',
