@@ -1,39 +1,44 @@
 import React from 'react'
 import Styles from '../index.less'
 import ClassNames from 'classnames'
+import Router from 'umi/router'
 export  default class DateChoose extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            effectiveDate: props.effectiveDate, //effectiveDate:可用的日期
+        }
+    }
+
+    getChooseDate(){
+        let {effectiveDate} = this.props,{date,index} =  effectiveDate;
+        let defaultDate = date[effectiveDate.index].date;
+        Router.push(`/date?defaultDate=${defaultDate}`);
+    }
+
     render(){
+        let {effectiveDate} = this.props;
+      // console.log("effectiveDate",effectiveDate);
         return <div className={Styles['fillOrderDate']}>
             <div className={ClassNames(Styles['fontIconStyle'])}>
                 <span className={Styles['fontIcon']}></span>
                 使用日期
             </div>
             <div className={Styles['chooseDateList']}>
-                <div className={ClassNames(Styles['common'],{
-                    [Styles["default"]]:true,
-                    [Styles["active"]]: false,
-                    [Styles["disable"]]: false
-                })}>
-                    <div>今天07-18 </div>
-                    <div>不可订</div>
-                </div>
-                <div className={ClassNames(Styles['common'],{
-                    [Styles["default"]]:false,
-                    [Styles["active"]]: false,
-                    [Styles["disable"]]: true
-                })}>
-                    <div>明天07-19 </div>
-                    <div>¥55</div>
-                </div>
-                <div className={ClassNames(Styles['common'],{
-                    [Styles["default"]]:false,
-                    [Styles["active"]]: true,
-                    [Styles["disable"]]: false
-                })}>
-                    <div>07-20周五</div>
-                    <div>¥55</div>
-                </div>
-                <div className={ClassNames(Styles['moreDate'])}>
+
+                {
+                    effectiveDate.date.map((item,index)=>{
+                        return <div key={'chooseDateList'+index} className={ClassNames(Styles['common'],{
+                            [Styles["default"]]:item.use,
+                            [Styles["active"]]: effectiveDate.index === index,
+                            [Styles["disable"]]:!item.use
+                        })}>
+                            <div>{index === 0&&"今天"||index === 1&&"明天"||""}{item.date.substr(5,item.date.length)} </div>
+                            <div style={{"whiteSpace": "nowrap","overflow":"hidden","width":"100%","textOverflow": "inherit"}}>{item.use&&`¥${item.price}`||"不可用"}</div>
+                        </div>
+                    })
+                }
+                <div className={ClassNames(Styles['moreDate'])} onClick={this.getChooseDate.bind(this)}>
                     <div>更多日期</div>
                     <div>
                         <i className="fa fa-angle-right fa-lg" style={{"color":"#3E3E3E"}}></i>

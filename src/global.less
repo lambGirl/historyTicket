@@ -77,3 +77,30 @@ p{
   border-top: 1px solid #e6e6e6;
 }
 
+//cardBox下中的信息
+.writeOrder-cardContent{
+  div{
+    margin-bottom:5px;
+    color:#949494;
+    display: flex;
+    /*min-height: @base*60rem;*/
+    >:first-child{
+      width: @base*180rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex:1
+    }
+    >:last-child{
+      flex:2
+    }
+  }
+  .line{
+    border-top: 1px solid #E5E5E5;
+    margin-left: @base*30rem;
+  }
+}
+
+.paddingLR30{
+  padding: 0 @base*30rem;
+}

@@ -1,55 +1,103 @@
 import React from 'react'
-import Date from '../../components/date/date'
+import DateContainer from '../../components/date/date'
 import Header from '../../components/header'
-const state =  {
-    preSellDays: 200,
-    defaultDate: ["2018-08-03"],
-    holidays:[{ date:"2018-08-03",
-        id:3673,
-        name:"国庆节",
-        play:1,
-        year:2018},
-            {
-                date:"2018-08-04",
+import Router from 'umi/router'
+import { Date } from "../../utils/util"
+import { connect } from "dva"
+
+@connect(({fillOrder,loading})=>({
+    fillOrder,
+    loading
+}))
+
+export default class DateIndex extends React.Component{
+    constructor(props){
+        super(props);
+        let defaultDate =  Router.location.query.defaultDate||new Date().format("yyyy-MM-dd"),
+            {fillOrderDetail} =  props.fillOrder;
+        this.state =  {
+            preSellDays: 200,
+            defaultDate: [defaultDate],
+            holidays:[{ date:"2018-08-03",
                 id:3673,
-                name:"情人节",
+                name:"国庆节",
                 play:1,
-                year:2018
-            }
-        ]
-}
-
-const DateIndex =  ()=>{
-
-    this.getChangeDate = (date)=>{
-        console.log("arguments", arguments);
+                year:2018},
+                {
+                    date:"2018-08-04",
+                    id:3673,
+                    name:"情人节",
+                    play:1,
+                    year:2018
+                }
+            ],
+            sellDetail:fillOrderDetail["productDatePrices"]
+        }
     }
-    this.rightClick = ()=>{
+    getChangeDate = (date,tag)=>{
+        /**
+         *  1. 这里首先要验证选中的当前日期是不是里面的今天和明天，如果是，就选中今天和明天中的一个，
+         *  2. 如果不是今天明天，则去修改最后一个数据为选中的当前日期,作为最好一个日期
+         */
+        if(tag === "init"){
+            return;
+        }
+
+      //  console.log("date",date, tag);
+        let {actionDate} =  this.props.fillOrder,{content} = tag;
+        if(date[0] === actionDate["date"][0].date){
+            actionDate.index =  0;
+            actionDate["date"][0].price =  content;
+            actionDate["date"][0].use =  true;
+        }
+        else if(date[0] === actionDate["date"][1].date){
+            actionDate.index =  1;
+            actionDate["date"][1].price =  content;
+            actionDate["date"][1].use =  true;
+        }else{
+            actionDate.index =  2;
+            actionDate["date"][2].price =  content;
+            actionDate["date"][2].date =  date[0] ;
+            actionDate["date"][2].use =  true;
+        }
+        this.props.dispatch({
+            type:'fillOrder/setactionDate',
+            payload:actionDate
+        })
+
+        window.history.go(-1);
+    }
+    rightClick = ()=>{
         console.log("rightClick 被点击")
     }
-    return <div style={{height:"100%"}}>
-        {/*<Header   />*/}
-       <Header      mode="light"
-                     leftContent={<i className="fa fa-angle-left fa-lg"></i>}
-                     onLeftClick={() => window.history.go(-1)}
-                     >
-           <div style={{"textAlign":"center"}}>日期</div>
-       </Header>
-        <div style={{"position":"relative",height:"100%"}}>
-            <Date
-                refs="getDate"
-                defaultDate={state.defaultDate || []}
-                holidays={state.holidays}
-                limitDate={state.preSellDays}
-                chooseNumber="1"
-                type="single"   //选择单个
-                tips={null}
-                model='jqmp' // 景区门票显示规则
-                DateChange={this.getChangeDate.bind(this)}
-                defineClass='defineDateClass'
-            />
-        </div>
-    </div>
-}
 
-export default DateIndex;
+    render(){
+        return <div style={{height:"100%"}}>
+            {/*<Header   />*/}
+            <Header      mode="light"
+                         leftContent={<i className="fa fa-angle-left fa-lg"></i>}
+                         leftClick={() => window.history.go(-1)}
+            >
+                <div style={{"textAlign":"center"}}>日期</div>
+            </Header>
+            <div style={{"position":"relative",height:"100%"}}>
+                <DateContainer
+                    refs="getDate"
+                    defaultDate={this.state.defaultDate || []}
+                    holidays={this.state.holidays}
+                    limitDate={this.state.preSellDays}
+                    chooseNumber="1"
+                    type="single"   //选择单个
+                    tips={null}
+                    model='jqmp' // 景区门票显示规则
+                    DateChange={this.getChangeDate.bind(this)}
+                    defineClass='defineDateClass'
+                    sellDetail={this.state.sellDetail}
+                />
+            </div>
+        </div>
+    }
+};
+
+
+

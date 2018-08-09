@@ -32,6 +32,15 @@ Date.parseTimeStr = function (datestr) {//ios 专用
     datestr = datestr.replace(/-/g, "/");
     return new Date(datestr);
 }
+Date.prototype.getweek = function(){
+    if (this.format('yyyy/MM/dd') == new Date().format('yyyy/MM/dd')){
+        return '今天'
+    }
+    if (this.format('yyyy/MM/dd') == new Date((new Date() / 1000 + 86400) * 1000).format('yyyy/MM/dd')){
+        return '明天'
+    }
+    return ' 周' + '日一二三四五六'.charAt(this.getDay());
+};
 Date.parse1=Date.parseTimeStr;
 
 class Singer{
@@ -200,16 +209,137 @@ const baseUtil = {
     },
     productRefundRule(tag){
         let val = "";
+        //console.log("val",tag);
         switch (tag){
-            case 1:val='随时可退，过期自动退';
+            case "1":val='随时可退，过期自动退';
                     break;
-            case 2:val='退票收取手续费';
+            case "2":val='退票收取手续费';
                 break;
-            case 3:val='购买后不可退票';
+            case "3":val='购买后不可退票';
+                break;
+        }
+
+        return val;
+    },
+    entryParkMethods(tag){
+        let val = "";
+        //console.log("val",tag);
+        switch (tag){
+            case "2":val='商家短信';
+                break;
+            case "3":val='商家邮件';
+                break;
+            case "4":val='商家电子码';
+                break;
+            case "5":val='二维码';
+                break;
+            case "6":val='身份证';
+                break;
+            case "7":val='商家订单号';
+                break;
+            case "8":val='手机号';
+                break;
+            case "-1":val='其他';
                 break;
         }
         return val;
+    },
+    orderDetailStatus(status){
+        var detail = ""
+        switch(status){
+            case "booking":detail = {
+                singleLine:true,
+                mangLine: false,
+                status:'下单中',
+                doubleBtn:false,
+                singleBtn:false,
+                statusContent:"",
+                refundMoney:false,
+                icon:'paying'
+            };break;
+            case "book_succeed":detail = {
+                status:'待支付',
+                singleLine:false,
+                mangLine: true,
+                doubleBtn:true,
+                statusContent:"",
+                refundMoney:false,
+                icon:'paying'
+            };break;
+            case "selling":detail = {
+                status:'购票中',
+                singleLine:false,
+                mangLine: true,
+                doubleBtn:false,
+                singleBtn:false,
+                statusContent:"请耐心等待，抢到票后会第一时间告诉你",
+                refundMoney:false,
+                icon:'paying'
+            };break;
+            case "sell_succeed":detail = {
+                status:'待使用',
+                singleLine:true,
+                mangLine: false,
+                singleBtn:false,
+                doubleBtn:false,
+                statusContent:"",
+                refundMoney:true,
+                icon:'paying'
+            };break;
+            case "consume_succeed":detail = {
+                status:'已使用',
+                singleLine:true,
+                mangLine: false,
+                singleBtn:false,
+                doubleBtn:false,
+                statusContent:"",
+                refundMoney:false,
+                icon:'useing'
+            };break;
+            case "backed":detail = {
+                status:'已退票',
+                singleLine:true,
+                mangLine: false,
+                singleBtn:false,
+                doubleBtn:false,
+                statusContent:"",
+                refundMoney:false,
+                icon:'used',
+            };break;
+            case "backing":detail = {
+                status:'退票中',
+                singleLine:true,
+                mangLine: false,
+                singleBtn:false,
+                doubleBtn:false,
+                statusContent:"",
+                refundMoney:false,
+                icon:'paying'
+            };break;
+            case "sell_fail":detail = {
+                status:'退票失败',
+                singleLine:true,
+                mangLine: false,
+                singleBtn:true,
+                doubleBtn:false,
+                statusContent:"",
+                refundMoney:false,
+                icon:'retired'
+            };break;
+            case "cancelled":detail = {
+                status:'已取消',
+                singleLine:true,
+                mangLine: false,
+                singleBtn:false,
+                doubleBtn:false,
+                statusContent:"",
+                refundMoney:false,
+                icon:'retired'
+            };break;
+        }
+        return detail;
     }
+
 }
 
 export {

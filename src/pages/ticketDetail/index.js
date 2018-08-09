@@ -113,20 +113,20 @@ export  default class ticketDetail extends  React.Component{
               {
                   productUseRule.voucherTimes&&<div>
                     <div className={Styles[ "name" ]}>换票时间</div>
-                    <div>{`${productUseRule.voucherTimes.beginTime+"-"+productUseRule.voucherTimes.endTime}`}</div>
+                    <div>{`${productUseRule.voucherTimes[0].beginTime+"-"+productUseRule.voucherTimes[0].endTime}`}</div>
                   </div>
               }
               {
                   productUseRule.ticketGetAddress.length&&<div>
                       <div className={Styles[ "name" ]}>换票地址</div>
                       <div>{productUseRule.ticketGetAddress[0]}</div>
-                  </div>
+                  </div>||null
               }
               {
                   productUseRule.getInAddress.length&&<div>
                       <div className={Styles[ "name" ]}>入园地址</div>
                       <div>{productUseRule.getInAddress[0]}</div>
-                  </div>
+                  </div>||null
               }
           </div>
       }
@@ -140,8 +140,9 @@ export  default class ticketDetail extends  React.Component{
       if(!ticketDetail){
           return <div></div>
       }
-      return <div>
+      return <div style={{"height":"100%"}}>
           <Carousel
+
               className={Styles["carousel"]}
               autoplay={true}
               infinite
@@ -157,7 +158,7 @@ export  default class ticketDetail extends  React.Component{
                       className={Styles['swiper-single-a']}
                   >
                       <img
-                          src={val}
+                          src={'https://p0.meituan.net/300.0/hotel/99f65871392a88e7debe87199bbe4485721629.png'}
                           alt=""
                           onLoad={() => {
                               // fire window resize event to change height
@@ -225,7 +226,12 @@ export  default class ticketDetail extends  React.Component{
    * 执行跳转
    */
   writeOrder(item){
-    Router.push(`/fillOrder?pointNo=${this.state.pointNo}&productNo=${item.productNo}`)
+    //把需要传入的参数存入session好了
+    baseUtil.setSession("jqmp_ticketDetail",{
+        pointNo:this.state.pointNo,
+        productNo: item.productNo
+    })
+    Router.push(`/fillOrder`)
   }
 
   renderTicketModel(){
@@ -289,6 +295,7 @@ export  default class ticketDetail extends  React.Component{
   }
   render(){
     var _this = this;
+    let {ticketDetail} =  this.props.ticketDetail
     return <div className={ClassNames(Styles['ticketDetailContent'])}>
         <div className={Styles['ticketTop']}>
           <Header
@@ -299,7 +306,6 @@ export  default class ticketDetail extends  React.Component{
           ></Header>
             {this.renderTop()}
         </div>
-
       <div className={ClassNames(Styles['scroll-content'],Styles["defaultHeight"])}>
         <Scroll class={Styles['wrapper']}>
           <div className={Styles['scroll-cotent-bottom']}>

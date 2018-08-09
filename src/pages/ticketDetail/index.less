@@ -7,18 +7,7 @@
     position: relative;
     height: @base*300rem;
    /* overflow: hidden;*/
-    .slider-frame{
-      overflow: inherit !important;
-    }
-    .slider-list{
-      height: @base*300rem !important;
-    }
-    .swiper-single-a{
-      img{
-        width:100%;
-        height: @base*300rem;
-      }
-    }
+
     .leftBtnCircle{
       display: inline-block;
       width:@base*56rem;
@@ -85,7 +74,21 @@
     font-size:@font28;
   }
 }
-
+.carousel{
+  height:100% !important;
+  .am-carousel{
+    height:100% !important;
+  }
+  .slider-list{
+    height: @base*300rem !important;
+  }
+  .swiper-single-a{
+    img{
+      width:100%;
+      height: @base*300rem;
+    }
+  }
+}
 
 
 //card样式
@@ -282,22 +285,4 @@
   }
 }
 
-//cardBox下中的信息
-.writeOrder-cardContent{
-  div{
-    margin-bottom:5px;
-    color:#949494;
-    display: flex;
-    min-height: @base*60rem;
-    >:first-child{
-      width: @base*180rem;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      flex:1
-    }
-    >:last-child{
-      flex:2
-      }
-  }
-}
+

@@ -13,7 +13,9 @@ export default class CardBox extends React.Component{
                 {cardTitleIcon&&<span className={Styles['card-title-leftIcon']}></span>}
                 {cardTitle}
             </div>
-            <div className={Styles['card-content']}>
+            <div className={ClassNames(Styles['card-content'],{
+                    [Styles["noPadding"]]:this.props.noPadding}
+                )}>
                 {content}
             </div>
         </div>

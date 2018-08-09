@@ -3,56 +3,25 @@ import ClassNames from 'classnames'
 import Styles from '../index.less'
 export default  class PassagerChoose extends React.Component{
     render(){
+        let {passengers} =  this.props;
         return   <div className={ClassNames(Styles['passageList'], Styles["mgBottom20"])}>
             <div className={Styles["centerLine"]}></div>
-            <div className={Styles['passageList-single']}>
-                <div>
-                    <div className={Styles['passage-name']}>王小米</div>
-                    <div className={Styles['passage-detail']}>
-                        <span>身份证: 500231******12</span>
-                        <span>电话: 18008100961</span>
+            {
+                passengers.length&&passengers.map((item, index)=>{
+                    return <div className={Styles['passageList-single']} key={"passageList"+ index}>
+                        <div>
+                            <div className={Styles['passage-name']}>{item.userName}</div>
+                            <div className={Styles['passage-detail']}>
+                                <span>身份证: {item.cardNo}</span>
+                                <span>电话: {item.phone}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <i className={Styles['reduce-passage-Icon']}></i>
+                        </div>
                     </div>
-                </div>
-                <div>
-                    <i className={Styles['reduce-passage-Icon']}></i>
-                </div>
-            </div>
-            <div className={Styles['passageList-single']}>
-                <div>
-                    <div className={Styles['passage-name']}>王小米</div>
-                    <div className={Styles['passage-detail']}>
-                        <span>身份证: 500231******12</span>
-                        <span>电话: 18008100961</span>
-                    </div>
-                </div>
-                <div>
-                    <i className={Styles['reduce-passage-Icon']}></i>
-                </div>
-            </div>
-            <div className={Styles['passageList-single']}>
-                <div>
-                    <div className={Styles['passage-name']}>王小米</div>
-                    <div className={Styles['passage-detail']}>
-                        <span>身份证: 500231******12</span>
-                        <span>电话: 18008100961</span>
-                    </div>
-                </div>
-                <div>
-                    <i className={Styles['reduce-passage-Icon']}></i>
-                </div>
-            </div>
-            <div className={Styles['passageList-single']}>
-                <div>
-                    <div className={Styles['passage-name']}>王小米</div>
-                    <div className={Styles['passage-detail']}>
-                        <span>身份证: 500231******12</span>
-                        <span>电话: 18008100961</span>
-                    </div>
-                </div>
-                <div>
-                    <i className={Styles['reduce-passage-Icon']}></i>
-                </div>
-            </div>
+                })
+            }
         </div>
     }
 }
