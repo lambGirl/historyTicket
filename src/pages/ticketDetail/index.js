@@ -226,6 +226,8 @@ export  default class ticketDetail extends  React.Component{
    * 执行跳转
    */
   writeOrder(item){
+    baseUtil.setSession("jcpm_fillOrder","");
+      baseUtil.setSession("jpmp_dates","");
     //把需要传入的参数存入session好了
     baseUtil.setSession("jqmp_ticketDetail",{
         pointNo:this.state.pointNo,

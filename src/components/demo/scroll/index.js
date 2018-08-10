@@ -281,7 +281,7 @@ class Scroll extends Component {
          /* this.setState({
               isPullUpLoad: false,
           });*/
-          this.scroll.off("pullingUp");
+          //this.scroll.off("pullingUp");
       }
   }
 

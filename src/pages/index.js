@@ -13,12 +13,6 @@ import IndexSelectBar from '../components/indexSelectBar'   //selectBar
 import Scroll from '../components/demo/index' //分页滚动
 import AttractionSingle from '../components/indexAttractionSingle';
 import Dynamic from 'umi/dynamic';
-
-const Data = []
-let NEWDATAINDEX = 1
-for (let i = 0; i < 10; i++) {
-    Data.push(i)
-}
 @connect(({globalAct})=>({
     globalAct
 }))
@@ -40,11 +34,6 @@ class IndexPage extends React.Component{
     }
 
     componentDidMount(){
-        setTimeout(() => {
-            this.setState({
-                data: ['AiyWuByWklrrUDlFignR', 'TekJlZRVCjLFexlOCuWn', 'IJOtIlfsYdTyaDTRVrLI'],
-            });
-        }, 100);
         this.props.dispatch({
             type:'globalAct/getInit',
         });
@@ -52,7 +41,6 @@ class IndexPage extends React.Component{
         //console.log("sdfsdfsdfsdfsdf", this.props);
     }
     goDetail(){
-      //console.log("ticketDetail");
        Router.push('/ticketDetail/')
     }
     //获取门票列表的接口

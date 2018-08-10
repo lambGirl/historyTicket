@@ -246,8 +246,6 @@ export default globalAct = {
        return {
            ...state
        }
-
-
     }
   },
 

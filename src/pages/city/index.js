@@ -198,12 +198,15 @@ export  default  class cityChoose  extends  React.Component{
             "currentIndex":listHeight.length - 2
         });
     }
+
     searchFous(){
 
     }
+
     searchInput(){
 
     }
+
     //按照汉字排序
     localeCompare(a,b){
         if(!a&&!b){
@@ -366,11 +369,9 @@ export  default  class cityChoose  extends  React.Component{
 
                         </div>
                             {
-
-                                this.props.fetchCityData&&<div className={classNames(Styles["loading"])}>
-                                <div>loading</div>
-                                </div>
-
+                             this.props.fetchCityData&&<div className={classNames(Styles["loading"])}>
+                             <div>loading</div>
+                             </div>
                             }
                             {this.renderOrid()}
                     </div>

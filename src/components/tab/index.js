@@ -39,7 +39,7 @@ export default class LightTab extends React.Component {
                   //  console.log("i", i,  me.state.activeIndex);
                     return <div  key={"light_tab"+index} onClick={me.headerClick.bind(me,index)}
                               className={classnames(Styles["tab-link"],{
-                                  [Styles["active"]]: index == me.state.activeIndex
+                                  [Styles["active"]]: index == me.props.activeIndex
                               })}>
                         <span>{item}</span>
                     </div>
@@ -49,7 +49,7 @@ export default class LightTab extends React.Component {
     }
 
     renderTab(index){
-        var me = this,active = index == this.state.activeIndex ? "tab active" : "tab";
+        var me = this,active = index == this.props.activeIndex ? "tab active" : "tab";
 
         return  this.props.renderTab(index);
 
@@ -102,7 +102,8 @@ export default class LightTab extends React.Component {
     }
 
     headerClick(index){
-        if (this.props.beforeTabJump){
+        this.props.changeTab(index)
+       /* if (this.props.beforeTabJump){
             if (this.props.beforeTabJump(index)){
                 this.setState({
                     activeIndex:index
@@ -112,6 +113,8 @@ export default class LightTab extends React.Component {
         else
             this.setState({
                 activeIndex:index
-            });
+            },()=>{
+
+            });*/
     }
 }

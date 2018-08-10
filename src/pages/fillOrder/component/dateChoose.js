@@ -16,6 +16,12 @@ export  default class DateChoose extends React.Component{
         Router.push(`/date?defaultDate=${defaultDate}`);
     }
 
+    switchTime(index, item){
+        if(!item.use){
+            return;
+        }
+        this.props.switchTime(index, item.price);
+    }
     render(){
         let {effectiveDate} = this.props;
       // console.log("effectiveDate",effectiveDate);
@@ -28,7 +34,7 @@ export  default class DateChoose extends React.Component{
 
                 {
                     effectiveDate.date.map((item,index)=>{
-                        return <div key={'chooseDateList'+index} className={ClassNames(Styles['common'],{
+                        return <div onClick={this.switchTime.bind(this, index, item)} key={'chooseDateList'+index} className={ClassNames(Styles['common'],{
                             [Styles["default"]]:item.use,
                             [Styles["active"]]: effectiveDate.index === index,
                             [Styles["disable"]]:!item.use

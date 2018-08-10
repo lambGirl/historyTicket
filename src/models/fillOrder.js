@@ -124,12 +124,18 @@ export default globalAct = {
                     date:allowDateList[i].sellDate,price:allowDateList[i].sellDate,use:true
                 });
 
-                actionDate.date.map(function(item,index){
+                for(var i = 0; i< actionDate.date.length; i++){
+                    if(actionDate.date[i].use){
+                        actionDate.index = i;
+                        break;
+                    }
+                }
+                /*actionDate.date.map(function(item,index){
                     if(item.use){
-                        actionDate.index = index;
+
                         return;
                     }
-                });
+                });*/
 
                 baseUtil.setSession("jpmp_dates", actionDate);
                 return {

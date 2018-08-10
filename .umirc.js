@@ -12,5 +12,10 @@ export default {
           "changeOrigin": true,
           "pathRewrite": { "^/api" : "/api" }
       },
+      "/config":{
+          //"target": "http://jsonplaceholder.typicode.com/",
+          "target": "http://localhost:5000/",
+          "changeOrigin": true,
+      }
   }
 }

@@ -108,6 +108,7 @@ export default class FillOrder extends  React.Component{
             //这里就去请求统一支付页面result.data.body.orderNo
         })
     }
+
     componentDidMount(){
         let {pointNo,productNo} =  baseUtil.getSession("jqmp_ticketDetail");
         if(!baseUtil.getSession("jcpm_fillOrder")){
@@ -132,11 +133,26 @@ export default class FillOrder extends  React.Component{
 
 
     }
-    payPrice(cdqcp_passengers){
-
+    //切换时间选择并计价
+    switchTime(index, price){
+        //需要去设置时间的选择
+        let jpmp_dates =  baseUtil.getSession("jpmp_dates");
+        jpmp_dates.index =  index;
+        this.props.dispatch({
+            type:'fillOrder/setactionDate',
+            payload:jpmp_dates
+        });
+        //对应的乘客存在 就要存在计价
+        let cdqcp_passengers =  baseUtil.get("cdqcp_passengers");
+        if(cdqcp_passengers){
+            this.payPrice(cdqcp_passengers, price)
+        }
+    }
+    //计价规则
+    payPrice(cdqcp_passengers,newPrice){
         let {fillOrderDetail, canBuy,chooseInsurance, actionDate} = this.props.fillOrder,
             {productDetail} = fillOrderDetail,priceDetails=[],total = 0,
-            price = actionDate["date"].length&&parseFloat(actionDate["date"][actionDate.index].price)||"";
+            price = newPrice||actionDate["date"].length&&parseFloat(actionDate["date"][actionDate.index].price)||"";
         //单张票的价格
         priceDetails.push({
             label:"单价",
@@ -206,7 +222,8 @@ export default class FillOrder extends  React.Component{
          */
         var opid = baseUtil.get('cdqcp_opid');  //用户登陆的opid是否为空
         if(!opid){
-            window.location.href="/user/login?tzType=new&tzBuss=jpmp_ChoosePerson"
+            window.location.href="/user/login?tzType=new&tzBuss=jpmp_ChoosePerson";
+            return;
         }
         window.location.href="/user/newpassenger?allowIdCardType=01&allowTicketType=0,1,2&tzType=new&tzBuss=jpmp_ChoosePerson"
     }
@@ -219,6 +236,7 @@ export default class FillOrder extends  React.Component{
             <Header
                 mode="light"
                 leftContent={ <i className="fa fa-angle-left fa-lg" style={{"color":"#3E3E3E"}}></i>}
+                leftClick={()=>{window.history.go(-1)}}
             >
                 <div style={{"textAlign":'center','color':'#3E3E3E'}} >订单填写</div>
             </Header>
@@ -227,7 +245,7 @@ export default class FillOrder extends  React.Component{
                     <div className={Styles['scroll-cotent-bottom']}>
                         <div className={Styles['fillOrder-content-top']}>
                             <Title detail={fillOrderDetail["productDetail"]}/>
-                            <DateChoose effectiveDate={actionDate}/>
+                            <DateChoose effectiveDate={actionDate} switchTime={this.switchTime.bind(this)}/>
                             <div className={Styles["centerLine"]}></div>
                             <CanBuyNum initNum={canBuy} clickItem={this.controlBtn.bind(this)} fillOrderDetail={fillOrderDetail}/>
                         </div>
@@ -238,15 +256,17 @@ export default class FillOrder extends  React.Component{
                             clickType="1"
                         >
                         </LineBox>
-                        {passengers&&<PassagerChoose passengers={passengers}/>||null}
-                        <LineBox
-                            rightIcon={true}
-                            leftContent={<span className={ClassNames(Styles['color_333'],Styles['font28'])}>游园保障</span>}
-                            rightContent={<span className={ClassNames(Styles["color_313131"],Styles["font28"])}>游园保障</span>}
-                            clickType="1"
-                            clickTap = {this.chooseInsurance.bind(this)}
-                        >
-                        </LineBox>
+                        {passengers.length&&<PassagerChoose passengers={passengers}/>||""}
+                        <div className={Styles["mgtop20"]}>
+                            <LineBox
+                                rightIcon={true}
+                                leftContent={<span className={ClassNames(Styles['color_333'],Styles['font28'])}>游园保障</span>}
+                                rightContent={<span className={ClassNames(Styles["color_313131"],Styles["font28"])}>游园保障</span>}
+                                clickType="1"
+                                clickTap = {this.chooseInsurance.bind(this)}
+                            >
+                            </LineBox>
+                        </div>
                     </div>
                 </Scroll>
             </div>
