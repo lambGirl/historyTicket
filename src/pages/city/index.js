@@ -388,10 +388,19 @@ export  default  class cityChoose  extends  React.Component{
         let jqmp_IndexInit =  baseUtil.getSession("jqmp_IndexInit");
         jqmp_IndexInit.cityName =  item.cityName;
         jqmp_IndexInit.cityNo =  item.cityNo;
-       // baseUtil.setSession("jqmp_IndexInit",jqmp_IndexInit);
+        jqmp_IndexInit["all"] =  {
+            activeIndex:0,
+            data:item.childrens&&[{
+                  cityName: "全城", cityNo: "all"
+                }, ...item.childrens]||[{
+                cityName: "全城", cityNo: "all"
+            }]
+        };
+       //baseUtil.setSession("jqmp_IndexInit",jqmp_IndexInit);
         this.props.dispatch({
             type:'globalAct/getSelectBarData',
             payload:{
+                type:false,
                 SelectBarData:jqmp_IndexInit
             }
         })

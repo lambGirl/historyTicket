@@ -64,12 +64,14 @@ export default globalAct = {
        */
       const {SelectBarData} = yield select(_=>_.globalAct);
 
-      let {postData} =  payload;
+      //type:表示是否执行数据的累加操作
+      let {postData, type} =  payload;
 
       /**
        *请求的参数
        */
-      postData = Object.assign({},postData,{cityNo:SelectBarData.cityNo});
+    //  postData = Object.assign({},postData,{cityNo:SelectBarData.cityNo});
+      postData.cityNo = postData.cityNo === "all"&&SelectBarData.cityNo||  postData.cityNo;
       var data =  yield  call(query,{payload:postData});
 
        // console.log("data",data);
@@ -77,7 +79,9 @@ export default globalAct = {
         Toast.info('ok', 2);*/
         yield put({
           type:'setDoorList',
-          data: data.data
+          data:{
+              type: type,
+              initData:data.data}
         })
      /* } else {
         Toast.info('error', 2);
@@ -102,9 +106,10 @@ export default globalAct = {
          *      定位成功则去获取对应的城市编码(城市编码存在一个初始值，默认为成都。没有改变过)
          *      得到对应的城市城市编码，去获取对应的景区门票列表
          */
-        let {currPoint,currentCity,pageNum,currPage,SelectBarData} = yield select(_=>_.globalAct),getLocation;
+        let {point,currentCity,pageNum,currPage,SelectBarData,totalPage} = yield select(_=>_.globalAct),getLocation;
         //console.log("currPoint",currPoint,currentCity,  SelectBarData)
-        if(!currPoint){
+        currPage = 1,totalPage=10;  //进来都去初始化一次数据
+        if(!point){
             try {
                 getLocation =  yield call(location);//获取坐标定位之后
             }catch (err){
@@ -114,11 +119,11 @@ export default globalAct = {
                 }
             }
 
-            currPoint = Object.assign({}, getLocation);
+            point = Object.assign({}, getLocation);
             //如果初始化进来，就直接去设置point
             yield put({
                 type:'setPoint',
-                data: currPoint
+                data: point
             })
         }
 
@@ -129,8 +134,10 @@ export default globalAct = {
                 lat =  getLocation&&getLocation.data["lat"];
             //设置对应的城市
             var getLocationCityData = yield call(getLocationCity,{longitude:lng,latitude:lat});
-          // console.log("getLocationCityData",getLocationCityData);
-            SelectBarData["all"].data = getLocationCityData.data.body.childrens;
+            //console.log("getLocationCityData",getLocationCityData);
+            SelectBarData["all"].data =getLocationCityData.data.body.childrens&&[{
+                cityName: "全城", cityNo: "all"
+            }, ...getLocationCityData.data.body.childrens];
             SelectBarData["cityName"] = getLocationCityData.data.body.cityName;
             SelectBarData["cityNo"] = getLocationCityData.data.body.cityNo;
             //初始化对应的首页默认数据
@@ -148,34 +155,60 @@ export default globalAct = {
                 data: getLocationCityData.data
             })
         }
+
+
         let  {data, activeIndex} = SelectBarData["zlpx"];
+        let  allData = SelectBarData["all"]["data"],allActiveIndex = SelectBarData["all"]["activeIndex"];
       //  return;
         yield  put({
             type:'getPoints',
             payload: {
+                type:false,
                 postData:{
                     sortType: data[activeIndex].cityNo,
-                    longitude: currPoint.data&&currPoint.data.lng||"",
-                    latitude: currPoint.data&&currPoint.data.lat||"",
+                    longitude: point.data&&point.data.lng||"",
+                    latitude: point.data&&point.data.lat||"",
                     key:'',
                     pageNum: currPage,
                     pageSize:pageNum,
-                    cityNo:'all'    //这里到时候要改
+                    cityNo:allData[allActiveIndex].cityNo    //这里到时候要改
                 }
             },
         })
     },
 
-    *getSelectBarData({payload},{call, put}){
-       //console.log("SelectBarData",payload);
-        let {SelectBarData} = payload;
+    *getSelectBarData({payload},{call, put, select}){
+        let {SelectBarData,type} = payload;//得到改变的参数
+        if(type){
+            let {point} = yield select(_=>_.globalAct)
+            let  {data, activeIndex} = SelectBarData["zlpx"];
+            let  allData = SelectBarData["all"]["data"],allActiveIndex = SelectBarData["all"]["activeIndex"];
+            yield  put({
+                type:'getPoints',
+                payload: {
+                    type:false,
+                    postData:{
+                        sortType: data[activeIndex].cityNo,
+                        longitude: point.data&&point.data.lng||"",
+                        latitude: point.data&&point.data.lat||"",
+                        key:'',
+                        pageNum: 1,
+                        pageSize:20,
+                        cityNo: allData[allActiveIndex].cityNo   //这里到时候要改
+                    }
+                },
+            })
+        }
+
+      //  console.log(currPoint);
+      //  return;
+
         yield put({
             type:'setIndexInit',
             data:{
                 type:true,
                 data:SelectBarData
             }
-
         })
     }
 
@@ -226,19 +259,21 @@ export default globalAct = {
 
     setDoorList(state, action){
       // console.log(action);
+        let {initData, type} =  action.data;
         //这里需要验证doorList是否存在，如果存在了就需要push数据
-       if(action.data.pubResponse.code == "0000"){
-           if(state.doorList&&state.doorList.length&&state.currPage != action.data.body.pageNum){
-               state.doorList = state.doorList.concat(action.data.body.list);
+       if(initData.pubResponse.code == "0000"){
+           //这里执行分页查询的操作
+           if(type){
+               state.doorList = state.doorList.concat(initData.body.list);
 
            }else{
-               state.doorList = action.data.body.list
+               state.doorList = initData.body.list
            }
 
            return {
                ...state,
-               currPage:action.data.body.pageNum,   //门票的分页初始页
-               totalPage:action.data.body.pages,  //门票分页的总页数
+               currPage:initData.body.pageNum,   //门票的分页初始页
+               totalPage:initData.body.pages,  //门票分页的总页数
            }
        }
 

@@ -142,7 +142,6 @@ export  default class ticketDetail extends  React.Component{
       }
       return <div style={{"height":"100%"}}>
           <Carousel
-
               className={Styles["carousel"]}
               autoplay={true}
               infinite
@@ -156,10 +155,12 @@ export  default class ticketDetail extends  React.Component{
                       href="javascript:;"
                       onClick={_this.showPhotosList.bind(_this,index)}
                       className={Styles['swiper-single-a']}
+                      style={{ display: 'inline-block', width: '100%', height: this.state.imgHeight }}
                   >
                       <img
                           src={'https://p0.meituan.net/300.0/hotel/99f65871392a88e7debe87199bbe4485721629.png'}
                           alt=""
+                          style={{ width: '100%', verticalAlign: 'top' }}
                           onLoad={() => {
                               // fire window resize event to change height
                               window.dispatchEvent(new Event('resize'));

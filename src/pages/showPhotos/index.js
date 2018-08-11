@@ -47,6 +47,7 @@ export default class ShowPhotos extends React.Component{
                                 key={val + index}
                                 href="javascript:;"
                                 className={Styles['swiper-single-a']}
+                                style={{ display: 'inline-block', width: '100%', height: this.state.imgHeight }}
                             >
                                 <img
                                     src={val}

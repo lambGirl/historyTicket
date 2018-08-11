@@ -157,7 +157,7 @@ class Scroll extends Component {
   initEvents () {
     // console.log("this.options.pullUpLoad",this.options.pullUpLoad);
       //下来加载数据 实现分页，则需要分页的页面要小于最大的页数
-    if (this.options.pullUpLoad && this.props.currPage < this.props.totalPage) {
+    if (this.options.pullUpLoad) {
       this._initPullUpLoad();
     }
     if (this.options.pullDownRefresh) {
@@ -271,8 +271,9 @@ class Scroll extends Component {
       //否则继续滚动
       if(currPage < totalPage){
           this.scroll.finishPullUp();
-          this.scroll.refresh();
+          //this.scroll.refresh();
       }
+
       // console.log("sdfsdf", )
       //滚动的页数如果等于当前页面了则结束滚动
       // console.log("水电费水电费11111", now_isPullUpLoad);

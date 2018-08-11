@@ -32,13 +32,16 @@ class IndexPage extends React.Component{
             selectBarModelFixed:false,      //设置toolBar悬浮动画
         }
     }
+    componentWillMount(){
+       // console.log("1111111111111")
+    }
 
     componentDidMount(){
         this.props.dispatch({
             type:'globalAct/getInit',
         });
         //拿去定位结果，如果定位成功则去请求，获取城市的接口。得到城市之后，去查询所有的门票的列表
-        //console.log("sdfsdfsdfsdfsdf", this.props);
+        console.log("sdfsdfsdfsdfsdf1111111111111111");
     }
     goDetail(){
        Router.push('/ticketDetail/')
@@ -57,6 +60,7 @@ class IndexPage extends React.Component{
         this.props.dispatch({
             type: 'globalAct/getPoints',
             payload: {
+                type:true,
                 postData:{
                     sortType: zlpx.data[zlpx.activeIndex].key,
                     longitude: point.data&&point.data.lng||"",
@@ -137,6 +141,7 @@ class IndexPage extends React.Component{
         this.props.dispatch({
             type:'globalAct/getSelectBarData',
             payload: {
+                type:false,
                 SelectBarData
             }
         })
@@ -162,10 +167,14 @@ class IndexPage extends React.Component{
             this.props.dispatch({
                 type:'globalAct/getSelectBarData',
                 payload: {
+                    type:true,
                     SelectBarData:e
                 }
             })
+            let {indexScroll} = this.refs;
+            indexScroll.refs.scrollSwipe.scrollToElement(this.refs.searchBarModel, 300);
         }
+        //console.log("点击了");
         this.setState({
             IndexModelSelectBarStatus:[false,false]
         })
@@ -195,7 +204,7 @@ class IndexPage extends React.Component{
             allBarColor = (SelectBarData["all"].activeIndex||IndexModelSelectBarStatus[0])?'#37A0F1':"#DBDBDB",
             zlpxColor =  (SelectBarData["zlpx"].activeIndex||IndexModelSelectBarStatus[1])?'#37A0F1':"#DBDBDB";
         let ListArrHeight = this.initticketsListArrHeight();
-        //console.log("SelectBarData",SelectBarData);
+        //console.log("我会执行嘛");
         return (
             <div className={styles["container_page"]}>
                 <Helmet>
@@ -211,7 +220,7 @@ class IndexPage extends React.Component{
                             leftContent={ <i className="fa fa-angle-left fa-lg" style={{"color":`${this.state.headerConfig.color}`}}></i>}
                             rightContent={
                                 <span style={{"color":`${this.state.headerConfig.color}`}}>
-                                    <span style={{"paddingRight":'4px'}}>{SelectBarData.cityName}</span>
+                                    <span style={{"paddingRight":'4px'}} className={styles["headerCityName"]}>{SelectBarData.cityName}</span>
                                     <i className="fa fa-angle-down fa-lg"></i>
                                </span>
                             }

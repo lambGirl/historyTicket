@@ -15,7 +15,9 @@ export  default class IndexModelSelectBar extends React.Component{
            // console.log("parentType", item);
             selectBarData[item.parentType].activeIndex = item.index
             barClick(selectBarData);
+            return;
         }
+       // console.log("sdfsdfsdf",item);
         barClick();
     }
 
@@ -30,8 +32,8 @@ export  default class IndexModelSelectBar extends React.Component{
       //  console.log("parentType",selectBarData[parentType]);
        // return <div></div>
 
-        return <div className={Styles['selectModelContent']} >
-            <div className={Styles['selectModelListArr']} onClick={this.selectItem.bind(this)}>
+        return <div className={Styles['selectModelContent']}  onClick={this.selectItem.bind(this,"")}>
+            <div className={Styles['selectModelListArr']}>
                 {/*<div className={classnames(Styles['selectModelList-single'],{
                     [Styles["active"]]:true
                 })}>
