@@ -9,6 +9,9 @@ import LineBox from  '../../components/lineBox'
 import CardBox from  '../../components/cardBox'
 import { connect } from 'dva'
 import {Date,baseUtil} from '../../utils/util'
+import { Modal,List } from 'antd-mobile';
+
+const alert = Modal.alert;
 
 @connect(({ticketDetail,loading})=>({
     ticketDetail,
@@ -22,7 +25,8 @@ export  default class ticketDetail extends  React.Component{
         slideIndex: 0,
         showModel: false,
         showModelContent: "",
-        pointNo: Router.location.query.point
+        pointNo: Router.location.query.point,
+        showPhone: false
     }
   }
 
@@ -180,7 +184,7 @@ export  default class ticketDetail extends  React.Component{
   }
   renderPhone(){
       let {ticketDetail} =  this.props.ticketDetail;
-      return <div className={Styles["ticketAddress"]}>
+      return <div className={Styles["ticketAddress"]}  onClick={this.callPhone.bind(this)}>
           <div>
               {ticketDetail.pointAddress}
           </div>
@@ -197,6 +201,7 @@ export  default class ticketDetail extends  React.Component{
       }
       return    <div className={Styles['card']}>
           <div className={Styles['card-Title']}>
+              <span className={Styles['card-title-leftIcon']}></span>
               <span className={Styles['card-title-leftIcon']}></span>
               门票
           </div>
@@ -343,6 +348,36 @@ export  default class ticketDetail extends  React.Component{
         {
             this.state.showModel&&this.renderTicketModel()
         }
+
+           <Modal
+                popup
+                visible={this.state.showPhone}
+                onClose={this.onClose.bind(this)}
+                animationType="slide-up"
+            >
+                <List  renderHeader={() => <div>一键拨号</div>} className="popup-list">
+                    {['18822342345', '18822342345', '18822342345'].map((i, index) => (
+                        <List.Item key={index}><a style={{"color":"#807878","width":"100%", "height":"100%","display":"inline-block"}} href={`tel:${i}`}>{i}</a></List.Item>
+                    ))}
+                </List>
+            </Modal>
+
     </div>
   }
+
+  //打电话
+    callPhone(){
+          this.setState({
+              "showPhone":true
+          })
+    }
+    onClose(phone){
+    //  console.log(phone);
+        this.setState({
+            "showPhone":false
+        });
+      /*if(phone){
+        return `tel:${phone}`
+      }*/
+    }
 }

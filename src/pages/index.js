@@ -199,6 +199,11 @@ class IndexPage extends React.Component{
        router.push(`/ticketDetail?point=${item.pointNo}`)
     }
 
+    //centerClick
+    centerClick(){
+        router.push(`/searchTicketList`);
+    }
+
     render(){
         let {SelectBarData,doorList,currPage,totalPage} =  this.props.globalAct,{ IndexModelSelectBarStatus } =  this.state,
             allBarColor = (SelectBarData["all"].activeIndex||IndexModelSelectBarStatus[0])?'#37A0F1':"#DBDBDB",
@@ -226,9 +231,10 @@ class IndexPage extends React.Component{
                             }
                             centerContentType='1'
                             rightClick={this.rightClick.bind(this)}
+                            centerClick={this.centerClick.bind(this)}
                         ></Header>
                     </div>
-                    {SelectBarData.cityName&&<Scroll class={styles["wrapper"]}
+                    <Scroll class={styles["wrapper"]}
                             ref='indexScroll'
                             needMore={true}
                             currPage={currPage}
@@ -253,8 +259,7 @@ class IndexPage extends React.Component{
                                     IndexModelSelectBarStatus={this.state.IndexModelSelectBarStatus}
                                 ></IndexSelectBar>
                             </div>
-
-                            <div className={styles["ticketsListArr"]}>
+                           <div className={styles["ticketsListArr"]}>
                                 {
                                     doorList&&doorList.map((item,index)=>{
                                         return  <AttractionSingle key={index} item={item} clickItem={this.chooseTicket.bind(this)}/>
@@ -262,7 +267,7 @@ class IndexPage extends React.Component{
                                 }
                             </div>
                         </div>
-                    </Scroll>}
+                    </Scroll>
                 </div>
 
                 {

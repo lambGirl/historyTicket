@@ -21,7 +21,7 @@ export default globalAct = {
           "all":{
               activeIndex:0,
               parentIndex: false,
-              data:[]
+              data:[{"cityName":"全城","cityNo":'all'}]
           },
           'zlpx':{
               activeIndex:0,
@@ -133,11 +133,10 @@ export default globalAct = {
             let lng =  getLocation&&getLocation.data["lng"],
                 lat =  getLocation&&getLocation.data["lat"];
             //设置对应的城市
-            var getLocationCityData = yield call(getLocationCity,{longitude:lng,latitude:lat});
+            var getLocationCityData = yield call(getLocationCity,{longitude:lng,latitude:lat}),
+            allChild=getLocationCityData.data.body.childrens;
             //console.log("getLocationCityData",getLocationCityData);
-            SelectBarData["all"].data =getLocationCityData.data.body.childrens&&[{
-                cityName: "全城", cityNo: "all"
-            }, ...getLocationCityData.data.body.childrens];
+            SelectBarData["all"].data =allChild.length&&[{cityName: "全城", cityNo: "all"}].concat(allChild);
             SelectBarData["cityName"] = getLocationCityData.data.body.cityName;
             SelectBarData["cityNo"] = getLocationCityData.data.body.cityNo;
             //初始化对应的首页默认数据
@@ -147,13 +146,13 @@ export default globalAct = {
                     type:false,
                     data:getLocationCityData.data
                 }
-            })
+            });
 
             //初始化定位的城市
             yield  put({
                 type:'setCurrentCity',
                 data: getLocationCityData.data
-            })
+            });
         }
 
 
@@ -240,7 +239,8 @@ export default globalAct = {
         //console.log("action---------",action);
         //接口回来的数据设置
         if(!action.data.type){
-            state.SelectBarData["all"].data = action.data.data.body.childrens;
+            let allChild = action.data.data.body.childrens;
+            state.SelectBarData["all"].data = allChild.length&&[{"cityName":"全城","cityNo":'all'}].concat(allChild);
             state.SelectBarData["cityName"] = action.data.data.body.cityName;
             state.SelectBarData["cityNo"] = action.data.data.body.cityNo;
             baseUtil.setSession("jqmp_IndexInit",state.SelectBarData);

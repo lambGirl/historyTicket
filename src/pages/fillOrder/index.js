@@ -26,27 +26,7 @@ export default class FillOrder extends  React.Component{
             reduceAddBtn: [ true, true ],
             passengers:[],
             total:0, //总票价
-            priceDetails:[          //明细
-                {
-                    label:"单价",
-                    num:"" ,
-                    desc:'',
-                    value:"¥35"
-                },
-                {
-                    label:"总人数",
-                    num:"" ,
-                    desc:'人',
-                    value:"1"
-                },
-                {
-                    label:"保险",
-                    num:"1" ,
-                    desc:'人',
-                    value:"12"
-                },
-
-            ]
+            priceDetails:[]
         }
     }
     chooseInsurance(){
@@ -149,10 +129,11 @@ export default class FillOrder extends  React.Component{
         }
     }
     //计价规则
-    payPrice(cdqcp_passengers,newPrice){
+    payPrice(cdqcp_passengers,newPrice,num){
         let {fillOrderDetail, canBuy,chooseInsurance, actionDate} = this.props.fillOrder,
             {productDetail} = fillOrderDetail,priceDetails=[],total = 0,
-            price = newPrice||actionDate["date"].length&&parseFloat(actionDate["date"][actionDate.index].price)||"";
+            price = newPrice||actionDate["date"].length&&parseFloat(actionDate["date"][actionDate.index].price)||"",
+            totalPerson = num||canBuy;
         //单张票的价格
         priceDetails.push({
             label:"单价",
@@ -164,7 +145,7 @@ export default class FillOrder extends  React.Component{
             label:"总人数",
             num:"" ,
             desc:'人',
-            value:canBuy
+            value:totalPerson
         });
         //
         chooseInsurance.flag&&priceDetails.push({
@@ -176,7 +157,7 @@ export default class FillOrder extends  React.Component{
 
         //这里还需要加上保险的价格
         //console.log(fillOrderDetail)
-        total += Number(price)*canBuy;
+        total += Number(price)*totalPerson;
 
         this.setState({
             total: total,
@@ -213,7 +194,13 @@ export default class FillOrder extends  React.Component{
         this.props.dispatch({
             type:'fillOrder/canBuy',
             payload:num
-        })
+        });
+        //这里需要设置对应的乘客
+        let cdqcp_passengers =  baseUtil.get("cdqcp_passengers");
+        if(cdqcp_passengers){
+            //这里就去算价格
+            this.payPrice(cdqcp_passengers,"", num);
+        }
     }
 
     choosePassager(){

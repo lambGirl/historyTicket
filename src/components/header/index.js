@@ -21,6 +21,14 @@ class Header extends  React.Component{
       }
       return false;
   }
+
+  centerClick(){
+       if(!this.props.centerClick){
+           return;
+       }
+      this.props.centerClick();
+  }
+
   render(){
     let {parentOutClass,positionType,mode,leftContent, rightContent,centerContentType,ref} =  this.props;
     return  <div ref={ref} className={classnames(styles["header-parent"],{
@@ -38,7 +46,7 @@ class Header extends  React.Component{
          {/* <i className="fa fa-angle-left fa-lg" style={{"color":"#fff"}}></i>*/}
           {leftContent}
         </div>
-        <div className={styles['center-header']}>
+        <div className={styles['center-header']} onClick={this.centerClick.bind(this)}>
           {
             centerContentType == '1'&&<div className={styles['search-input']}>
               <i className="fa fa-search fa-lg"></i>
