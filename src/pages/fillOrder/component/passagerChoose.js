@@ -16,7 +16,7 @@ export default  class PassagerChoose extends React.Component{
                                 <span>电话: {item.phone}</span>
                             </div>
                         </div>
-                        <div>
+                        <div onClick={()=>{this.props.delPerson(item,index)}}>
                             <i className={Styles['reduce-passage-Icon']}></i>
                         </div>
                     </div>

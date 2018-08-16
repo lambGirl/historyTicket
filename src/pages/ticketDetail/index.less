@@ -13,11 +13,11 @@
       width:@base*56rem;
       height:@base*56rem;
       line-height: @base*56rem;
-      background:rgba(0,0,0,1);
-      opacity:0.2;
+      background:rgba(0,0,0,.2);
       color: #fff;
       border-radius: 50%;
       text-align: center;
+      font-size: @font40;
       i{
         height: 100%;
         width: 100%;
@@ -26,28 +26,47 @@
       }
     }
     .swiper-bottom{
-      height: @base*72rem;
+      max-height: @base*72rem;
       width:100%;
-      background: rgba(255,255,255,0);
+      background:linear-gradient(0deg,rgba(0,0,0,0.6),rgba(0,0,0,0.3),rgba(255,255,255,0));
       color: #fff;
       position: absolute;
       bottom:0;
-
+      padding-bottom: @base*20rem;
+      font-size: @font28;
       >div{
         display: flex;
-        align-items: center;
-
         width:100%;
         height:100%;
         box-sizing: border-box;
         padding:0 @base*30rem;
+        justify-content: center;
+        align-items: center;
         >:first-child{
           text-align: left;
-          flex:1;
+          flex:2;
+          width:100%;
+          height:100%;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          >div{
+            word-break: break-all;
+            text-overflow: ellipsis;
+            display: -webkit-box !important; /** 对象作为伸缩盒子模型显示 **/
+            -webkit-line-clamp: 2 !important; /** 显示的行数 **/
+            overflow: hidden; /** 隐藏超出的内容 **/
+          }
         }
         >:last-child{
           text-align: right;
           flex:1;
+          height:100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          overflow: hidden;
         }
       }
     }
@@ -68,10 +87,42 @@
   >:first-child{
     color:#949494;
     font-size:@font24;
+    display: flex;
+    align-items: center;
+    height:100%;
+    flex:2;
+    overflow: hidden;
+    .address_Icon{
+      width: @base*30rem;
+      height: @base*30rem;
+      background: url("../../assets/img/ico_address@2x.png")no-repeat;
+      background-size: cover;
+    }
+    >:last-child{
+      padding-left: @base*20rem;
+      width:90%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
-  >:last-child{
-    color:#37A0F1;
-    font-size:@font28;
+  >:nth-child(2){
+    max-width:@base*100rem;
+    height:48%;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid #E6E6E6;
+    justify-content: center;
+    align-items: flex-end;
+    padding-right: @base*20rem;
+    box-sizing: border-box;
+    flex:1;
+    .ticketDetail_phone{
+      width: @base*28rem;
+      height: @base*30rem;
+      background: url("../../assets/img/ico_phone@2x.png") no-repeat;
+      background-size: cover;
+    }
   }
 }
 .carousel{
@@ -135,6 +186,15 @@
     flex-direction: column;
     justify-content: space-between;
     padding: @base*33rem 0;
+    overflow: hidden;
+    flex: 3;
+    width: 90%;
+    >:first-child{
+      white-space: nowrap;
+      width: 94%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
   >:last-child{
     display: flex;
@@ -215,6 +275,8 @@
       align-items: center;
       /*justify-content: space-between;*/
       padding-left: @base*30rem;
+      font-size: @font30;
+      color:#333333;
       /*padding-bottom: @base*36rem;*/
       >:first-child{
       /*  height: @base*160rem;*/
@@ -223,26 +285,50 @@
         box-sizing: border-box;
         height:100%;
         min-width: @base*160rem ;
-        img{
+        >div{
           position:absolute;
           height: @base*160rem;
-          top:-@base*40rem;
           width: @base*160rem;
-          height: @base*160rem;
+          box-sizing: border-box;
+          top:-@base*40rem;
+          padding: @base*5rem;
+          background: #fff;
+          border: @base*1rem solid #E6E6E6;
+        }
+        img{
+          width: @base*150rem;
+          height: @base*150rem;
         }
       }
       >:last-child{
         width:76%;
+        height:100%;
         padding-left:@base*30rem;
         box-sizing: border-box;
         padding-right: @base*76rem;
+        padding-top: @base*30rem;
+        div{
+          height:@base*80rem;
+          width:100%;
+          word-break: break-all;
+          text-overflow: ellipsis;
+          display: -webkit-box !important; /** 对象作为伸缩盒子模型显示 **/
+          -webkit-line-clamp: 2 !important; /** 显示的行数 **/
+          overflow: hidden; /** 隐藏超出的内容 **/
+        }
       }
     }
     .close{
       position: absolute;
       right:0;
       font-size:@font36;
-      padding: @base*20rem;
+      padding: @base*30rem  @base*20rem @base*20rem  @base*20rem;
+      .closeBtn{
+        width: @base*25rem;
+        height: @base*25rem;
+        background: url("../../assets/img/btn_delete@2x.png") no-repeat;
+        background-size: cover;
+      }
     }
     .writeOrder_detail_content{
 
@@ -264,13 +350,12 @@
       background: #fff;
       box-sizing: border-box;
       height:@base*100rem;
-      border-top: 1px solid #E5E5E5;
+
       &>:first-child{
         flex: 2;
         padding-left: @base*30rem;
         line-height:@base*100rem;
-
-
+        border-top: 1px solid #E5E5E5;
       }
       &>:last-child{
        /* flex: 1;*/
@@ -280,6 +365,7 @@
         text-align: center;
         color: #fff;
         line-height:@base*100rem;
+        border-top: 1px solid #F48831;
       }
     }
   }

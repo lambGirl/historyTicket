@@ -1,6 +1,31 @@
 import request from '../utils/request';
 import {getLocation} from "../utils/util";
 
+//获取全局配置
+function queryGlobalConfig() {
+    // console.log("payload",payload);
+    return request('/api?server=system.globalConfig',{
+        method: "post",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify({})
+    });
+}
+
+//获取首页的图片列表
+function getHomeFocusImg() {
+    // console.log("payload",payload);
+    return request('/api?server=trip_getHomeFocusImg',{
+        method: "post",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify({})
+    });
+}
+
+
 //获取景区门票列表
 function query({payload}) {
    // console.log("payload",payload);
@@ -42,5 +67,7 @@ export {
     query,
     queryM,
     location,
-    getLocationCity
+    getLocationCity,
+    queryGlobalConfig,
+    getHomeFocusImg
 }

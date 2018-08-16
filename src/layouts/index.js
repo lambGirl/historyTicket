@@ -5,6 +5,7 @@ import createLoading from 'dva-loading';
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import '@babel/polyfill';
 import {baseUtil} from "../utils/util";
+import router from "../pages/.umi/router";
 
 /*import { IntlProvider } from 'react-intl';*/
 
@@ -29,6 +30,9 @@ class App extends React.Component{
        /*this.props.dispatch({
             type:'globalAct/getInit',
         });*/
+    }
+    componentWillUnmount(){
+        console.log("22222222222222222222222222222222222");
     }
 
     render(){

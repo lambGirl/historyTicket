@@ -1,4 +1,4 @@
-import { queryFillOrder } from '../services/fillOrder'
+import { queryFillOrder,queryHoliday } from '../services/fillOrder'
 import {baseUtil,Date} from "../utils/util";
 import { Toast } from 'antd-mobile';
 
@@ -10,6 +10,7 @@ export default globalAct = {
     state: {
         fillOrderDetail:baseUtil.getSession("jcpm_fillOrder")||"",    //ticketDetail详情
         canBuy:baseUtil.getSession("jcpm_canBuy")||0,
+        holidays:[],
         chooseInsurance:{       //是否选择保险
             flag: false,
             index:0,
@@ -46,6 +47,17 @@ export default globalAct = {
                 }
             });
         },
+
+        *getHoliday({payload},{call, put}){
+            let initData =  yield call(queryHoliday, {payload});
+            //这里初始化日历的选择, 这里是初始化设置
+            yield put({
+                type: 'setHoliday',
+                data: {
+                    initData:initData.data
+                }
+            });
+        },
         *canBuy({payload},{call,put}){
             //console.log("payload",payload);
             yield put({
@@ -66,6 +78,13 @@ export default globalAct = {
     },
 
     reducers: {
+        setHoliday(state, action){
+
+            return{
+                ...state,
+                holidays: action.data.body
+            }
+        },
         save(state, action) {
            //console.log("action.data111",action.data.body["productDetail"]);
             if(action.data.pubResponse.code === "0000"){
@@ -121,7 +140,7 @@ export default globalAct = {
                     }
                 });
                 actionDate.date.push({
-                    date:allowDateList[i].sellDate,price:allowDateList[i].sellDate,use:true
+                    date:allowDateList[i].sellDate,price:allowDateList[i].sellPrice,use:true
                 });
 
                 for(var i = 0; i< actionDate.date.length; i++){

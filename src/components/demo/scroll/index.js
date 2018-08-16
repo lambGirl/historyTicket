@@ -42,7 +42,7 @@ class Scroll extends Component {
     },
     eventPassthrough: '',
     isPullUpTipHide: true,
-    bounce: false,
+    bounce: true,
   }
 
   static propTypes = {
@@ -265,13 +265,16 @@ class Scroll extends Component {
 
   }
 
-  componentDidUpdate(nextProps, prevState){
+    UNSAFE_componentWillReceiveProps(nextProps){
       //console.log("componentDidUpdate", nextProps, prevState)
       let {currPage,totalPage } = nextProps
       //否则继续滚动
       if(currPage < totalPage){
+          this.setState({
+              isPullUpLoad: true,
+          });
           this.scroll.finishPullUp();
-          //this.scroll.refresh();
+          this.scroll.refresh();
       }
 
       // console.log("sdfsdf", )
@@ -279,9 +282,9 @@ class Scroll extends Component {
       // console.log("水电费水电费11111", now_isPullUpLoad);
       //console.log("currPage",currPage, totalPage)
       if(currPage >= totalPage){
-         /* this.setState({
+         this.setState({
               isPullUpLoad: false,
-          });*/
+          });
           //this.scroll.off("pullingUp");
       }
   }
@@ -323,7 +326,7 @@ class Scroll extends Component {
 
   renderPullUpLoad () {
     let { pullUpLoad, isPullUpTipHide, currPage, totalPage } = this.props
-      //console.log("currPage",currPage, totalPage);
+     // console.log("currPage",currPage, totalPage);
     if (pullUpLoad && isPullUpTipHide ) {
       return (
         <div className={Styles["b-pullup-wrapper"]}>
@@ -334,7 +337,7 @@ class Scroll extends Component {
       )
     }
 
-    if(pullUpLoad&&currPage >= totalPage ){
+    if(pullUpLoad&&currPage >= totalPage){
         return (
             <div className= {Styles["b-pullup-wrapper"]}>
                 <div className={Styles["before-trigger"]}>
@@ -414,6 +417,7 @@ class Scroll extends Component {
     }
     //刷新scroll
     refresh(){
+      //console.log("1111111111111我被刷新了")
         this.scroll && this.scroll.refresh()
     }
 

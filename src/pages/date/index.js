@@ -2,8 +2,10 @@ import React from 'react'
 import DateContainer from '../../components/date/date'
 import Header from '../../components/header'
 import Router from 'umi/router'
-import { Date } from "../../utils/util"
+import { baseUtil, Date } from "../../utils/util"
 import { connect } from "dva"
+import global from "../../models/global";
+import Request from "../../utils/request"
 
 @connect(({fillOrder,loading})=>({
     fillOrder,
@@ -14,25 +16,33 @@ export default class DateIndex extends React.Component{
     constructor(props){
         super(props);
         let defaultDate =  Router.location.query.defaultDate||new Date().format("yyyy-MM-dd"),
-            {fillOrderDetail} =  props.fillOrder;
+            {fillOrderDetail} =  props.fillOrder,
+            globalConfig =  baseUtil.getSession("globalConfig");
         this.state =  {
-            preSellDays: 200,
+            preSellDays: baseUtil.ConfigFind("max_presell_days"),
             defaultDate: [defaultDate],
-            holidays:[{ date:"2018-08-03",
-                id:3673,
-                name:"国庆节",
-                play:1,
-                year:2018},
-                {
-                    date:"2018-08-04",
-                    id:3673,
-                    name:"情人节",
-                    play:1,
-                    year:2018
-                }
-            ],
+            holidays:[],
             sellDetail:fillOrderDetail["productDatePrices"]
         }
+    }
+    componentDidMount(){
+        let {from} =  Router.location.query,_this =  this;
+        Request("/api?server=tz_getHoliday",{
+            method: "post",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify({
+                preSellDays:this.state.preSellDays,
+                _p_from:from||baseUtil.get("appFrom")||baseUtil.get("cdqcp_channel")
+            })
+        }).then((result)=>{
+            if(result.data.pubResponse.code === "0000"){
+                _this.setState({
+                    holidays: result.data.body.data
+                })
+            }
+        })
     }
     getChangeDate = (date,tag)=>{
         /**

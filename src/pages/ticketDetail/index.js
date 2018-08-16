@@ -162,7 +162,7 @@ export  default class ticketDetail extends  React.Component{
                       style={{ display: 'inline-block', width: '100%', height: this.state.imgHeight }}
                   >
                       <img
-                          src={'https://p0.meituan.net/300.0/hotel/99f65871392a88e7debe87199bbe4485721629.png'}
+                          src={val}
                           alt=""
                           style={{ width: '100%', verticalAlign: 'top' }}
                           onLoad={() => {
@@ -176,21 +176,24 @@ export  default class ticketDetail extends  React.Component{
           </Carousel>
           <div className={Styles['swiper-bottom']}>
               <div>
-                  <div>{ticketDetail.pointAddress}</div>
-                  <div>{this.state.slideIndex+1}/{ticketDetail.images.length}张</div>
+                  <div><div style={{"WebkitBoxOrient":"vertical","boxOrient":'vertical',"MozBoxOrient":"vertical","msboxOrient":'vertical'}}>{ticketDetail.pointAddress}</div></div>
+                  <div><div>{this.state.slideIndex+1}/{ticketDetail.images.length}张</div></div>
               </div>
           </div>
       </div>
   }
   renderPhone(){
-      let {ticketDetail} =  this.props.ticketDetail;
+      let {ticketDetail} =  this.props.ticketDetail, {servicePhones} = ticketDetail;
       return <div className={Styles["ticketAddress"]}  onClick={this.callPhone.bind(this)}>
           <div>
-              {ticketDetail.pointAddress}
+              <div className={Styles["address_Icon"]}></div>
+              <div>{ticketDetail.pointAddress}</div>
           </div>
-          <div>
-              <i className="fa fa-phone" aria-hidden="true"></i>
-          </div>
+          {
+              servicePhones&&servicePhones.length&&<div>
+              <div className={Styles["ticketDetail_phone"]}></div>
+          </div>||''
+          }
       </div>
   }
 
@@ -201,15 +204,14 @@ export  default class ticketDetail extends  React.Component{
       }
       return    <div className={Styles['card']}>
           <div className={Styles['card-Title']}>
-              <span className={Styles['card-title-leftIcon']}></span>
-              <span className={Styles['card-title-leftIcon']}></span>
+             {/* <span className={Styles['card-title-leftIcon']}></span>*/}
               门票
           </div>
           <div className={Styles['card-content']}>
               {ticketDetail.productDetails.map((item,index)=>{
                   return <div key={"productDetails"+index} className={ClassNames(Styles['door-ticketList-single'],{
                       [Styles['borderBottom']]: index+1 === ticketDetail.productDetails.length?false:true
-                  })}>
+                  })} onClick={this.preOrder.bind(this,true, item)}>
                       <div>
                           <div className={ClassNames(Styles['font28'],Styles['color_3e'])}>{item.productName}</div>
                           <div>
@@ -219,7 +221,7 @@ export  default class ticketDetail extends  React.Component{
                           </div>
                       </div>
                       <div>
-                          <div className={Styles['ticket-buy']} onClick={this.preOrder.bind(this,true, item)}>立即预订</div>
+                          <div className={Styles['ticket-buy']} >立即预订</div>
                       </div>
                   </div>
               })}
@@ -232,8 +234,9 @@ export  default class ticketDetail extends  React.Component{
    * 执行跳转
    */
   writeOrder(item){
-    baseUtil.setSession("jcpm_fillOrder","");
+      baseUtil.setSession("jcpm_fillOrder","");
       baseUtil.setSession("jpmp_dates","");
+      baseUtil.set("cdqcp_passengers","");
     //把需要传入的参数存入session好了
     baseUtil.setSession("jqmp_ticketDetail",{
         pointNo:this.state.pointNo,
@@ -248,15 +251,19 @@ export  default class ticketDetail extends  React.Component{
           <div className={Styles[ 'model' ]}></div>
           <div className={Styles[ 'ticketDetail_model_show' ]}>
               <div className={Styles[ 'close' ]} onClick={this.preOrder.bind(this,false)}>
-                  <i className="fa fa-close fa-lg" style={{"color": "#000"}}></i>
+                  <div className={Styles["closeBtn"]}></div>
               </div>
               <div className={Styles[ 'detail_title' ]}>
                   <div>
-                      <img src={ticketDetail.images[0]}
-                           alt=""/>
+                      <div>
+                        <img src={ticketDetail.images[0]}
+                             alt=""/>
+                      </div>
                   </div>
                   <div>
-                      {showModelContent.productName}
+                      <div style={{"WebkitBoxOrient":"vertical","boxOrient":'vertical',"MozBoxOrient":"vertical","msboxOrient":'vertical'}}>
+                        {showModelContent.productName}
+                      </div>
                   </div>
               </div>
               <div className={ClassNames(Styles[ 'scroll-content' ], Styles[ "defaultHeight_detail" ])}>
@@ -303,7 +310,21 @@ export  default class ticketDetail extends  React.Component{
   }
   render(){
     var _this = this;
-    let {ticketDetail} =  this.props.ticketDetail
+    let {ticketDetail} =  this.props.ticketDetail,
+        {servicePhones} = ticketDetail;
+    if(!ticketDetail){
+        <div className={ClassNames(Styles['ticketDetailContent'])}>
+            <div className={Styles['ticketTop']}>
+                <Header
+                    positionType ='positionAbolute'
+                    mode="none"
+                    leftContent={ <span className={Styles['leftBtnCircle']}><i className="fa fa-angle-left fa-lg" style={{"color":"#fff"}}></i></span>}
+                    leftClick={()=>{Router.push("/")}}
+                ></Header>
+            </div>
+        </div>
+    }
+    //console.log("servicePhones",servicePhones);
     return <div className={ClassNames(Styles['ticketDetailContent'])}>
         <div className={Styles['ticketTop']}>
           <Header
@@ -319,22 +340,43 @@ export  default class ticketDetail extends  React.Component{
           <div className={Styles['scroll-cotent-bottom']}>
               {this.renderPhone()}
               {this.renderTicketDetial()}
-              <div className={Styles['card']}>
-                <div className={Styles['card-Title']}>
-                  <span className={Styles['card-title-leftIcon']}></span>
-                  开放时间
-                </div>
-                <div className={Styles['card-content']}>
-                  <div className={Styles['card-content-text']}>
-                    1月1日-8月31日 周二至周日 全天：09:00-17:00 最晚入园时间
-                    17:00
-                    周一闭馆
-                    9月1日-12月31日 周三至周日 全天：09:00-17:00 最晚入园时
-                    间16:00
-                    <span className={Styles['']}>备注：周一、周二闭馆</span>
+              {ticketDetail.pointOpenInfo&&<div className={Styles[ 'card' ]}>
+                  <div className={Styles[ 'card-Title' ]}>
+                      <span className={Styles[ 'card-title-leftIcon' ]}></span>
+                      开放时间
                   </div>
-                </div>
+                  <div className={Styles[ 'card-content' ]}>
+                      <div className={Styles[ 'card-content-text' ]}>
+                          {ticketDetail.pointOpenInfo}
+                          <div>以上信息仅供参考,具体以景区当日实际公示信息为准</div>
+                      </div>
+                  </div>
+              </div>||''
+              }
+              <div className={Styles['card']}>
+                  <div className={Styles['card-Title']}>
+                      <span className={Styles['card-title-leftIcon']}></span>
+                      景点状态
+                  </div>
+                  <div className={Styles['card-content']}>
+                      <div className={Styles['card-content-text']}>
+                          <div style={{"textAlign":"center","padding":"10px 0"}}>
+                            {ticketDetail.pointState == "0"?"停售中":"正在营业"}
+                          </div>
+                      </div>
+                  </div>
               </div>
+              {ticketDetail.pointDes&&<div className={Styles['card']}>
+                  <div className={Styles['card-Title']}>
+                      <span className={Styles['card-title-leftIcon']}></span>
+                      景点介绍
+                  </div>
+                  <div className={Styles['card-content']}>
+                      <div className={Styles['card-content-text']}>
+                          {ticketDetail.pointDes}
+                      </div>
+                  </div>
+              </div>||''}
               <LineBox
                   leftIcon={true}
                   leftContent={<span className={ClassNames(Styles['font28'],Styles['color_3e'])}>安全须知</span>}
@@ -356,9 +398,9 @@ export  default class ticketDetail extends  React.Component{
                 animationType="slide-up"
             >
                 <List  renderHeader={() => <div>一键拨号</div>} className="popup-list">
-                    {['18822342345', '18822342345', '18822342345'].map((i, index) => (
-                        <List.Item key={index}><a style={{"color":"#807878","width":"100%", "height":"100%","display":"inline-block"}} href={`tel:${i}`}>{i}</a></List.Item>
-                    ))}
+                    {servicePhones&&servicePhones.length&&servicePhones.map((item, index) => (
+                        <List.Item key={index}><a style={{"color":"#807878","width":"100%", "height":"100%","display":"inline-block"}} href={`tel:${item.phone}`}>{item.phone}</a></List.Item>
+                    ))||null}
                 </List>
             </Modal>
 
@@ -367,9 +409,15 @@ export  default class ticketDetail extends  React.Component{
 
   //打电话
     callPhone(){
-          this.setState({
-              "showPhone":true
-          })
+        let {ticketDetail} =  this.props.ticketDetail, {servicePhones} = ticketDetail;
+        if(servicePhones&&servicePhones.length){
+            this.setState({
+                "showPhone":true
+            })
+            return;
+        }
+        return;
+
     }
     onClose(phone){
     //  console.log(phone);

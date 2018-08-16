@@ -1,6 +1,4 @@
 @import "../../global.less";
-// 颜色定义规范
-@base: 0.0416;
 @color-background:#222;
 @color-background-d:rgba(0, 0, 0, 0.3);
 @color-highlight-background:#333;
@@ -58,7 +56,7 @@ ul li{
   height: 2.2rem;
   justify-content: space-between;
   align-items: center;
-  padding-right: @base*40rem;
+  padding-right: @base*80rem;
   .locationIocn{
     width: 1rem;
     height: 1rem;
@@ -92,11 +90,11 @@ ul li{
       }
     }
     .list-group-title {
-      height: @base*40rem;
-      line-height: @base*40rem;
+      height: @base*60rem;
+      line-height: @base*60rem;
       padding-left: @base*20rem;
       font-size: .75rem;
-      background: #ecf0f4;
+      background: #ECF0F4;
       color: #3e3e3e;
     }
     .list-group-item{
@@ -152,18 +150,20 @@ ul li{
   right: 0;
   top: 45%;
   transform: translateY(-50%);
-  width: @base*40rem;
+  /*width: @base*40rem;*/
   padding: @base*20rem 0;
   border-radius: @base*10rem;
   text-align: center;
-  background: @color-background-d;
+ /* background: @color-background-d;*/
   font-family: 'Helvetica';
-  color:rgba(255, 255, 255, 0.5);
+  /*color:rgba(255, 255, 255, 0.5);*/
+  color: #3E3E3E;
+
   .item{
     padding: 10% 0;
     line-height: 1;
-    color: @color-text-l;
-    font-size: 14px;
+    color: #3E3E3E;
+    font-size: @base*18rem;
   }
 
   .current{
@@ -171,102 +171,64 @@ ul li{
   }
 }
 
-
-.bar{
-  position: relative;
-  right: 0;
-  left: 0;
-  z-index: 10;
-  height: 2.2rem;
-  padding-right: .5rem;
-  padding-left: .5rem;
-  background-color: #ecf0f4;
-  backface-visibility: hidden;
-}
-.bar .searchbar{
-  padding: .4rem .5rem;
-  margin: 0 -.5rem;
-}
-.bar .icon{
-  position: relative;
-  z-index: 20;
-  padding: .5rem .1rem;
-  font-size: 1rem;
-  line-height: 1.2rem;
-}
-.bar .searchbar .search-input input{
-  border: 0;
-  height: 1.4rem;
-  margin: 0;
-  padding-left: 1.4rem;
-  display: block;
-  width: 100%;
+.city-search{
+  width: 94%;
+  margin: @base*20rem auto @base*20rem auto;
+  background: #fff;
+  height: @base*70rem;
+  line-height: @base*70rem;
   box-sizing: border-box;
-  -webkit-appearance: none;
-  padding: 0 .5rem;
-  font-family: inherit;
-  font-size: .7rem;
-  font-weight: 400;
-  color: #3d4145;
-  background-color: #fff;
-  border-radius: .25rem;
-  outline: 0;
-}
-.search-input .icon-close{
-
-  /*left: auto;*/
-  width: .8rem;
-  background: url(../../assets/img/close.png) 50% no-repeat;
-  background-size: contain;
-}
-.searchbar{
-  height: 2.2rem;
-  align-items: center;
-  -webkit-box-align: center;
-  box-sizing: border-box;
-}
-.searchbar .search-input{
-  transition: none;
-  margin-right: 0;
-  transform: translate3d(0,0,0);
+  padding: 0 @base*15rem;
   position: relative;
-}
-.search-input .icon{
-  position: absolute;
-  top: 50%;
-  /*left: .3rem;*/
-  font-size: .9rem;
-  right: .3rem;
-  color: #b4b4b4;
-  transform: translate3D(0,-50%,0);
-}
-//searchBar
-.searchbar .searchbar-cancel {
-  display: none;
-  transition: none
+  border-radius: @base*10rem;
+  .icon-search{
+    font-size:@base *23rem;
+    height:100%;
+    display: inline-block;
+    line-height: @base*64rem;
+    color:#949494;
+    i{
+      vertical-align: middle;
+    }
+  }
+  .icon-close{
+    height:100%;
+    position: absolute;
+    right:0;
+    width: @base*80rem;
+    text-align: center;
+    display: inline-block;
+    color:#CCCCCC;
+  }
+  input{
+    height: 100%;
+    border:none;
+    outline: none;
+    font-size: @font26;
+    padding-left:4px;
+    width: 90%;
+  }
 }
 
-.searchbar .search-input {
-  transition: none
-}
-
-.searchbar.searchbar-active .searchbar-cancel {
-  display: block
-}
 
 
-.loading{
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0, 0.4);
-  position: absolute;
-  z-index: 1000;
-  top: 2.2rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.showAZ {
+  position: fixed;
+  z-index: 30;
+  right: 1.6rem;
+  background: rgba(0, 0, 0, .6);
+  height: 2rem;
+  width: 2rem;
   color: #fff;
+  text-align: center;
+  line-height: 2rem;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  border-radius: 5px;
+  font-family: Helvetica;
 }
+
 
 .ui-standard-top{
   height:100%;
@@ -274,8 +236,28 @@ ul li{
   width: 100%;
   z-index:1000;
   background: #fff;
-  top: @base*105rem;
-
+  top: @base*205rem;
+  ul{
+    li{
+      line-height: 2.2rem;
+      text-align: left;
+      font-size: .75rem;
+      color: #3e3e3e;
+      p{
+        margin: 0;
+        margin-left: .5rem;
+        border-bottom: .333px solid #f5f5f5;
+        i{
+          color: #0d87e4;
+          font-style: normal;
+        }
+        .cityName_car{
+          padding-left: 1rem;
+          color: #adadad;
+        }
+      }
+    }
+  }
   .cityList-li{
     height: 30px;
     line-height:  30px;

@@ -54,7 +54,7 @@ export default class TicketOrder extends React.Component{
     }
 
     btnClick(item,flag){
-       // console.log("item", item);
+        //console.log("item", item);
        // return;
         let  {orderList} =  this.props.orderList,_this =  this;
         if(flag === "pay"){
@@ -71,7 +71,7 @@ export default class TicketOrder extends React.Component{
                         wxcode: baseUtil.get("cdqcp_wxopenId"),
                         channelName: from,
                         wxOpenId:baseUtil.get("cdqcp_wxopenId"),
-                        manualBackUrl:window.location.origin+"/mtTicket/#/ticketOrder/[from,wxcode,opid]",
+                        manualBackUrl:window.location.origin+"/mtTicket/#/orderList/[from,wxcode,opid]",
                         backUrl:encodeURIComponent(window.location.origin+`/mtTicket/#/ticketOrderDetail?orderNum=${item.orderNo}&opid=${baseUtil.get("cdqcp_opid")}`)
                     };
                     var href = result["payHref"] + '/index.html?';
@@ -91,7 +91,7 @@ export default class TicketOrder extends React.Component{
                         payload:{
                             state:this.state.state,
                             postData:{
-                                orderNo:this.state.orderNo,
+                                orderNo:item.orderNo,
                                 userToken: this.state.userToken
                             }
                         }
@@ -109,6 +109,7 @@ export default class TicketOrder extends React.Component{
                     currPage={pageNum}
                     totalPage={pages}
                     loadMoreData={this.getOrderList.bind(this)} >
+                <div className={Styles["scroll-cotent-bottom"]}>
                     <ul className={Styles["orderList"]}>
                         {
                             orderList.length&&orderList.map((item,index)=>{
@@ -116,6 +117,7 @@ export default class TicketOrder extends React.Component{
                             })||null
                         }
                     </ul>
+                </div>
             </Scroll>
         </div>
     }
@@ -145,6 +147,10 @@ export default class TicketOrder extends React.Component{
 
     }
 
+    goHomeOrderList(){
+        window.location.href="/orders/allorders"
+    }
+
     render(){
         let {orderList} =  this.props.orderList;
 
@@ -152,6 +158,7 @@ export default class TicketOrder extends React.Component{
             <Header
                 mode="common"
                 leftContent={ <i className="fa fa-angle-left fa-lg" style={{"color":"#fff"}}></i>}
+                leftClick={this.goHomeOrderList.bind(this)}
             >
                 <div style={{"textAlign":'center','color':'#fff'}}>景区门票订单</div>
             </Header>

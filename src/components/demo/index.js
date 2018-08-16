@@ -8,6 +8,7 @@ export default class VerticalScrollPage extends Component {
     }
 
     scrollToElement(){
+      //  console.log("arguments",arguments);
        this.refs.scrollSwipe.scrollToElement(arguments);
     }
     scrollTo(){

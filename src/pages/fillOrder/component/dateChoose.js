@@ -2,6 +2,8 @@ import React from 'react'
 import Styles from '../index.less'
 import ClassNames from 'classnames'
 import Router from 'umi/router'
+import {baseUtil} from "../../../utils/util";
+
 export  default class DateChoose extends React.Component{
     constructor(props){
         super(props);
@@ -22,9 +24,37 @@ export  default class DateChoose extends React.Component{
         }
         this.props.switchTime(index, item.price);
     }
+
+    renderDateDetialShow(){
+        let {fillOrderDetail,effectiveDate} = this.props,
+            {productDetail} = fillOrderDetail;
+        /**
+         * bookType:0, voucherDateEnd 如果为0，则需要只需要在结束日期前有效均可
+         * 诶如果不会零就要去计算了累加多少天
+         */
+         if(!productDetail.bookType)  {
+             return <span>
+                 {`${Date.parse1(productDetail.productUseRule["voucherDateEnd"]).format("yyyy年MM月dd日")}之前有效`}
+             </span>
+         }
+         if(effectiveDate&&effectiveDate.date.length){
+             let date =  effectiveDate.date[effectiveDate['index']].date;
+
+              let dateArray =  baseUtil.formatDateArray(date, productDetail.bookType);
+             return <span>
+                    购买后在{dateArray.join("或")}使用有效
+                </span>
+         }
+        return null;
+
+
+    }
+
     render(){
-        let {effectiveDate} = this.props;
-      // console.log("effectiveDate",effectiveDate);
+        let {effectiveDate,fillOrderDetail} = this.props;
+        if(!fillOrderDetail){
+            return null;
+        }
         return <div className={Styles['fillOrderDate']}>
             <div className={ClassNames(Styles['fontIconStyle'])}>
                 <span className={Styles['fontIcon']}></span>
@@ -52,7 +82,7 @@ export  default class DateChoose extends React.Component{
                 </div>
             </div>
             <div className={Styles['moreDate-remark']}>
-                <p className={ClassNames(Styles['font24'], Styles['color_3e'],Styles['mgBottom12'])}>购买后立即使用，7月19日当日使用有效</p>
+                <p className={ClassNames(Styles['font24'], Styles['color_3e'],Styles['mgBottom12'])}>{this.renderDateDetialShow()}</p>
                 <p className={Styles['remarks']}>*此产品可在2017年7月19日 16:00前退款</p>
             </div>
         </div>

@@ -1,6 +1,7 @@
 import React from 'react'
 import classnames from 'classnames'
 import styles from './index.less'
+import {baseUtil} from "../../utils/util";
 
 export  default  class IndexSelectBar extends  React.Component{
 
@@ -8,7 +9,6 @@ export  default  class IndexSelectBar extends  React.Component{
         let { selectBarModelFixed, SelectBarData ,IndexModelSelectBarStatus,allBarColor,
             zlpxColor,
             selectBar} =  this.props;
-
         return <div className={classnames(styles["selectBarModel"],{
             [styles["selectBarModelFixed"]]:selectBarModelFixed
         })}>
@@ -24,7 +24,7 @@ export  default  class IndexSelectBar extends  React.Component{
                     ></i>
                 </div>
                 <div onClick={()=>{selectBar('zlpx')}}>
-                    <span>{ SelectBarData["zlpx"].data[SelectBarData["zlpx"].activeIndex].cityName}</span>
+                    <span>{ baseUtil.formatNameStr(8,SelectBarData["zlpx"].data[SelectBarData["zlpx"].activeIndex].cityName)}</span>
                     <i className={classnames("fa fa-caret-down fa-lg", {
                         "fa-caret-up": SelectBarData["zlpx"].parentIndex&&IndexModelSelectBarStatus[1]
                     })}

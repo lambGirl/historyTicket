@@ -47,18 +47,26 @@ Date.prototype.getUnixTimeStamp=function(){
 Date.parse1=Date.parseTimeStr;
 
 class Singer{
-    constructor({cityNo,cityName,parentRegion,chidrens}) {
+    constructor({cityNo,cityName,parentRegionName,childrens,shortName}) {
         this.cityNo = cityNo;
         this.cityName = cityName,
-        this.parentRegion = parentRegion,
-        this.chidrens = chidrens||[]
+        this.shortName = shortName,
+        this.parentRegionName = parentRegionName,
+        this.childrens = childrens||[]
     }
 }
-
-
+//按照汉字排序
+var localeCompare =  function(a,b){
+    if(!a&&!b){
+        return;
+    }
+    return a.shortName.localeCompare(b.shortName);
+}
 
 //得到城市数据
 const redetailSingleData = (list)=>{
+
+
     let map = {
         other: {
             title: '其他',
@@ -77,15 +85,17 @@ const redetailSingleData = (list)=>{
             map[first].items.push(new Singer({
                 cityNo: item.cityNo,
                 cityName: item.cityName,
-                parentRegion: item.parentRegion,
-                chidrens:item.chidrens||[]
+                shortName:item.shortName,
+                parentRegionName: item.parentRegionName,
+                childrens:item.childrens||[]
             }));
         } else {
             map.other.items.push(new Singer({
                 cityNo: item.cityNo,
                 cityName: item.cityName,
-                parentRegion: item.parentRegion,
-                chidrens:item.chidrens||[]
+                shortName:item.shortName,
+                parentRegionName: item.parentRegionName,
+                childrens:item.childrens||[]
             }))
         }
     }
@@ -93,18 +103,22 @@ const redetailSingleData = (list)=>{
     for (let key in map) {
         let val = map[key];
         if (val.title.match(/[a-zA-Z]/)) {
+            val.items.sort(localeCompare);
+           // console.log("item", val.items);
             ret.push(val)
         }
     }
+
     ret.sort((a, b) => {
         return a.title.charCodeAt(0) - b.title.charCodeAt(0)
     });
+   // ret.sort().sort().sort()
     return [...ret];
 }
 
 //得到大小写数据
 const shortcutListData = (list)=>{
-    let List = ["定"];
+    let List = ["定位"];
     let ListArry = list.map(group => {return group.title.substr(0,1)});
  //   console.log("ListArry",ListArry);
     return List.concat(ListArry);
@@ -160,6 +174,7 @@ const getLocation  =  ()=>{
     });
 }
 const baseUtil = {
+
     get: function (prop, needTime, notneedFrom) {
         var  val = localStorage.getItem(prop);
         val = (val == "null" || val == "undefined" || val == "none") ? '' : val ? val : "";
@@ -200,6 +215,44 @@ const baseUtil = {
         } else {
             sessionStorage.removeItem(key2);
             sessionStorage.setItem(key2,value);
+        }
+    },
+    formatNameStr:function(numLength,v){
+        // console.log(v)
+        return v.length<=numLength?v:(v.substring(0, numLength) + "...")
+    },
+
+    //格式化数值
+    formatNumber(numStr){
+        numStr=Number(numStr)+"";
+        if(/\.\d{3,}$/.test(numStr)){
+            numStr=Number(numStr).toFixed(2)
+        }
+        return numStr
+    },
+    formatDateArray(date, num){
+        /**
+         * 得到date， date值加num
+         */
+       // console.log("num", date, typeof num, num);
+        var newDate = Date.parse1(date), dateArray = [];
+        for (var i = 0 ; i < Number(num); i++){
+            let dateFlag =  newDate.addDays(i);
+            dateArray.push(dateFlag.format("yyyy年MM月dd日"))
+        }
+        return dateArray;
+    },
+   ConfigFind:function(name){
+        let globalConfig = baseUtil.getSession('globalConfig');
+        if (!globalConfig){
+            console.error('没有访问首页--缓存配置项目');
+            return '';
+        } else {
+            for(let i = 0; i < globalConfig.length; i++) {
+                if (globalConfig[i].name === name){
+                    return globalConfig[i].value;
+                }
+            }
         }
     },
     getHours(num){
@@ -330,6 +383,7 @@ const baseUtil = {
                 doubleBtn:false,
                 pz:true,   //凭证模块是否显示
                 pzDisable: false, //凭证模块是否颜色禁用
+                pzClass:'used',
                 statusContent:"",
                 refundMoney:true,
                 icon:'paying',
@@ -349,6 +403,7 @@ const baseUtil = {
                 doubleBtn:false,
                 pz:true,   //凭证模块是否显示
                 pzDisable: true, //凭证模块是否颜色禁用
+                pzClass:'used',
                 statusContent:"",
                 refundMoney:false,
                 icon:'useing',
@@ -369,12 +424,13 @@ const baseUtil = {
                 statusContent:"",
                 pz:true,   //凭证模块是否显示
                 pzDisable: true, //凭证模块是否颜色禁用
+                pzClass:'backed',
                 refundMoney:false,
                 icon:'used',
                 orderListGroupBtn:{
                     show:true,
                     btnList:{
-                        payment: false, cancel:true
+                        payment: false, delete:true
                     }
                 }
             };break;
@@ -387,6 +443,7 @@ const baseUtil = {
                 statusContent:"",
                 pz:true,   //凭证模块是否显示
                 pzDisable: true, //凭证模块是否颜色禁用
+                pzClass:'backing',
                 refundMoney:false,
                 icon:'paying',
                 orderListGroupBtn:{

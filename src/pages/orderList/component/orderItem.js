@@ -30,7 +30,7 @@ export  default  class OrderItem extends React.Component{
             {
                 orderItem.orderListGroupBtn.show&&<div>
                     {orderItem.orderListGroupBtn.btnList["pay"]&&<div className={Styles[ "payment" ]} onClick={(e)=>{e.stopPropagation(); e.preventDefault();this.props.btnClick(item,'pay')}}>立即支付</div>||''}
-                    {orderItem.orderListGroupBtn.btnList["delete"]&&<div className={Styles[ "cancel" ]} onClick={()=>{this.props.btnClick(item,'delete')}}>删除</div>||''}
+                    {orderItem.orderListGroupBtn.btnList["delete"]&&<div className={Styles[ "cancel" ]} onClick={(e)=>{e.stopPropagation(); e.preventDefault();this.props.btnClick(item,'delete')}}>删除</div>||''}
             </div>||''
             }
         </li>

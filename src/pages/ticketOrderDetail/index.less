@@ -43,6 +43,9 @@
       }
       >:last-child{
         .font36;
+        .orderStatus-warning{
+
+        }
       }
     }
     .mangLine{
@@ -120,3 +123,59 @@
   }
 }
 
+.voucher-List-content{
+  .voucher-List{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: @base*29rem;
+
+    >:first-child{
+      text-align: center;
+      color: #3e3e3e;
+      font-size: @font30;
+      padding-bottom: @base*29rem;
+    }
+    .show-voucher-Img{
+      width: @base*160rem;
+      height: @base*160rem;
+      position: relative;
+      img{
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .icon_used{
+      position:absolute;
+      width: @base*120rem;
+      height: @base*120rem;
+      right:-@base*60rem;
+      top: -@base*100rem;
+      background: url("../../assets/img/ico_used@2x.png") no-repeat;
+      background-size: cover;
+    }
+    .icon_backing{
+      position:absolute;
+      width: @base*120rem;
+      height: @base*120rem;
+      right:-@base*60rem;
+      top: -@base*100rem;
+      z-index: 0;
+      background: url("../../assets/img/ico_backing@2x.png") no-repeat;
+      background-size: cover;
+    }
+    .icon_backed{
+      position:absolute;
+      width: @base*120rem;
+      height: @base*120rem;
+      right:-@base*60rem;
+      top: -@base*100rem;
+      background: url("../../assets/img/ico_backed@2x.png") no-repeat;
+      background-size: cover;
+    }
+  }
+
+}

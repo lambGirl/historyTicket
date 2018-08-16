@@ -13,6 +13,7 @@ import IndexSelectBar from '../components/indexSelectBar'   //selectBar
 import Scroll from '../components/demo/index' //分页滚动
 import AttractionSingle from '../components/indexAttractionSingle';
 import Dynamic from 'umi/dynamic';
+import { baseUtil } from "../utils/util";
 @connect(({globalAct})=>({
     globalAct
 }))
@@ -40,8 +41,6 @@ class IndexPage extends React.Component{
         this.props.dispatch({
             type:'globalAct/getInit',
         });
-        //拿去定位结果，如果定位成功则去请求，获取城市的接口。得到城市之后，去查询所有的门票的列表
-        console.log("sdfsdfsdfsdfsdf1111111111111111");
     }
     goDetail(){
        Router.push('/ticketDetail/')
@@ -62,13 +61,13 @@ class IndexPage extends React.Component{
             payload: {
                 type:true,
                 postData:{
-                    sortType: zlpx.data[zlpx.activeIndex].key,
+                    sortType: zlpx.data[zlpx.activeIndex].cityNo,
                     longitude: point.data&&point.data.lng||"",
                     latitude: point.data&&point.data.lat||"",
                     key:'',
                     pageNum: currPage,
                     pageSize:20,
-                    cityNo:'all'    //这里到时候要改
+                    cityNo:all.data[all.activeIndex].cityNo    //这里到时候要改
                 },
                 currentCity: currentCity
             },
@@ -84,15 +83,14 @@ class IndexPage extends React.Component{
          */
         //console.log("po---------------s",pos);
         let { pageStatus,headerConfig } =  this.state,
-            {searchBarModel,indexSwiper,headers} = this.refs,
+            {searchBarModel,indexSwiper,headers,indexScroll} = this.refs,
             {clientHeight} = indexSwiper;  //滚动图片的高度,如果小于这个都需要重新设置header
         pageStatus.currPageY =  pos.y;
         this.setState({
             pageStatus:pageStatus
         })
-
-        //console.log("123123", (pos.y+(-40)),(-clientHeight))
-        if((pos.y+(-40))<(-clientHeight)+5){
+        //console.log("123123", (pos.y+(-40)),(-clientHeight)+5)
+        if((-clientHeight)+5>=(pos.y+(-60))){
             this.setState({
                 headerConfig:{
                     mode:"light",
@@ -117,8 +115,17 @@ class IndexPage extends React.Component{
 
     //点击seachBar
     selectBar(tag,e) {
+        //判断是够点击model是够展示，如果展示就隐藏 什么都不做
+        let {IndexModelSelectBarStatus} =  this.state;
+       // console.log("IndexModelSelectBarStatus",IndexModelSelectBarStatus.indexOf(true) !== -1);
+        if(IndexModelSelectBarStatus.indexOf(true) !== -1){
+            this.setState({
+                IndexModelSelectBarStatus:[false,false]
+            });
+            return;
+        }
       let {searchBarModel,indexScroll,indexSwiper} = this.refs,
-          {selectBarModelFixed,IndexModelSelectBarStatus} =  this.state,
+          {selectBarModelFixed} =  this.state,
             {clientWidth, clientHeight} = indexSwiper,
             searchBarHeight =  searchBarModel.clientHeight,
             { currPageY } = this.state.pageStatus,time = !selectBarModelFixed&&100||0;
@@ -171,12 +178,15 @@ class IndexPage extends React.Component{
                     SelectBarData:e
                 }
             })
-            let {indexScroll} = this.refs;
-            indexScroll.refs.scrollSwipe.scrollToElement(this.refs.searchBarModel, 300);
         }
         //console.log("点击了");
         this.setState({
             IndexModelSelectBarStatus:[false,false]
+        },()=>{
+            if(e){
+                let {indexScroll} = this.refs;
+                indexScroll.refs.scrollSwipe.scrollToElement(this.refs.searchBarModel, 300,0, -30);
+            }
         })
     }
     //初始化底部实际数据渲染的高度
@@ -204,12 +214,17 @@ class IndexPage extends React.Component{
         router.push(`/searchTicketList`);
     }
 
+    goHome(){
+        //这里到时候要处理和原生app的交互
+        window.location.href="/"
+    }
+
     render(){
-        let {SelectBarData,doorList,currPage,totalPage} =  this.props.globalAct,{ IndexModelSelectBarStatus } =  this.state,
+        let {SelectBarData,doorList,currPage,totalPage,homeFocusImg} =  this.props.globalAct,{ IndexModelSelectBarStatus } =  this.state,
             allBarColor = (SelectBarData["all"].activeIndex||IndexModelSelectBarStatus[0])?'#37A0F1':"#DBDBDB",
             zlpxColor =  (SelectBarData["zlpx"].activeIndex||IndexModelSelectBarStatus[1])?'#37A0F1':"#DBDBDB";
         let ListArrHeight = this.initticketsListArrHeight();
-        //console.log("我会执行嘛");
+        //console.log("currPage, totalPage",currPage, totalPage);
         return (
             <div className={styles["container_page"]}>
                 <Helmet>
@@ -230,6 +245,7 @@ class IndexPage extends React.Component{
                                </span>
                             }
                             centerContentType='1'
+                            leftClick={this.goHome.bind(this)}
                             rightClick={this.rightClick.bind(this)}
                             centerClick={this.centerClick.bind(this)}
                         ></Header>
@@ -246,7 +262,7 @@ class IndexPage extends React.Component{
                         <div  className={styles["wrapper_content"]} style={{"minHeight":`${ListArrHeight}px`}}>
                             <div className={styles["swipper_top"]} ref='indexSwiper'>
                                 <div className={styles["index_banner_img"]}>
-                                    <img src="https://p0.meituan.net/400.0/hotel/fd8e418933a722e6ca77f918aa553f89135934.jpg" alt=""/>
+                                    <img src={homeFocusImg.length&&homeFocusImg[0].showImage||''} alt=""/>
                                 </div>
                             </div>
                             <div  ref='searchBarModel'>
@@ -259,13 +275,34 @@ class IndexPage extends React.Component{
                                     IndexModelSelectBarStatus={this.state.IndexModelSelectBarStatus}
                                 ></IndexSelectBar>
                             </div>
-                           <div className={styles["ticketsListArr"]}>
+                            {doorList.length&&<div className={styles[ "ticketsListArr" ]}>
                                 {
-                                    doorList&&doorList.map((item,index)=>{
-                                        return  <AttractionSingle key={index} item={item} clickItem={this.chooseTicket.bind(this)}/>
+                                    doorList.map((item, index) => {
+                                        return <AttractionSingle key={index} item={item}
+                                                                 clickItem={this.chooseTicket.bind(this)}/>
                                     })
                                 }
-                            </div>
+
+                                {/*<div className={styles["loading"]}>
+                                   <div className={styles['loading-icon']}></div>
+                                   <div>
+                                       <div className={styles['loading-left']}></div>
+                                       <div>正在加载,请等待</div>
+                                   </div>
+                               </div>*/}
+                            </div>||''
+                            }
+                            {
+                                !doorList.length&&<div className={styles['search-nothing-content']}>
+                                    <div
+                                        className={classnames(styles["searchContentIcon"],{
+                                            [styles["noData"]]:true,
+                                        })}></div>
+                                    <div className={styles['search-nothing-font']}>
+                                        未找到您要搜索的内容
+                                    </div>
+                                </div>||''
+                            }
                         </div>
                     </Scroll>
                 </div>

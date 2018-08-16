@@ -197,7 +197,7 @@ export default class TicketOrderDetail extends React.Component{
             </div>
             <div>
                 <div className={Styles["name"]}>有效期</div>
-                <div>安仁古镇门票</div>
+                <div>{orderDetail.voucherDateEnd}</div>
             </div>
             <div>
                 <div className={Styles["name"]}>换票时间</div>
@@ -281,6 +281,46 @@ export default class TicketOrderDetail extends React.Component{
         }
         return con.content;
     }
+
+    renderpz(top){
+        //凭证的使用
+        let { orderDetail } =  this.props.orderDetail;
+        if(orderDetail.voucherType == "0"){
+            return <div className={Styles['writeOrder-cardContent']}>
+                {orderDetail.ignoreVoucherText}
+            </div>
+        }
+
+        if(orderDetail.voucherType == "1"){
+            let travellers =  orderDetail.travellers[0];
+            return <div className={Styles["voucher-List-content"]}>
+                <div className={Styles['voucher-List']}>
+                    <div>{travellers.voucherText}</div>
+                    <div className={Styles['show-voucher-Img']}>
+                        <img src={travellers.voucherPics} alt=""/>
+                        {top.pzClass&&<div className={Styles[`icon_${top.pzClass}`]}></div>||''}
+                    </div>
+                </div>
+            </div>
+        }
+        let travellers = orderDetail.travellers;
+        return <div className={Styles["voucher-List-content"]}>
+            {
+                travellers.map((item, index)=>{
+                    return <div className={Styles['voucher-List']} key={"voucher"+index}>
+                                <div>{item.voucherText}</div>
+                                <div className={Styles['show-voucher-Img']}>
+                                    <img src={item.voucherPics} alt=""/>
+                                    {top.pzClass&&<div className={Styles[`icon_${top.pzClass}`]}></div>||''}
+                                </div>
+
+
+                    </div>
+                })
+            }
+        </div>
+    }
+
     render(){
         let { orderDetail } =  this.props.orderDetail;
         if(!orderDetail){
@@ -336,6 +376,14 @@ export default class TicketOrderDetail extends React.Component{
                                 content={this.renderBaseInfo()}
                             />
                         </div>
+                        {top.pz&&<div className={Styles['mgtop20']}>
+                            <CardBox
+                                cardTitleIcon={true}
+                                cardTitle="使用凭证"
+                                content={this.renderpz(top)}
+                                disabled={top.pzClass||false}
+                            />
+                        </div>||''}
                         <div className={Styles['mgtop20']}>
                             <CardBox
                                 noPadding={true}
@@ -349,7 +397,7 @@ export default class TicketOrderDetail extends React.Component{
                                 cardTitleIcon={true}
                                 cardTitle="订单信息"
                                 content={this.renderOrderInfo()}
-                                disabled={true}
+                                disabled={false}
                             />
                         </div>
                         {top.refundMoney&&<div className={Styles["refundBtn"]} onClick={this.refundMoney.bind(this)}>申请退票</div>||''}
@@ -425,7 +473,7 @@ export default class TicketOrderDetail extends React.Component{
                 href=href+Object.keys(obj).map(function (key) {
                     return key+"="+obj[key]
                 }).join("&");
-                console.log("payHref", href);
+                //console.log("payHref", href);
                 window.location.href =  href;
             }
         })

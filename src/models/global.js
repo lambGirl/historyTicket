@@ -1,4 +1,4 @@
-import { query, queryM,location,getLocationCity } from '../services/global'
+import { query, queryM,location,getLocationCity,queryGlobalConfig,getHomeFocusImg} from '../services/global'
 import {baseUtil} from "../utils/util";
 import { Toast } from 'antd-mobile';
 
@@ -9,6 +9,7 @@ export default globalAct = {
 
   state: {
       text:"第一",
+      homeFocusImg:baseUtil.getSession("homeFocusImg")||"",
       point:baseUtil.getSession("locationPoint")||'',   //当前定位的坐标,默认为空
       currentCity:baseUtil.getSession("jqmp_CurrentCity")||"",   //默认城市
       doorList:'' , //首页门票的列表
@@ -18,6 +19,7 @@ export default globalAct = {
       SelectBarData:baseUtil.getSession("jqmp_IndexInit")||{
           cityName:'',
           cityNo:'',
+          control:false,
           "all":{
               activeIndex:0,
               parentIndex: false,
@@ -38,17 +40,43 @@ export default globalAct = {
     setup({ dispatch, history }) {
         history.listen(location => {
             //console.log("location",location);
-           /* if(location.pathname === "/"){
+            //全局配置
+            let globalConfig =  baseUtil.getSession('globalConfig')
+            if(!globalConfig){
                 dispatch({
-                    type:'getInit',
+                    type:'getGlobalConfig',
                 })
-            }*/
+            }
+            //获取首页的图片列表
+            let IndexHeaderImgs =  baseUtil.getSession('homeFocusImg')
+            if(!IndexHeaderImgs){
+                dispatch({
+                    type:'getIndexHeaderImgs',
+                })
+            }
 
         });
     },
   },
 
   effects: {
+      //获取首页的header的图片背景
+    *getIndexHeaderImgs({payload}, {call, put}){
+        let initData =  yield call(getHomeFocusImg);
+        //console.log("initData",initData);
+        yield put({
+            type: 'saveIndexHeaderImgs',
+            data: initData.data
+        });
+    },
+
+    //全局配置
+    *getGlobalConfig({payload}, {call, put}){
+        let initData =  yield call(queryGlobalConfig);
+        //console.log("initData",initData);
+        baseUtil.setSession("globalConfig", initData.data.body.config);
+    },
+
     *fetch({ payload }, { call, put }) {
         let initData =  yield call(queryM, payload);
         //console.log("initData",initData);
@@ -88,14 +116,53 @@ export default globalAct = {
       }*/
 
     },
-    *getLocation({ payload }, { call, put }){
+    *getLocation({ payload }, { call, put, select }){
         //全局默认开启定位
-        var getLocation =  yield call(location);//获取坐标定位之后
-        //console.log("2--------------getLocation");
+        var getLocation = "", {SelectBarData} =  yield select(_=>_.globalAct)
+        try {
+            getLocation =  yield call(location);//获取坐标定位之后
+        }catch (err){
+            getLocation={
+                code:0,
+                data:"0004"
+            }
+        }
+        if(!getLocation||!getLocation.code){
+            Toast.info("定位失败");
+            return;
+        }
+
         yield put({
             type:'setPoint',
             data: getLocation
-        })
+        });
+
+        let lng =  getLocation&&getLocation.data["lng"],
+            lat =  getLocation&&getLocation.data["lat"];        //设置对应的城市
+        var getLocationCityData = yield call(getLocationCity,{longitude:lng,latitude:lat});
+        Toast.info("已为你重新定位");
+        //初始化定位的城市
+        yield  put({
+            type:'setCurrentCity',
+            data: getLocationCityData.data
+        });
+        //这里就要判断是够已经初始化过， 如果用户已经点击过了 就不在去初始化select的情况及定位的情况
+        if(!SelectBarData.control){
+            var allChild=getLocationCityData.data.body.childrens;
+            //console.log("getLocationCityData",getLocationCityData);
+            SelectBarData["all"].data =allChild.length&&[{cityName: "全城", cityNo: "all"}].concat(allChild);
+            SelectBarData["cityName"] = getLocationCityData.data.body.cityName;
+            SelectBarData["cityNo"] = getLocationCityData.data.body.cityNo;
+            //初始化对应的首页默认数据
+            yield  put({
+                type:'setIndexInit',
+                data:{
+                    type:false,
+                    data:getLocationCityData.data
+                }
+            });
+        }
+
     },
 
     *getInit({payload}, { call, put, select}){
@@ -214,6 +281,14 @@ export default globalAct = {
   },
 
   reducers: {
+      saveIndexHeaderImgs(state, action) {
+          //console.log("actions", action);
+        return {
+            ...state,
+            homeFocusImg: action.data.body.data
+        };
+    },
+
     save(state, action) {
       return { ...state};
     },

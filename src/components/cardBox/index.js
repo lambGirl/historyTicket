@@ -10,8 +10,8 @@ export default class CardBox extends React.Component{
                 [Styles["borderBottom"]]:cardCenterBottom,
                 [Styles['disabled']]:disabled
             })}>
-                {cardTitleIcon&&<span className={Styles['card-title-leftIcon']}></span>}
-                {cardTitle}
+                {cardTitleIcon&&<div className={Styles['card-title-leftIcon']}></div>}
+                <div style={{"verticalAlign":"middle"}}>{cardTitle}</div>
             </div>
             <div className={ClassNames(Styles['card-content'],{
                     [Styles["noPadding"]]:this.props.noPadding}

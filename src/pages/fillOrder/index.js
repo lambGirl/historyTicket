@@ -13,7 +13,8 @@ import DateChoose from './component/dateChoose'
 import CanBuyNum from './component/canBuyNum'
 import PassagerChoose from './component/passagerChoose'
 import Request from "../../utils/request"
-import { Toast } from 'antd-mobile';
+import { Toast,Modal } from 'antd-mobile';
+const alert = Modal.alert;
 @connect(({fillOrder,loading})=>({
     fillOrder,
     loading
@@ -26,7 +27,8 @@ export default class FillOrder extends  React.Component{
             reduceAddBtn: [ true, true ],
             passengers:[],
             total:0, //总票价
-            priceDetails:[]
+            priceDetails:[],
+            onlyPersonNum:''
         }
     }
     chooseInsurance(){
@@ -39,6 +41,10 @@ export default class FillOrder extends  React.Component{
         let {pointNo,productNo} =  baseUtil.getSession("jqmp_ticketDetail");
         let {fillOrderDetail, canBuy,chooseInsurance,actionDate} = this.props.fillOrder,
             {productDetail} = fillOrderDetail,priceDetails=[],total = 0,traveller=baseUtil.get("cdqcp_passengers")||[];
+        if(!traveller||!traveller.length){
+            Toast.info("请完善信息",2)
+            return;
+        }
         //组装数据
         let  payload = {
             pointNo:pointNo,
@@ -75,7 +81,7 @@ export default class FillOrder extends  React.Component{
         }).then((result)=>{
             //console.log("data------------", result);
             if(result.data.pubResponse.code !== "0000"){
-                Toast.info(result.data.pubResponse.msg, 3);
+                Toast.info(result.data.pubResponse.msg, 2);
                 return;
             }
             /**
@@ -110,8 +116,6 @@ export default class FillOrder extends  React.Component{
                 this.payPrice(cdqcp_passengers);
             });
         }
-
-
     }
     //切换时间选择并计价
     switchTime(index, price){
@@ -130,10 +134,12 @@ export default class FillOrder extends  React.Component{
     }
     //计价规则
     payPrice(cdqcp_passengers,newPrice,num){
+        //console.log("num", num);
         let {fillOrderDetail, canBuy,chooseInsurance, actionDate} = this.props.fillOrder,
             {productDetail} = fillOrderDetail,priceDetails=[],total = 0,
             price = newPrice||actionDate["date"].length&&parseFloat(actionDate["date"][actionDate.index].price)||"",
             totalPerson = num||canBuy;
+
         //单张票的价格
         priceDetails.push({
             label:"单价",
@@ -156,11 +162,11 @@ export default class FillOrder extends  React.Component{
         })
 
         //这里还需要加上保险的价格
-        //console.log(fillOrderDetail)
-        total += Number(price)*totalPerson;
+        //console.log(price,'22222222222222')
+        total += parseFloat(price)*totalPerson;
 
         this.setState({
-            total: total,
+            total: baseUtil.formatNumber(total),
             priceDetails: priceDetails
         })
     }
@@ -183,10 +189,12 @@ export default class FillOrder extends  React.Component{
         if(num === -1&&(productBookRule.minBuyCount === -1 && (canBuy-1) === 0||(canBuy-1)<productBookRule.minBuyCount )){
            // console.log("1");
             this.setState({reduceAddBtn:[false, true]});
+            Toast.info(`该门票至少购买${canBuy}张`,2)
             return;
         }
         if(num === 1&&((canBuy+1)>productBookRule.maxBuyCount)){
            // console.log("2");
+            Toast.info(`该门票限购${canBuy}张`,2);
             this.setState({reduceAddBtn:[true, false]});
             return;
         }
@@ -195,11 +203,12 @@ export default class FillOrder extends  React.Component{
             type:'fillOrder/canBuy',
             payload:num
         });
+
         //这里需要设置对应的乘客
         let cdqcp_passengers =  baseUtil.get("cdqcp_passengers");
         if(cdqcp_passengers){
             //这里就去算价格
-            this.payPrice(cdqcp_passengers,"", num);
+            this.payPrice(cdqcp_passengers,"", (canBuy+num));
         }
     }
 
@@ -212,18 +221,42 @@ export default class FillOrder extends  React.Component{
             window.location.href="/user/login?tzType=new&tzBuss=jpmp_ChoosePerson";
             return;
         }
-        window.location.href="/user/newpassenger?allowIdCardType=01&allowTicketType=0,1,2&tzType=new&tzBuss=jpmp_ChoosePerson"
+        window.location.href="/user/jqmppassenger?allowIdCardType=01&allowTicketType=0,1,2&tzType=new&tzBuss=jpmp_ChoosePerson"
+    }
+
+    //删除乘客列表
+    deleteOne(item){
+        var da = this.state.passengers,n = da.indexOf(item);
+        if (n > -1){
+            da.splice(n,1);
+            baseUtil.set('cdqcp_passengers',da);
+            this.setState({passengers:da});
+        }
+    }
+
+    //返回上一页
+    goLastPage(){
+        //进行二次确认
+        alert('', '订单未填写完成，放弃填写？', [
+            { text: <div>去意已绝</div>, onPress: () => {
+                    let {pointNo} =  baseUtil.getSession("jqmp_ticketDetail");
+                    Router.push(`/ticketDetail?point=${pointNo}`)
+                } },
+            { text: <div>在想想</div>, onPress: () => console.log('ok') },
+        ])
     }
 
     render(){
         let {fillOrderDetail, canBuy,actionDate} =  this.props.fillOrder;
         if(!fillOrderDetail){return null}
-        let {passengers,total,priceDetails} =  this.state;
+        let {passengers,total,priceDetails} =  this.state,{visitorInfoType} = fillOrderDetail.productDetail.productBookRule;
+
+        let onlyPersonNum =  (visitorInfoType == 1||visitorInfoType == 2)&&1||canBuy;
         return <div className={Styles['fillOrder-main']}>
             <Header
                 mode="light"
                 leftContent={ <i className="fa fa-angle-left fa-lg" style={{"color":"#3E3E3E"}}></i>}
-                leftClick={()=>{window.history.go(-1)}}
+                leftClick={this.goLastPage.bind(this)}
             >
                 <div style={{"textAlign":'center','color':'#3E3E3E'}} >订单填写</div>
             </Header>
@@ -232,19 +265,19 @@ export default class FillOrder extends  React.Component{
                     <div className={Styles['scroll-cotent-bottom']}>
                         <div className={Styles['fillOrder-content-top']}>
                             <Title detail={fillOrderDetail["productDetail"]}/>
-                            <DateChoose effectiveDate={actionDate} switchTime={this.switchTime.bind(this)}/>
+                            <DateChoose fillOrderDetail={fillOrderDetail} effectiveDate={actionDate} switchTime={this.switchTime.bind(this)}/>
                             <div className={Styles["centerLine"]}></div>
                             <CanBuyNum initNum={canBuy} clickItem={this.controlBtn.bind(this)} fillOrderDetail={fillOrderDetail}/>
                         </div>
                         <LineBox
-                            leftContent={<div className={ClassNames(Styles['color_333'],Styles['font28'],Styles['addPassager'])}>添加游客<span>需<i>1位</i>实际出行的游客信息</span></div>}
+                            leftContent={<div className={ClassNames(Styles['color_333'],Styles['font28'],Styles['addPassager'])}>添加游客<span>需<i>{onlyPersonNum}位</i>实际出行的游客信息</span></div>}
                             rightContent={<div className={Styles['addPassageBtn']}>选择游客</div>}
                             clickTap={this.choosePassager.bind(this)}
                             clickType="1"
                         >
                         </LineBox>
-                        {passengers.length&&<PassagerChoose passengers={passengers}/>||""}
-                        <div className={Styles["mgtop20"]}>
+                        {passengers.length&&<PassagerChoose passengers={passengers} delPerson={this.deleteOne.bind(this)}/>||""}
+                        {/*<div className={Styles["mgtop20"]}>
                             <LineBox
                                 rightIcon={true}
                                 leftContent={<span className={ClassNames(Styles['color_333'],Styles['font28'])}>游园保障</span>}
@@ -253,7 +286,7 @@ export default class FillOrder extends  React.Component{
                                 clickTap = {this.chooseInsurance.bind(this)}
                             >
                             </LineBox>
-                        </div>
+                        </div>*/}
                     </div>
                 </Scroll>
             </div>

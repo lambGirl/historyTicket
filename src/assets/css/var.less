@@ -1,4 +1,4 @@
-@base: 0.025;
+@base: 0.031;
 @font24: @base*24rem;
 @font20:@base*20rem;
 @font26:@base*26rem;
@@ -9,7 +9,7 @@
 @font30: @base*30rem;
 @font32: @base*32rem;
 @font36:@base*36rem;
-
+@font42:@base*42rem;
 @base-bg:#0d87e4;
 .font20{font-size:@font20}
 .font24{font-size:@font24}
@@ -19,7 +19,7 @@
 .font36{font-size:@font36}
 .font32{font-size:@font32}
 .font40{font-size:@font40}
-
+.font42{font-size:@font42}
 .color_fff {color: #fff;}
 .color_333 {color: #333;}
 .color_2B{color: #2b2b2b;}
@@ -63,4 +63,41 @@
   .scroll-cotent-bottom{
     padding-bottom: 100px;
   }
+}
+
+
+.search-nothing-content{
+  width: 92%;
+  height: @base*300rem;
+  background: #fff;
+  border-radius: @base*10rem;
+  margin: @base*30rem auto 0 auto;
+  text-align: center;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  .searchContentIcon{
+    width: @base*120rem;
+    height: @base*120rem;
+    margin: 0 auto;
+    margin-bottom: @base*24rem;
+  }
+  .noData{
+    background: url("../img/ico_null@2x.png") no-repeat;
+    background-size: cover;
+  }
+  .noSearch{
+    background: url("../img/ico_noData@2x.png") no-repeat;
+    background-size: cover;
+  }
+  .search-nothing-font{
+    color:#3E3E3E;
+    font-size: @font28;
+  }
+}
+
+html,body{
+  font-size: 16px;
 }

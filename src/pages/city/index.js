@@ -6,6 +6,7 @@ import Styles from './index.less'
 import classNames from 'classnames';
 import Scroll from '../../components/scroll'
 import { getData, baseUtil } from '../../utils/util'
+import Loading from '../../components/loading'
 import router from 'umi/router';
 const ANCHOR_HEIGHT = 18    //索引的高度
 const TITLE_HEIGHT = 4     //title的高度
@@ -13,7 +14,7 @@ const TITLE_HEIGHT = 4     //title的高度
 @connect(({city,globalAct,loading})=>({
     globalAct,
     city,
-    fetchCityData: loading.effects['city/fetch']
+    fetchCityData:loading.effects['city/fetch','globalAct/getLocation']
 }))
 
 export  default  class cityChoose  extends  React.Component{
@@ -41,7 +42,8 @@ export  default  class cityChoose  extends  React.Component{
             diff: -1,
             fixedHeight:0,
             noLocal:'',//search搜索框的
-            filterData:[]   //过滤数据
+            filterData:[],   //过滤数据
+            showAz:false
         }
     }
     componentWillMount(){
@@ -83,6 +85,11 @@ export  default  class cityChoose  extends  React.Component{
     onShortTouchEnd(e){
         e.preventDefault();
         e.stopPropagation();
+        setTimeout(()=>{
+            this.setState({
+                "showAz":''
+            })
+        },10)
     }
 
     _scrollTo(index){
@@ -97,9 +104,10 @@ export  default  class cityChoose  extends  React.Component{
         } else if (index > this.state.listHeight.length - 2){
             index = this.state.listHeight.length - 2
         }
-
-
+        let {shortcutList} =  this.props.city;
+       // console.log("shortcutList",shortcutList[index]);
         this.setState({
+            showAz:shortcutList[index],
             "currentIndex":index,
             "scrollY":-this.state.listHeight[index]
         },function(){
@@ -233,26 +241,32 @@ export  default  class cityChoose  extends  React.Component{
                     product['cityName'].indexOf(val) != -1
             })
         });
-       // console.log("------newCity------",newCity.sort(this.localeCompare));
+       // console.log("newCity",newCity);
+        // console.log("------newCity------",newCity.sort(this.localeCompare));
         this.setState({
             "filterData":newCity.sort(this.localeCompare),
         })
-
     }
+
     keywordClear(){
         this.setState({
             "noLocal":""
         })
     }
 
-    locationPos(){
-
+    locationPos(e){
+        //获取定位
+        e.stopPropagation();
+        e.preventDefault();
+        this.props.dispatch({
+            type:"globalAct/getLocation",
+        })
     }
 
     //render的方法
     render(){
-        const { cityList, shortcutList } = this.props.city, _this =  this,{ point,SelectBarData} =  this.props.globalAct;
-       //console.log("point", point, SelectBarData);
+        const { cityList, shortcutList } = this.props.city, _this =  this,{ point,SelectBarData,currentCity} =  this.props.globalAct;
+        //console.log("cityList",cityList);
         if(!cityList.length){
             return <div style={{"height":"100%"}}>
                 <Helmet>
@@ -265,8 +279,7 @@ export  default  class cityChoose  extends  React.Component{
                 ><div style={{"textAlign":"center"}}>选择城市</div></Header>
             </div>
         }
-       // console.log("cityList",this.state.filterData);
-        return <div style={{"height":"100%"}}>
+        return <div style={{"height":"100%","background":'#ECF0F4'}}>
                         <Helmet>
                             <meta charSet="utf-8" />
                             <title>选择城市</title>
@@ -275,20 +288,21 @@ export  default  class cityChoose  extends  React.Component{
                                  leftContent={<i className="fa fa-angle-left fa-lg"></i>}
                                  leftClick={() => window.history.go(-1)}
                         ><div style={{"textAlign":"center"}}>选择城市</div></Header>
-                        <div  className={classNames(Styles["bar"],Styles["bar-header-secondary"])}>
-                            <div className={classNames(Styles["searchbar"],Styles["searchbar-active"])}>
-                                <div className={classNames(Styles["search-input"])}>
-                                    <label className={classNames(Styles["icon"],Styles["icon-search"])} htmlFor="search"></label>
-                                    <input ref="search" onFocus={this.searchFous.bind(this)}
-                                           onBlur={this.searchInput.bind(this)} type="search"
-                                           maxLength="20"
-                                           value={this.state.noLocal}
-                                           onChange={this.keywordChange.bind(this)} name="search" id='search'
-                                           placeholder='成都，chengdu，cd'/>
-                                    <label className={classNames(Styles["icon"], Styles["icon-close"])}  style={{display:this.state.noLocal == "" ? "none" : ""}}
-                                           onClick={this.keywordClear.bind(this)}></label>
-                                </div>
-                            </div>
+                        <div  className={classNames(Styles["city-search"])}>
+                              <label className={classNames(Styles["icon-search"])} htmlFor="search">
+                                  <i className="fa fa-search fa-lg"></i>
+                              </label>
+                              <input ref="search"
+                                     type="search"
+                                     maxLength="20"
+                                     value={this.state.noLocal}
+                                     onChange={this.keywordChange.bind(this)} name="search" id='search'
+                                     placeholder='成都，chengdu，cd'/>
+                            {this.state.noLocal&&<label className={classNames(Styles[ "icon-close" ])}
+                                    onClick={this.keywordClear.bind(this)}>
+                                <i className="fa fa-times-circle" aria-hidden="true"></i>
+                            </label>||''
+                            }
                         </div>
 
                         <div className={classNames(Styles['scroll-content'],Styles["defaultHeight"])}>
@@ -301,10 +315,10 @@ export  default  class cityChoose  extends  React.Component{
                                     <ul>
                                         {/*定位导航栏*/}
                                         <li  className={Styles["list-group"]}>
-                                            <h2 className={Styles["list-group-title"]}>定位</h2>
-                                            <div className={Styles['positionAdress']}>
-                                                <div>{point.code&&SelectBarData.cityName||'定位失败'}</div>
-                                                <div><i className={Styles["locationIocn"]} onClick={this.locationPos.bind(this,true)}></i></div>
+                                            <h2 className={Styles["list-group-title"]}>当前定位城市</h2>
+                                            <div className={Styles['positionAdress']} onClick={this.switchCity.bind(this, currentCity)}>
+                                                <div>{currentCity.cityName}</div>
+                                                <div><i className={Styles["locationIocn"]} onClick={this.locationPos.bind(this)}></i></div>
                                             </div>
                                         </li>
                                         {/*热门城市*/}
@@ -335,7 +349,7 @@ export  default  class cityChoose  extends  React.Component{
                                                                         <li onClick={_this.switchCity.bind(_this, item)} key={itemIndex + 'list-group-item' + groupIndex} className={Styles["list-group-item"]} >
                                                                           {/*  <img className={Styles["avatar"]} src={item.avatar}/>*/}
                                                                             <span className={Styles["name"]}>{item.cityName}</span>
-                                                                            <span className={Styles['parentRegion']}>{item.parentRegion}</span>
+                                                                            <span className={Styles['parentRegion']}>{item.parentRegionName}</span>
                                                                         </li>
                                                                     )
                                                                 })
@@ -365,13 +379,11 @@ export  default  class cityChoose  extends  React.Component{
                                         )})
                                     }
                                 </ul>
+                                {this.state.showAz&&<div className={Styles["showAZ"]}>{this.state.showAz}</div>||''}
                             </div>
-
                         </div>
                             {
-                             this.props.fetchCityData&&<div className={classNames(Styles["loading"])}>
-                             <div>loading</div>
-                             </div>
+                                this.props.fetchCityData&&<Loading/>
                             }
                             {this.renderOrid()}
                     </div>
@@ -380,11 +392,13 @@ export  default  class cityChoose  extends  React.Component{
 
     //选择却换城市
     switchCity(item){
-       // console.log("item", item);
+        //console.log("item", item);
+        //return;
         /**
          * 设置对应的首页查询条件
          * @type {string}
          */
+       // console.log("item", item);
         let jqmp_IndexInit =  baseUtil.getSession("jqmp_IndexInit");
         jqmp_IndexInit.cityName =  item.cityName;
         jqmp_IndexInit.cityNo =  item.cityNo;
@@ -396,6 +410,7 @@ export  default  class cityChoose  extends  React.Component{
                 cityName: "全城", cityNo: "all"
             }]
         };
+        jqmp_IndexInit.control =  true;
        //baseUtil.setSession("jqmp_IndexInit",jqmp_IndexInit);
         this.props.dispatch({
             type:'globalAct/getSelectBarData',
@@ -415,13 +430,68 @@ export  default  class cityChoose  extends  React.Component{
         return <div className={Styles["ui-standard-top"]} style={{display:this.state.noLocal ? "block" : "none"}}>
             <ul style={{transition:'top 1s',overflowX:'hidden',padding:'0',"height":"80%"}}>
                 {this.noDatas()}
-                {
-                    filterData.length&&filterData.map((item,index)=>{
-                        return <li onClick={this.switchCity.bind(this, item)} key={`filterData-${index}`} className={Styles['cityList-li']}>{item.cityName}</li>
-                    })
-                }
+                {this.renderSearchContent()}
+
             </ul>
         </div>
+    }
+    renderSearchContent() {
+        let {filterData} = this.state;
+       // console.log("filterData", filterData);
+        var v = this.state.noLocal, datas =filterData, itemss = [], hot1, hot, hotc;
+        if ( !datas ) return
+        var c1 = [], c2 = [], c3 = [], c4 = [], c5 = [], c6 = [], that = this;
+        datas.map((item, index)=>{
+            itemss[ index ] = []
+            if ( (item.shortName.indexOf(v) === 0 && item.shortName.length === v.length) || item.cityName.indexOf(v) === 0 ) {
+                hot = item.cityName.substr(0, v.length)
+                hotc = item.cityName.substr(v.length, item.cityName.length)
+                hot1 = ""
+            } else if ( item.cityName.indexOf(v) !== 0 && item.cityName.indexOf(v) !== -1 ) {
+                // console.log("datas",datas[a]);
+                hot1 = item.cityName.substr(0, item.cityName.indexOf(v));
+                hot = item.cityName.substr(item.cityName.indexOf(v), v.length);
+                hotc = item.cityName.substr(item.cityName.indexOf(v) + v.length, item.cityName.length);
+                // console.log("hot",hot1, hot, hotc);
+            } else if ( item.fullName === v ) {
+                hotc = "";
+                hot = item.cityName
+                hot1 = "";
+            } else if ( item.fullName.indexOf(v) !== -1 ) {
+                hotc = item.cityName;
+                hot = "";
+                hot1 = ""
+            } else {
+                hotc = item.cityName
+                hot = "";
+                hot1 = "";
+            }
+            var cityNames = item.parentRegionName;
+            if (item.cityName.indexOf(v) !== 0 && item.cityName.indexOf(v) !== -1 ) {
+                //console.log("222222222222222222222222");
+                c2.push(<li key={"renderSearchContent"+index}><p className={Styles["city"]}
+                                                   onClick={this.switchCity.bind(this, item)}>{hot1}<i>{hot}</i>{hotc}
+                    <span className={Styles["cityName_car"]}>{cityNames}</span>
+                </p>
+                    {itemss[ index ]}
+                </li>)
+            } else if ( (item.cityName.indexOf(v) === 0 || item.fullName === v || item.fullName.indexOf(v) !== -1 || item.shortName.indexOf(v) === 0) ) {
+                //console.log("1111111111111111111111111111");
+                c1.push(<li key={"renderSearchContent"+index}><p className={Styles["city"]} onClick={this.switchCity.bind(this, item, 1)}><i>{hot}</i>{hotc}
+                    <span className={Styles["cityName_car"]}>{cityNames}</span>
+                </p>
+                    {itemss[ index ]}
+                </li>)
+            } else if (item.cityName.indexOf(v) === -1 && (item.fullName !== v || item.fullName.indexOf(v) === -1) && item.shortName.indexOf(v) !== 0 ) {
+                //console.log("333333333333333333333333333",itemss);
+                c3.push(<li key={"renderSearchContent"+index}><p className={Styles["city"]}
+                               onClick={this.switchCity.bind(this, item)}>{item.cityName}<span
+                    className={Styles["cityName_car"]}>{cityNames}</span></p>
+                    {itemss[ index ]}
+                </li>)
+            }
+        })
+        return c1.concat(c2,c3).concat(c4,c5).concat(c6);
     }
     noDatas(){
 

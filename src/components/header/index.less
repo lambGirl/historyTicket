@@ -26,16 +26,19 @@
     height: 100%;
     align-items: center;
     .left-header{
-      width: 14%;
+      min-width: 14%;
+      flex:1;
       box-sizing: border-box;
       padding-left:@base*32rem;
     }
     .center-header{
-      width: 60%;
+      min-width: 63%;
+      flex:2;
       box-sizing: border-box;
     }
     .right-header{
-      width: 26%;
+      min-width: 26%;
+      flex:1;
       text-align: right;
       padding-right: @base*30rem;
       box-sizing: border-box;

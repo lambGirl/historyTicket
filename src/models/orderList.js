@@ -65,8 +65,9 @@ export default orderList = {
 
             let postData = payload.postData;
             let state =  payload.state;
-            let initData =  yield call(queryOrderList, {postData});
-            //
+            let initData =  yield call(deleteSinleOrder, {postData});
+
+           // console.log("postData", postData);
             if(initData.data.pubResponse.code === "0000"){
                 Toast.info("删除成功");
                 yield put({
@@ -81,6 +82,8 @@ export default orderList = {
                         }
                     }
                 })
+            }else{
+                Toast.info(initData.data.pubResponse.msg);
             }
         }
     },
@@ -110,7 +113,7 @@ export default orderList = {
                 state.orderList.concat(saveData.body.list);
                 return { ...state};
             }
-            Toast.info(action.data.pubResponse.msg);
+            Toast.info(saveData.pubResponse.msg);
             return { ...state};
         },
     },
