@@ -28,7 +28,7 @@ export default class VerticalScrollPage extends Component {
                          threshold: 0,
                          txt: {
                              more: '加载中...',
-                             nomore: '没有更多了哦',
+                             nomore: this.props.nomoreTxt?"":'没有更多了哦',
                          },
                      }||false}
                      currPage={this.props.currPage}

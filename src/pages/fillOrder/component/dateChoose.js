@@ -69,8 +69,8 @@ export  default class DateChoose extends React.Component{
                             [Styles["active"]]: effectiveDate.index === index,
                             [Styles["disable"]]:!item.use
                         })}>
-                            <div>{index === 0&&"今天"||index === 1&&"明天"||""}{item.date.substr(5,item.date.length)} </div>
-                            <div style={{"whiteSpace": "nowrap","overflow":"hidden","width":"100%","textOverflow": "inherit"}}>{item.use&&`¥${item.price}`||"不可用"}</div>
+                            <div>{index === 0&&"今天"||index === 1&&"明天"||""}{item.date.substr(5,item.date.length)}{index !== 0&&index !== 1&&Date.parse1(item.date).getweek()} </div>
+                            <div style={{"whiteSpace": "nowrap","overflow":"hidden","width":"100%","textOverflow": "inherit"}}>{item.use&&`¥${item.price}`||"不可订"}</div>
                         </div>
                     })
                 }

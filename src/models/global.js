@@ -1,8 +1,19 @@
 import { query, queryM,location,getLocationCity,queryGlobalConfig,getHomeFocusImg} from '../services/global'
 import {baseUtil} from "../utils/util";
 import { Toast } from 'antd-mobile';
+import Router from 'umi/router'
 
 var globalAct = {};
+if(Router.location.pathname === "/"){
+    baseUtil.removeSession("homeFocusImg");
+    baseUtil.removeSession("jqmp_IndexInit");
+    baseUtil.removeSession("jpmp_dates");
+    baseUtil.removeSession("jcpm_ticketDetail");
+    baseUtil.removeSession("jcpm_fillOrder");
+    baseUtil.removeSession("jcpm_canBuy");
+    baseUtil.removeSession("jqmp_CurrentCity");
+    /*baseUtil.removeSession("locationPoint");*/
+}
 export default globalAct = {
 
   namespace: 'globalAct',
@@ -38,8 +49,18 @@ export default globalAct = {
 
   subscriptions: {
     setup({ dispatch, history }) {
+
+        //既然要刷新。 就清楚所有的东西
         history.listen(location => {
-            //console.log("location",location);
+            if(location.pathname === "/"){
+                let { from,openId } = location.query;
+                if(from){
+                    baseUtil.setSession("cdqcp_channel",from);
+                    openId = openId||''
+                    baseUtil.set("cdqcp_opid",openId);
+                }
+            }
+
             //全局配置
             let globalConfig =  baseUtil.getSession('globalConfig')
             if(!globalConfig){
@@ -53,6 +74,12 @@ export default globalAct = {
                 dispatch({
                     type:'getIndexHeaderImgs',
                 })
+            }
+
+            if(location.pathname === "/"){
+               dispatch({
+                    type:'getInit',
+                });
             }
 
         });
@@ -176,6 +203,7 @@ export default globalAct = {
         let {point,currentCity,pageNum,currPage,SelectBarData,totalPage} = yield select(_=>_.globalAct),getLocation;
         //console.log("currPoint",currPoint,currentCity,  SelectBarData)
         currPage = 1,totalPage=10;  //进来都去初始化一次数据
+       // console.log("argument", point);
         if(!point){
             try {
                 getLocation =  yield call(location);//获取坐标定位之后
@@ -222,7 +250,7 @@ export default globalAct = {
             });
         }
 
-
+        console.log("currentCity",currentCity);
         let  {data, activeIndex} = SelectBarData["zlpx"];
         let  allData = SelectBarData["all"]["data"],allActiveIndex = SelectBarData["all"]["activeIndex"];
       //  return;
@@ -283,6 +311,7 @@ export default globalAct = {
   reducers: {
       saveIndexHeaderImgs(state, action) {
           //console.log("actions", action);
+          baseUtil.setSession("homeFocusImg",  action.data.body.data);
         return {
             ...state,
             homeFocusImg: action.data.body.data

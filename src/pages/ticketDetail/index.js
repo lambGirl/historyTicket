@@ -70,21 +70,20 @@ export  default class ticketDetail extends  React.Component{
           {productBookRule,productUseRule,productRefundRule} = showModelContent;
 
       if(tag === "gpxz"){
-          return <div className={Styles['writeOrder-cardContent']}>
+          return <div className={Styles['ticketDetial-cardContent']}>
               <div>
-                  <div className={Styles["name"]}>订票须知</div>
+                  <div className={Styles["name"]}>订票须知：</div>
                   <div>
-                      {productBookRule.aheadTimeType == "1"?"15:00点前可订今日,预定后立即可用":`预定${baseUtil.getHours(productBookRule.aheadMinutes)}后可用`}<br/>
+                      {productBookRule.aheadTimeType == "1"?"预定后立即可用":`预定${baseUtil.getHours(productBookRule.aheadMinutes)}后可用`}<br/>
                       {productBookRule.aheadNote&& `(注: ${productBookRule.aheadNote})`}
-
                   </div>
               </div>
               <div>
-                  <div className={Styles["name"]}>换票须知</div>
+                  <div className={Styles["name"]}>换票须知：</div>
                   <div>{productUseRule.needTicket=="1"&&"持团子电子票 先换票再入园"||"无需换票，持团子电子票直接入园"}</div>
               </div>
               <div>
-                  <div className={Styles["name"]}>退票须知</div>
+                  <div className={Styles["name"]}>退票须知：</div>
                   <div>{
                     baseUtil.productRefundRule(productRefundRule.refundType)
                   }</div>
@@ -92,43 +91,43 @@ export  default class ticketDetail extends  React.Component{
           </div>
       }
       if(tag === "fybh"){
-          return <div className={Styles['writeOrder-cardContent']}>
+          return <div className={Styles['ticketDetial-cardContent']}>
               {
                   showModelContent.costIncludeNote&&<div>
-                  <div className={Styles[ "name" ]}>费用包含</div>
+                  <div className={Styles[ "name" ]}>费用包含：</div>
                   <div>{showModelContent.costIncludeNote}</div>
               </div>
               }
               {
                   showModelContent.costExcludeNote&&<div>
-                    <div className={Styles[ "name" ]}>费用不含</div>
+                    <div className={Styles[ "name" ]}>费用不含：</div>
                     <div>{showModelContent.costExcludeNote}</div>
                   </div>
               }
-              <div>
+              {/*<div>
                   <div className={Styles["name"]}>其他</div>
                   <div>安仁古镇门票</div>
-              </div>
+              </div>*/}
           </div>
       }
 
       if(tag === "sysm"){
-          return <div className={Styles['writeOrder-cardContent']}>
+          return <div className={Styles['ticketDetial-cardContent']}>
               {
                   productUseRule.voucherTimes&&<div>
-                    <div className={Styles[ "name" ]}>换票时间</div>
+                    <div className={Styles[ "name" ]}>换票时间：</div>
                     <div>{`${productUseRule.voucherTimes[0].beginTime+"-"+productUseRule.voucherTimes[0].endTime}`}</div>
                   </div>
               }
               {
                   productUseRule.ticketGetAddress.length&&<div>
-                      <div className={Styles[ "name" ]}>换票地址</div>
+                      <div className={Styles[ "name" ]}>换票地址：</div>
                       <div>{productUseRule.ticketGetAddress[0]}</div>
                   </div>||null
               }
               {
                   productUseRule.getInAddress.length&&<div>
-                      <div className={Styles[ "name" ]}>入园地址</div>
+                      <div className={Styles[ "name" ]}>入园地址：</div>
                       <div>{productUseRule.getInAddress[0]}</div>
                   </div>||null
               }
@@ -246,7 +245,8 @@ export  default class ticketDetail extends  React.Component{
   }
 
   renderTicketModel(){
-      let { showModelContent } =  this.state,{ ticketDetail } =  this.props.ticketDetail;
+      let { showModelContent } =  this.state,{ ticketDetail } =  this.props.ticketDetail,
+          {productBookRule,productUseRule,productRefundRule} = showModelContent;
       return <div className={ClassNames(Styles[ 'ticketDetail_model' ])}>
           <div className={Styles[ 'model' ]}></div>
           <div className={Styles[ 'ticketDetail_model_show' ]}>
@@ -270,20 +270,20 @@ export  default class ticketDetail extends  React.Component{
                   <Scroll class={Styles[ 'wrapper' ]}>
                       <div className={Styles[ 'scroll-cotent-bottom' ]}>
                           <div className={Styles[ 'writeOrder_detail_content' ]}>
-                              <div className={Styles[ 'mgtop20' ]}>
+                              <div>
                                   <CardBox
                                       cardTitleIcon={true}
                                       cardTitle="购票须知"
                                       content={this.renderBaseInfo('gpxz')}
                                   />
                               </div>
-                              <div className={Styles[ 'mgtop20' ]}>
+                              {(showModelContent.costIncludeNote||showModelContent.costExcludeNote)&&<div className={Styles[ 'mgtop20' ]}>
                                   <CardBox
                                       cardTitleIcon={true}
                                       cardTitle="费用包含"
                                       content={this.renderBaseInfo('fybh')}
                                   />
-                              </div>
+                              </div>||''}
                               <div className={Styles[ 'mgtop20' ]}>
                                   <CardBox
                                       cardTitleIcon={true}
@@ -304,6 +304,22 @@ export  default class ticketDetail extends  React.Component{
                       </div>
                       <div onClick={this.writeOrder.bind(this, showModelContent)}>填写订单</div>
                   </div>
+              </div>
+          </div>
+      </div>
+  }
+  renderPhoneModel(){
+      let { showModelContent } =  this.state,{ ticketDetail } =  this.props.ticketDetail;
+      return <div className={ClassNames(Styles[ 'ticketDetail_model' ])}>
+          <div className={Styles[ 'model' ]} onClick={this.onClose.bind(this)}></div>
+          <div className={Styles['mangBtn']}>
+              <div className={Styles["btns"]}>
+                  {
+                      ticketDetail.servicePhones.length&&ticketDetail.servicePhones.map((item,key)=>{
+                          return <div className={Styles["btn"]} key={"servicePhones"+key}><a href={`tel:${item.phone}`}>{item.phone}({item.startTime&&item.endTime?baseUtil.formatTime(item.startTime)+'-'+baseUtil.formatTime(item.endTime):''})</a></div>
+                      })
+                  }
+                <div className={Styles["btn"]} onClick={this.onClose.bind(this)}>取消</div>
               </div>
           </div>
       </div>
@@ -342,8 +358,8 @@ export  default class ticketDetail extends  React.Component{
               {this.renderTicketDetial()}
               {ticketDetail.pointOpenInfo&&<div className={Styles[ 'card' ]}>
                   <div className={Styles[ 'card-Title' ]}>
-                      <span className={Styles[ 'card-title-leftIcon' ]}></span>
-                      开放时间
+                      <div className={Styles[ 'card-title-leftIcon' ]}></div>
+                      <div>开放时间</div>
                   </div>
                   <div className={Styles[ 'card-content' ]}>
                       <div className={Styles[ 'card-content-text' ]}>
@@ -381,7 +397,10 @@ export  default class ticketDetail extends  React.Component{
                   leftIcon={true}
                   leftContent={<span className={ClassNames(Styles['font28'],Styles['color_3e'])}>安全须知</span>}
                   righIcon={true}
+                  clickType='1'
+                  clickTap={()=>{window.location.href='/article/article_pub?key=trip_safety_notice&server=queryProtocolDetail&temp_title=安全须知'}}
                   rightContent={<span className={ClassNames(Styles['color_94'],Styles['font28'])}>了解详情</span>}
+
               />
           </div>
         </Scroll>
@@ -391,18 +410,9 @@ export  default class ticketDetail extends  React.Component{
             this.state.showModel&&this.renderTicketModel()
         }
 
-           <Modal
-                popup
-                visible={this.state.showPhone}
-                onClose={this.onClose.bind(this)}
-                animationType="slide-up"
-            >
-                <List  renderHeader={() => <div>一键拨号</div>} className="popup-list">
-                    {servicePhones&&servicePhones.length&&servicePhones.map((item, index) => (
-                        <List.Item key={index}><a style={{"color":"#807878","width":"100%", "height":"100%","display":"inline-block"}} href={`tel:${item.phone}`}>{item.phone}</a></List.Item>
-                    ))||null}
-                </List>
-            </Modal>
+        {
+            this.state.showPhone&&this.renderPhoneModel()
+        }
 
     </div>
   }

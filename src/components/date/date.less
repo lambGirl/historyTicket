@@ -57,7 +57,9 @@
     float:left;
   }
 
-  //justify-content: space-around;
+  >:first-child, >:last-child{
+    color:#FC5151;
+  }
 }
 
 /*月份渲染*/
@@ -111,7 +113,7 @@
           color:#3E3E3E;
         }
         .tip{
-          color: #FC5151;
+          color: #0D87E4;
         }
         .DH-active-date {
           width:90%;
@@ -124,6 +126,9 @@
           flex-direction: column;
           justify-content: center;
           .tip, .cn_fontSize,.en_fontSize{
+            color: #fff;
+          }
+          .remark{
             color: #fff;
           }
         }
@@ -160,13 +165,13 @@
         width: 100%;
         color: rgba(147, 146, 146, 1);
         font-size: @base*20rem;
-
         text-align: center;
         color:#bfbfbf;
         padding-bottom:2px;
       }
       .remark{
         padding-top:2px;
+        color:#FC5151;
       }
       .rest-data {
         width: .85rem;

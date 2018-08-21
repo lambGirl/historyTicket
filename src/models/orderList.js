@@ -17,6 +17,7 @@ export default orderList = {
         setup({ dispatch, history }) {
             history.listen(location => {
                     location.query.userToken&&baseUtil.set("cdqcp_opid", location.query.userToken);
+                    location.query.openId&&baseUtil.set("cdqcp_opid", location.query.userToken);
                     location.query.from&&baseUtil.set("cdqcp_channel", location.query.from);
                     location.query.wxcode&&baseUtil.set("cdqcp_wxopenId", location.query.wxcode);
                  if(location.pathname.indexOf("/orderList") != -1){

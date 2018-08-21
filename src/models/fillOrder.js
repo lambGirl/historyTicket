@@ -58,6 +58,7 @@ export default globalAct = {
                 }
             });
         },
+
         *canBuy({payload},{call,put}){
             //console.log("payload",payload);
             yield put({
@@ -65,6 +66,7 @@ export default globalAct = {
                 data: payload
             });
         },
+
         *setactionDate({payload}, {call, put}){
             yield put({
                 type: 'setDate',
@@ -89,9 +91,10 @@ export default globalAct = {
            //console.log("action.data111",action.data.body["productDetail"]);
             if(action.data.pubResponse.code === "0000"){
                 let  productDetail = action.data.body["productDetail"],
-                    minBuyCount =  productDetail["productBookRule"].minBuyCount;
+                    minBuyCount = productDetail["productBookRule"].minBuyCount;
                 state.fillOrderDetail = action.data.body;
-                state.canBuy = minBuyCount == -1?0:parseInt(minBuyCount);
+                state.canBuy = minBuyCount == "-1"?0:parseInt(minBuyCount);
+
                 baseUtil.setSession("jcpm_canBuy",state.canBuy);
                 baseUtil.setSession("jcpm_fillOrder",action.data.body);
                 return { ...state,fillOrderDetail:action.data.body};
@@ -132,13 +135,14 @@ export default globalAct = {
                         actionDate.date[0].use = true;
                         i++;
                     }
-                    if(item.tomorror === day){
+                    if(item.sellDate === tomorror){
                         actionDate.date[1].date = item.sellDate;
                         actionDate.date[1].price = item.sellPrice;
                         actionDate.date[1].use = true;
                         i++;
                     }
                 });
+
                 actionDate.date.push({
                     date:allowDateList[i].sellDate,price:allowDateList[i].sellPrice,use:true
                 });

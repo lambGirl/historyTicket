@@ -8,7 +8,7 @@ import CardBox from  '../../components/cardBox'
 import { baseUtil } from "../../utils/util";
 import Request from '../../utils/request'
 import {connect} from 'dva'
-import { Modal} from 'antd-mobile';
+import { Modal, Toast} from 'antd-mobile';
 const prompt = Modal.alert;
 let orderStatus =  false, paying =  false;
 
@@ -25,7 +25,8 @@ export default class TicketOrderDetail extends React.Component{
             timeIntervar:"",
             returntime:0,        //判断支付时间是否已经过期
             orderNo: Router.location.query.orderNum,
-            userToken: baseUtil.get("cdqcp_opid")||Router.location.query.opid
+            userToken: baseUtil.get("cdqcp_opid")||Router.location.query.opid,
+            voucherIndex:0
         }
     }
     UNSAFE_componentWillMount(){
@@ -137,20 +138,20 @@ export default class TicketOrderDetail extends React.Component{
     }
     caculateTime(){
         let _this =  this;
-      //  console.log("returntime",_this.state.returntime);
+       //console.log("returntime",_this.state.returntime);
         this.lock_interval&&clearInterval(this.lock_interval);
         this.lock_interval = setInterval(function(){
-            if (!_this._reactInternalInstance){
+            /*if (!_this._reactInternalInstance){
                 clearInterval(_this.lock_interval);
-                /*_this.props.dispatch({
+                /!*_this.props.dispatch({
                     type:'orderDetail/fetch',
                     payload:{
                         orderNo:_this.state.orderNo,
                         userToken: _this.state.userToken
                     }
-                });*/
+                });*!/
                 return;
-            }
+            }*/
             if (_this.state.returntime <= 1){
 
                 clearInterval(_this.lock_interval);
@@ -164,7 +165,7 @@ export default class TicketOrderDetail extends React.Component{
 
                 return;
             }
-            //console.log("getUnixTimeStamp",_this.state.returntime);
+           // console.log("getUnixTimeStamp",_this.state.returntime);
             var ac = _this.state.returntime;
             ac--;
             _this.setState({returntime:ac});
@@ -303,22 +304,36 @@ export default class TicketOrderDetail extends React.Component{
                 </div>
             </div>
         }
-        let travellers = orderDetail.travellers;
+        let travellers = orderDetail.travellers,{voucherIndex} =  this.state;
         return <div className={Styles["voucher-List-content"]}>
-            {
-                travellers.map((item, index)=>{
-                    return <div className={Styles['voucher-List']} key={"voucher"+index}>
-                                <div>{item.voucherText}</div>
-                                <div className={Styles['show-voucher-Img']}>
-                                    <img src={item.voucherPics} alt=""/>
-                                    {top.pzClass&&<div className={Styles[`icon_${top.pzClass}`]}></div>||''}
-                                </div>
-
-
+                <div className={Styles['voucher-List']} >
+                    <div>{travellers[voucherIndex].voucherText}</div>
+                    <div className={Styles['show-voucher-Img']}>
+                        <img src={travellers[voucherIndex].voucherPics} alt=""/>
+                        {top.pzClass&&<div className={Styles[`icon_${top.pzClass}`]}></div>||''}
                     </div>
-                })
-            }
+                </div>
+            {travellers.length>1&&<div className={Styles["voucherControlBtn"]}>
+                    <div className={ClassNames({
+                        [Styles["disabled"]]: voucherIndex === 0
+                    })} onClick={this.changeVoucherList.bind(this,travellers, -1)}>上一条</div>
+                    <div className={ClassNames({
+                        [Styles["disabled"]]: voucherIndex === travellers.length-1
+                    })} onClick={this.changeVoucherList.bind(this,travellers,1)}>下一条</div>
+                </div>||''}
         </div>
+    }
+    changeVoucherList(travellers, tag){
+        let {voucherIndex} =  this.state;
+       // console.log("travellers",voucherIndex,travellers,tag);
+        if((voucherIndex <= 0&&tag === -1)||(voucherIndex === travellers.length-1&&tag === 1)){
+            return;
+        }
+
+        this.setState({
+            voucherIndex: voucherIndex+(tag)
+        })
+
     }
 
     render(){
@@ -421,28 +436,61 @@ export default class TicketOrderDetail extends React.Component{
     }
     //申请退票
     refundMoney(){
-        this.props.dispatch({
-            type:'orderDetail/refundTicket',
-            payload:{
-                orderNo:this.state.orderNo,
-                userToken: this.state.userToken,
-                refundQuantity:"",
-                refundReason:""
+        /**
+         * 这里需要查询退票详情
+         */
+        let _this =  this;
+        Request("/api?server=trip_refundTicketQuery",{
+            method: "post",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify({
+                orderNo:this.state.orderNo, userToken: this.state.userToken})
+        }).then((result)=>{
+            if(result.data.pubResponse.code === "0000"){
+                prompt(<div className={Styles["doubleModelTitle"]}>你确定要申请退款么?</div>, <div className={Styles["doubleModelContent"]}>
+                    本次退票手续费 <span>{result.data.body.refundFee}</span>元,
+                    实退金额 <span>{result.data.body.refundPrice}</span>元
+                </div>, [
+                    { text: <span className={Styles["confirm_7c"]}>确定</span>, onPress: () => {
+                            Request("/api?server=trip_refundTicket",{
+                                method: "post",
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body:JSON.stringify({
+                                    orderNo:this.state.orderNo,
+                                    userToken: this.state.userToken
+                                })
+                            }).then((result)=>{
+                                if(result.data.pubResponse.code === "0000"){
+                                    //退票成功
+                                    window.location.reload()
+                                    return;
+                                }
+                                Toast.info(result.data.pubResponse.msg);
+                            })
+                        }, style:'' },
+                    { text: <span className={Styles["confirm_0d"]}>再想想</span>, onPress: () => console.log('ok') },
+                ])
+                return;
             }
+            Toast.info(result.data.pubResponse.msg,2);
         })
     }
 
     //作废订单
     obsolete(){
-        prompt('', <div>你确定要作废订单么</div>, [
-            { text: '确定', onPress: () => {this.props.dispatch({
+        prompt('', <div className={Styles["doubleModelContent"]}>你确定要作废订单么</div>, [
+            { text: <span className={Styles["confirm_7c"]}>确定</span>, onPress: () => {this.props.dispatch({
                     type:'orderDetail/obsoleteOrder',
                     payload:{
                         orderNo:this.state.orderNo,
                         userToken: this.state.userToken
                     }
                 })}, style:'' },
-            { text: '再想哈多', onPress: () => console.log('ok') },
+            { text: <span className={Styles["confirm_0d"]}>再想想</span>, onPress: () => console.log('ok') },
         ])
     }
 
@@ -466,8 +514,9 @@ export default class TicketOrderDetail extends React.Component{
                     wxcode: baseUtil.get("cdqcp_wxopenId"),
                     channelName: from,
                     wxOpenId:baseUtil.get("cdqcp_wxopenId"),
-                    manualBackUrl:window.location.origin+"/mtTicket/#/orderList/[from,wxcode,opid]",
-                    backUrl:encodeURIComponent(window.location.origin+`/mtTicket/#/ticketOrderDetail?orderNum=${orderDetail.orderNo}&opid=${baseUtil.get("cdqcp_opid")}`)
+                    orderNum:orderDetail.orderNo,
+                    manualBackUrl:encodeURIComponent(window.location.origin+"/mtTicket/#/orderList/[from,wxcode,opid]"),
+                    backUrl:encodeURIComponent(window.location.origin+`/mtTicket/#/ticketOrderDetail/[orderNum,opid,from]`)
                 };
                 var href = result["payHref"] + '/index.html?';
                 href=href+Object.keys(obj).map(function (key) {

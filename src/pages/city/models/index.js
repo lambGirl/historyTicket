@@ -17,7 +17,7 @@ export default {
 
     effects: {
         //获取所有的singles
-        *fetch({ payload }, { call, put,select }) {
+        *fetchCity({ payload }, { call, put,select }) {
             let {cityListInit} =  yield select(_=>_.city),initData;
             if(!cityListInit.length){
                 initData =  yield call(queryAllCitys, payload);

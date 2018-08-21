@@ -17,7 +17,7 @@ import { Toast,Modal } from 'antd-mobile';
 const alert = Modal.alert;
 @connect(({fillOrder,loading})=>({
     fillOrder,
-    loading
+    loading,
 }))
 
 export default class FillOrder extends  React.Component{
@@ -28,13 +28,17 @@ export default class FillOrder extends  React.Component{
             passengers:[],
             total:0, //总票价
             priceDetails:[],
-            onlyPersonNum:''
+            onlyPersonNum:'',
+            commitOrderStatus:false
         }
     }
     chooseInsurance(){
         Router.push("/insuranceList")
     }
     onPayClicked(){
+        if(this.state.commitOrderStatus){
+            return;
+        }
         /**
          * 这里就需要去提交订单了
          */
@@ -69,9 +73,10 @@ export default class FillOrder extends  React.Component{
             })
         })
 
-        //Toast.info("sdfsdfsdf", 3);
-        //return;
         //这里需要提交订单了
+        this.setState({
+            "commitOrderStatus":true
+        })
         Request('/api?server=trip_bookOrder',{
             method: "post",
             headers: {
@@ -79,6 +84,9 @@ export default class FillOrder extends  React.Component{
             },
             body:JSON.stringify(payload)
         }).then((result)=>{
+            this.setState({
+                "commitOrderStatus":false
+            })
             //console.log("data------------", result);
             if(result.data.pubResponse.code !== "0000"){
                 Toast.info(result.data.pubResponse.msg, 2);
@@ -92,6 +100,10 @@ export default class FillOrder extends  React.Component{
                 return;
             }
             //这里就去请求统一支付页面result.data.body.orderNo
+        }).catch((err)=>{
+            this.setState({
+                "commitOrderStatus":false
+            })
         })
     }
 
@@ -216,12 +228,19 @@ export default class FillOrder extends  React.Component{
         /**
          * 先要验证是否登陆
          */
-        var opid = baseUtil.get('cdqcp_opid');  //用户登陆的opid是否为空
+       // console.log("Router", Router.location)
+       // return;
+        var opid = baseUtil.get('cdqcp_opid'),choosePassager = "/user/jqmppassenger?allowIdCardType=01&allowTicketType=0,1,2&tzType=new&tzBuss=jpmp_ChoosePerson";  //用户登陆的opid是否为空
         if(!opid){
-            window.location.href="/user/login?tzType=new&tzBuss=jpmp_ChoosePerson";
+            let appFrom =  baseUtil.getSession("appFrom");
+            let originHref =  encodeURIComponent(`${window.location.origin}/${Router.location.pathname}?connName=1##needLogIn=1`)
+            let locationHref = ("iOS" == appFrom || "Android" == appFrom )?choosePassager+`&backUrl=${originHref}`:"/user/login?tzType=new&tzBuss=jpmp_ChoosePerson";
+            //这里要判断是否是ios或android
+            window.location.href= locationHref;
             return;
         }
-        window.location.href="/user/jqmppassenger?allowIdCardType=01&allowTicketType=0,1,2&tzType=new&tzBuss=jpmp_ChoosePerson"
+        //跳转到选择乘客列表
+        window.location.href= choosePassager;
     }
 
     //删除乘客列表
@@ -238,11 +257,11 @@ export default class FillOrder extends  React.Component{
     goLastPage(){
         //进行二次确认
         alert('', '订单未填写完成，放弃填写？', [
-            { text: <div>去意已绝</div>, onPress: () => {
+            { text: <span className={Styles["confirm_7c"]}>去意已绝</span>, onPress: () => {
                     let {pointNo} =  baseUtil.getSession("jqmp_ticketDetail");
                     Router.push(`/ticketDetail?point=${pointNo}`)
                 } },
-            { text: <div>在想想</div>, onPress: () => console.log('ok') },
+            { text: <span className={Styles["confirm_0d"]}>在想想</span>, onPress: () => console.log('ok') },
         ])
     }
 

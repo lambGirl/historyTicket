@@ -14,7 +14,9 @@ const TITLE_HEIGHT = 4     //title的高度
 @connect(({city,globalAct,loading})=>({
     globalAct,
     city,
-    fetchCityData:loading.effects['city/fetch','globalAct/getLocation']
+    loading,
+    fetchCityData:loading.effects['globalAct/getLocation'],
+    fetchCity: loading.effects['city/fetchCity']
 }))
 
 export  default  class cityChoose  extends  React.Component{
@@ -46,10 +48,8 @@ export  default  class cityChoose  extends  React.Component{
             showAz:false
         }
     }
-    componentWillMount(){
-        this.props.dispatch({type: 'city/fetch'});
-    }
     componentDidMount(){
+        this.props.dispatch({type: 'city/fetchCity'});
         this._calculateHeight()
     }
 
@@ -266,7 +266,6 @@ export  default  class cityChoose  extends  React.Component{
     //render的方法
     render(){
         const { cityList, shortcutList } = this.props.city, _this =  this,{ point,SelectBarData,currentCity} =  this.props.globalAct;
-        //console.log("cityList",cityList);
         if(!cityList.length){
             return <div style={{"height":"100%"}}>
                 <Helmet>
@@ -383,7 +382,7 @@ export  default  class cityChoose  extends  React.Component{
                             </div>
                         </div>
                             {
-                                this.props.fetchCityData&&<Loading/>
+                                (this.props.fetchCityData||this.props.fetchCity)&&<Loading/>||''
                             }
                             {this.renderOrid()}
                     </div>

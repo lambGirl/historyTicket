@@ -13,8 +13,8 @@ export  default  class IndexSelectBar extends  React.Component{
             [styles["selectBarModelFixed"]]:selectBarModelFixed
         })}>
             <div className={styles['selectBar']}>
-                <div onClick={()=>{selectBar('all')}}>
-                    <span>{ SelectBarData["all"].data[SelectBarData["all"].activeIndex].cityName}</span>
+                <div onClick={(e)=>{selectBar('all',e)}}>
+                    <span>{ baseUtil.formatNameStr(8,SelectBarData["all"].data[SelectBarData["all"].activeIndex].cityName)}</span>
                     <i className={classnames("fa fa-caret-down fa-lg", {
                         "fa-caret-up": SelectBarData["all"].parentIndex&&IndexModelSelectBarStatus[0]
                     })}
@@ -23,7 +23,7 @@ export  default  class IndexSelectBar extends  React.Component{
                        }}
                     ></i>
                 </div>
-                <div onClick={()=>{selectBar('zlpx')}}>
+                <div onClick={(e)=>{selectBar('zlpx',e)}}>
                     <span>{ baseUtil.formatNameStr(8,SelectBarData["zlpx"].data[SelectBarData["zlpx"].activeIndex].cityName)}</span>
                     <i className={classnames("fa fa-caret-down fa-lg", {
                         "fa-caret-up": SelectBarData["zlpx"].parentIndex&&IndexModelSelectBarStatus[1]

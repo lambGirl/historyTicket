@@ -140,6 +140,8 @@ class Scroll extends Component {
       freeScroll:true,
       scrollX,
       scrollbar,
+      taps:true,
+      preventDefault: true,
       pullDownRefresh : _pullDownRefresh,
       pullUpLoad: _pullUpLoad,
       preventDefaultException,

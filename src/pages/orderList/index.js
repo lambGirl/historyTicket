@@ -17,7 +17,6 @@ const prompt = Modal.alert;
     loading
 }))
 export default class TicketOrder extends React.Component{
-
     constructor(props){
         super(props);
         let userToken =  Router.location.query.opid
@@ -71,8 +70,9 @@ export default class TicketOrder extends React.Component{
                         wxcode: baseUtil.get("cdqcp_wxopenId"),
                         channelName: from,
                         wxOpenId:baseUtil.get("cdqcp_wxopenId"),
-                        manualBackUrl:window.location.origin+"/mtTicket/#/orderList/[from,wxcode,opid]",
-                        backUrl:encodeURIComponent(window.location.origin+`/mtTicket/#/ticketOrderDetail?orderNum=${item.orderNo}&opid=${baseUtil.get("cdqcp_opid")}`)
+                        orderNum:item.orderNo,
+                        manualBackUrl:encodeURIComponent(window.location.origin+"/mtTicket/#/orderList/[from,wxcode,opid]"),
+                        backUrl:encodeURIComponent(window.location.origin+`/mtTicket/#/ticketOrderDetail/[orderNum,opid,from]`)
                     };
                     var href = result["payHref"] + '/index.html?';
                     href=href+Object.keys(obj).map(function (key) {
@@ -85,8 +85,8 @@ export default class TicketOrder extends React.Component{
         }
 
         if(flag === "delete"){
-            prompt('', <div>你确定要删除该笔订单吗?</div>, [
-                { text: '确定', onPress: () => {this.props.dispatch({
+            prompt('', <div className={Styles["doubleModelContent"]}>你确定要删除该笔订单吗?</div>, [
+                { text: <span className={Styles["confirm_7c"]}>确定</span>, onPress: () => {this.props.dispatch({
                         type:'orderList/deleteSinleOrder',
                         payload:{
                             state:this.state.state,
@@ -96,7 +96,7 @@ export default class TicketOrder extends React.Component{
                             }
                         }
                     })}, style:'' },
-                { text: '再想哈多', onPress: () => console.log('ok') },
+                { text: <span className={Styles["confirm_0d"]}>再想想</span>, onPress: () => console.log('ok') },
             ])
         }
 
@@ -105,20 +105,31 @@ export default class TicketOrder extends React.Component{
         let {orderList, pageNum, pages} = this.props.orderList;
 
         return <div className={ClassNames(Styles['scroll-content'],Styles["defaultHeight"])}>
-            <Scroll needMore={orderList.length&&true||false}
-                    currPage={pageNum}
-                    totalPage={pages}
-                    loadMoreData={this.getOrderList.bind(this)} >
-                <div className={Styles["scroll-cotent-bottom"]}>
-                    <ul className={Styles["orderList"]}>
+            {orderList.length&&<Scroll needMore={orderList.length && true || false}
+                     currPage={pageNum}
+                     totalPage={pages}
+                     nomoreTxt={true}
+                     loadMoreData={this.getOrderList.bind(this)}>
+                    <ul className={Styles[ "orderList" ]}>
                         {
-                            orderList.length&&orderList.map((item,index)=>{
-                                return <OrderItem key={"item"+index} item={item} ClickItem={this.chooseItem.bind(this)} btnClick={this.btnClick.bind(this)}></OrderItem>
-                            })||null
+                            orderList.length && orderList.map((item, index) => {
+                                return <OrderItem key={"item" + index} item={item}
+                                                  ClickItem={this.chooseItem.bind(this)}
+                                                  btnClick={this.btnClick.bind(this)}></OrderItem>
+                            }) || null
                         }
                     </ul>
+            </Scroll>||<div className={Styles['search-nothing-content']}>
+                <div
+                    className={ClassNames(Styles["searchContentIcon"],{
+                        [Styles["noData"]]:true,
+                        [Styles["noSearch"]]:false,
+                    })}></div>
+                <div className={Styles['search-nothing-font']}>
+                    暂无订单
                 </div>
-            </Scroll>
+            </div>
+            }
         </div>
     }
 
@@ -148,7 +159,8 @@ export default class TicketOrder extends React.Component{
     }
 
     goHomeOrderList(){
-        window.location.href="/orders/allorders"
+        "iOS" == baseUtil.get("cdqcp_channel") || "Android" == baseUtil.get("cdqcp_channel") ? window.location.href = "##backToVC=1" : window.location.href="/orders/allorders";
+       // window.location.href="/orders/allorders"
     }
 
     render(){
@@ -168,7 +180,6 @@ export default class TicketOrder extends React.Component{
               headers={["全部","待使用","已使用"]}
               renderTab={this.renderTab.bind(this)}
             ></Tab>
-
         </div>
     }
 }

@@ -68,8 +68,13 @@ export default orderDetail = {
             /**
              * 这里验证作废成功与失败
              */
+           /* Toast.info("提交退票申请成功");*/
+           /* yield put({
+                type: 'fetch',
+                payload: payload
+            });*/
             if(initData.data.pubResponse.code === "0000"){
-                Toast.info("提交退票申请成功");
+               /* Toast.info("提交退票申请成功");*/
                 yield put({
                     type: 'fetch',
                     payload: payload
@@ -77,7 +82,6 @@ export default orderDetail = {
                 return;
             }
             Toast.info(initData.data.pubResponse.msg);
-
         },
         *getOrderStatus({payload}, {put, call}){
             let initData =  yield call(queryOrderStatus,{payload});

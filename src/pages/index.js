@@ -14,8 +14,9 @@ import Scroll from '../components/demo/index' //分页滚动
 import AttractionSingle from '../components/indexAttractionSingle';
 import Dynamic from 'umi/dynamic';
 import { baseUtil } from "../utils/util";
-@connect(({globalAct})=>({
-    globalAct
+@connect(({globalAct,loading})=>({
+    globalAct,
+    getLocation:  loading.effects['globalAct/getInit'],
 }))
 
 class IndexPage extends React.Component{
@@ -34,13 +35,14 @@ class IndexPage extends React.Component{
         }
     }
     componentWillMount(){
-       // console.log("1111111111111")
+        //console.log("222222222222222")
     }
 
     componentDidMount(){
-        this.props.dispatch({
+        /*this.props.dispatch({
             type:'globalAct/getInit',
-        });
+        });*/
+        //console.log("11111111111111");
     }
     goDetail(){
        Router.push('/ticketDetail/')
@@ -115,6 +117,8 @@ class IndexPage extends React.Component{
 
     //点击seachBar
     selectBar(tag,e) {
+       // console.log("e",e._constructed);
+       // return;
         //判断是够点击model是够展示，如果展示就隐藏 什么都不做
         let {IndexModelSelectBarStatus} =  this.state;
        // console.log("IndexModelSelectBarStatus",IndexModelSelectBarStatus.indexOf(true) !== -1);
@@ -185,7 +189,7 @@ class IndexPage extends React.Component{
         },()=>{
             if(e){
                 let {indexScroll} = this.refs;
-                indexScroll.refs.scrollSwipe.scrollToElement(this.refs.searchBarModel, 300,0, -30);
+                indexScroll.refs.scrollSwipe.scrollToElement(this.refs.searchBarModel, 300,0, -40);
             }
         })
     }
@@ -215,8 +219,12 @@ class IndexPage extends React.Component{
     }
 
     goHome(){
-        //这里到时候要处理和原生app的交互
-        window.location.href="/"
+        /**
+         * 这里要判断是不是ios， android
+         * @type {string}
+         */
+        let from  =  baseUtil.getSession("cdqcp_channel")||router.location.query.from;
+        ("iOS" == from || "Android" == from )? window.location.href = "##backToVC=1" : window.location.href="/";
     }
 
     render(){
@@ -224,11 +232,10 @@ class IndexPage extends React.Component{
             allBarColor = (SelectBarData["all"].activeIndex||IndexModelSelectBarStatus[0])?'#37A0F1':"#DBDBDB",
             zlpxColor =  (SelectBarData["zlpx"].activeIndex||IndexModelSelectBarStatus[1])?'#37A0F1':"#DBDBDB";
         let ListArrHeight = this.initticketsListArrHeight();
-        //console.log("currPage, totalPage",currPage, totalPage);
         return (
             <div className={styles["container_page"]}>
                 <Helmet>
-                    <meta charSet="utf-8" />
+                    <meta charSet="utf-8"/>
                     <title>首页</title>
                 </Helmet>
                 <div className={styles["index_page"]}>
@@ -250,6 +257,7 @@ class IndexPage extends React.Component{
                             centerClick={this.centerClick.bind(this)}
                         ></Header>
                     </div>
+                    {this.props.getLocation&&<div className={styles['loading-fullScreen']}></div>||''}
                     <Scroll class={styles["wrapper"]}
                             ref='indexScroll'
                             needMore={true}
@@ -275,34 +283,36 @@ class IndexPage extends React.Component{
                                     IndexModelSelectBarStatus={this.state.IndexModelSelectBarStatus}
                                 ></IndexSelectBar>
                             </div>
-                            {doorList.length&&<div className={styles[ "ticketsListArr" ]}>
+                           {doorList.length&&<div className={styles[ "ticketsListArr" ]}>
                                 {
                                     doorList.map((item, index) => {
                                         return <AttractionSingle key={index} item={item}
                                                                  clickItem={this.chooseTicket.bind(this)}/>
                                     })
                                 }
-
-                                {/*<div className={styles["loading"]}>
-                                   <div className={styles['loading-icon']}></div>
-                                   <div>
-                                       <div className={styles['loading-left']}></div>
-                                       <div>正在加载,请等待</div>
-                                   </div>
-                               </div>*/}
                             </div>||''
                             }
                             {
-                                !doorList.length&&<div className={styles['search-nothing-content']}>
+                                this.props.getLocation&&<div className={styles["loading"]}>
+                                    <div className={styles['loading-icon']}></div>
+                                    <div className={styles['loading-content']}>
+                                        <div className={styles['loading-left']}></div>
+                                        <div>正在加载,请等待</div>
+                                    </div>
+                               </div>||''
+                            }
+                            {
+                                !this.props.getLocation&&typeof doorList == "object"&&!doorList.length&&<div className={styles['search-nothing-content']}>
                                     <div
                                         className={classnames(styles["searchContentIcon"],{
                                             [styles["noData"]]:true,
                                         })}></div>
                                     <div className={styles['search-nothing-font']}>
-                                        未找到您要搜索的内容
+                                        未找到您筛选的内容
                                     </div>
                                 </div>||''
                             }
+
                         </div>
                     </Scroll>
                 </div>

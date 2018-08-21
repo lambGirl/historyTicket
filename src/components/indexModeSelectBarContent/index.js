@@ -52,7 +52,7 @@ export  default class IndexModelSelectBar extends React.Component{
                             [Styles["active"]]:selectBarData[parentType].activeIndex == index
                         })} key={index} onClick={this.selectItem.bind(this, {index, parentType})}>
                             <div >{item.cityName}</div>
-                            {selectBarData[parentType].activeIndex == index&&<div>√</div>}
+                            {selectBarData[parentType].activeIndex == index&&<div className={Styles["checked"]}></div>}
                         </div>)
                     })
                 }

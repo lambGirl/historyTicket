@@ -47,18 +47,18 @@ export default class ShowPhotos extends React.Component{
                                 key={val + index}
                                 href="javascript:;"
                                 className={Styles['swiper-single-a']}
-                                style={{ display: 'inline-block', width: '100%', height: this.state.imgHeight }}
+                                style={{ display: 'inline-block'}}
                             >
                                 <img
                                     src={val}
                                     alt=""
                                     onLoad={() => {
                                         // fire window resize event to change height
-                                        window.dispatchEvent(new Event('resize'));
-                                        this.setState({ imgHeight: 'auto' });
+                                    /*    window.dispatchEvent(new Event('resize'));*/
+                                      /*  this.setState({ imgHeight: 'auto' });*/
                                     }}
-                                    style={{    "height": "180px",
-                                        "width": "100%"}}
+                                   /* style={{    "maxHeight":"15.562rem",
+                                        "width": "auto"}}*/
                                 />
                             </a>
                         ))}

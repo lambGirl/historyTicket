@@ -4,7 +4,7 @@
   width:100%;
   height:100%;
   background: rgba(0,0,0,0.5);
-  top:@base*196rem;
+  top:@base*194rem;
   z-index:1000;
   /*height: calc(100% - @base*340rem);*/
   .selectModelListArr{
@@ -20,6 +20,12 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      .checked{
+        width: @base*26rem;
+        height:@base*20rem;
+        background: url("../../assets/img/cityChecked.png") no-repeat;
+        background-size: cover;
+      }
     }
     .active{
       background: #F2F2F7 ;

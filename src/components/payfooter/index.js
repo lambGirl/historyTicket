@@ -60,7 +60,7 @@ export default  class PayFooter extends  React.Component{
                 <div className={ClassNames(Styles["col-60"],Styles["train-pay-left"])} >
                     <div>
                         <div>
-                            合计：<i>￥</i><i className={Styles["foot-price-new"]}>{(this.props.total==0?"0.00":this.props.total)}</i>
+                            合计：<i>￥</i><i className={Styles["foot-price-new"]}>{(this.props.total==0?"0":this.props.total)}</i>
                         </div>
                         {this.props.showCoupon&&<div>(已优惠￥{this.props.showCoupon})</div>||null}
                     </div>
@@ -73,7 +73,7 @@ export default  class PayFooter extends  React.Component{
                     </div>
                 </div>
                 <div onClick={this.surePay.bind(this)} className={ClassNames(Styles["col-40"], Styles["train-footer-pay"])}>
-                    立即支付
+                    提交订单
                 </div>
             </div>
             {this.renderDetail()}

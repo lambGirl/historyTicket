@@ -12,7 +12,8 @@ export  default  class OrderItem extends React.Component{
         }
         //console.log("orderItem",orderItem);
         return <li className={Styles['orderListSingle']} onClick={(e)=>{e.stopPropagation(); e.preventDefault();this.props.ClickItem(item)}}>
-            <div className={Styles["orderListStatus"]}><span>{orderItem.status}</span></div>
+            <div className={Styles["orderListStatus"]}><span
+            style={{"color":`${orderItem.statusColor}`}}>{orderItem.status}</span></div>
             <div className={Styles["orderListCenter"]}>
                 <div>
                     <div className={ClassNames(Styles["color_1B1B1B"],

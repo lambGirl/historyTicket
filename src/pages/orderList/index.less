@@ -40,7 +40,7 @@ orderList{
       color: #f00;
     }
   }
-  >:nth-child(2){
+  >.orderListCenter{
     display: flex;
     box-sizing: border-box;
     justify-content: space-between;
@@ -49,8 +49,15 @@ orderList{
     >:first-child{
       text-align: left;
       display: flex;
+      flex:2;
       flex-direction: column;
+      max-width: 80%;
       justify-content: space-between;
+      >:first-child{
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
     }
     >:nth-child(2){
       text-align: right;

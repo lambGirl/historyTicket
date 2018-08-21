@@ -217,9 +217,12 @@ const baseUtil = {
             sessionStorage.setItem(key2,value);
         }
     },
+    removeSession(key){
+        sessionStorage.removeItem(key);
+    },
     formatNameStr:function(numLength,v){
         // console.log(v)
-        return v.length<=numLength?v:(v.substring(0, numLength) + "...")
+        return v.length<=numLength-1?v:(v.substring(0, numLength-1) + "...")
     },
 
     //格式化数值
@@ -261,7 +264,7 @@ const baseUtil = {
          */
         var hour =  parseInt(num/60); //多少小时
         var min =  num-hour*60; //分钟
-        return `${hour&&hour+"小时"||""}${min&&min+"分钟"}`
+        return `${hour&&hour+"小时"||""}${min&&min+"分钟"||''}`
     },
     productRefundRule(tag){
         let val = "";
@@ -269,9 +272,11 @@ const baseUtil = {
         switch (tag){
             case "1":val='随时可退，过期自动退';
                     break;
-            case "2":val='退票收取手续费';
+            case "2":val='随时可退，过期自动退';
                 break;
             case "3":val='购买后不可退票';
+                break;
+            case "4":val='有条件退(时间节点限制、手续费限制、只能整单退等)';
                 break;
         }
 
@@ -306,6 +311,7 @@ const baseUtil = {
             case "booking":detail = {
                 singleLine:true,
                 mangLine: false,
+                statusColor:'#3E3E3E',
                 status:'下单中',
                 doubleBtn:false,
                 singleBtn:false,
@@ -324,6 +330,7 @@ const baseUtil = {
             case "book_succeed":detail = {
                 status:'待支付',
                 singleLine:false,
+                statusColor:'#FF6137',
                 mangLine: true,
                 doubleBtn:true,
                 statusContent:"",
@@ -341,6 +348,7 @@ const baseUtil = {
             case "selling":detail = {
                 status:'购票中',
                 singleLine:false,
+                statusColor:'#3E3E3E',
                 mangLine: true,
                 doubleBtn:false,
                 singleBtn:false,
@@ -359,6 +367,7 @@ const baseUtil = {
             case "sell_failed":detail = {
                 status:'购票失败',
                 singleLine:false,
+                statusColor:'#ACACAC',
                 mangLine: true,
                 singleBtn:true,
                 doubleBtn:false,
@@ -378,12 +387,12 @@ const baseUtil = {
             case "sell_succeed":detail = {
                 status:'待使用',
                 singleLine:true,
+                statusColor:'#3E3E3E',
                 mangLine: false,
                 singleBtn:false,
                 doubleBtn:false,
                 pz:true,   //凭证模块是否显示
                 pzDisable: false, //凭证模块是否颜色禁用
-                pzClass:'used',
                 statusContent:"",
                 refundMoney:true,
                 icon:'paying',
@@ -398,6 +407,7 @@ const baseUtil = {
             case "consume_succeed":detail = {
                 status:'已使用',
                 singleLine:true,
+                statusColor:'#ACACAC',
                 mangLine: false,
                 singleBtn:false,
                 doubleBtn:false,
@@ -416,9 +426,10 @@ const baseUtil = {
                 }
             };break;
             case "backed":detail = {
-                status:'已退票',
+                status:'已退款',
                 singleLine:true,
                 mangLine: false,
+                statusColor:'#3E3E3E',
                 singleBtn:false,
                 doubleBtn:false,
                 statusContent:"",
@@ -437,6 +448,7 @@ const baseUtil = {
             case "backing":detail = {
                 status:'退票中',
                 singleLine:true,
+                statusColor:'#3E3E3E',
                 mangLine: false,
                 singleBtn:false,
                 doubleBtn:false,
@@ -460,6 +472,7 @@ const baseUtil = {
                 mangLine: false,
                 singleBtn:true,
                 doubleBtn:false,
+                statusColor:'#3E3E3E',
                 statusContent:"",
                 pz:true,   //凭证模块是否显示
                 pzDisable: false, //凭证模块是否颜色禁用
@@ -479,6 +492,7 @@ const baseUtil = {
                 mangLine: false,
                 singleBtn:false,
                 doubleBtn:false,
+                statusColor:'#ACACAC',
                 statusContent:"",
                 refundMoney:false,
                 icon:'retired',
@@ -494,6 +508,14 @@ const baseUtil = {
             };break;
         }
         return detail;
+    },
+    formatTime(val){
+        var vals =  val.split(":");
+
+        vals[0] = vals[0]<10&&vals[0].length==1?'0'+vals[0]:vals[0];
+        vals[1] = vals[1]<10&&vals[1].length==1?'0'+vals[1]:vals[1];
+       // console.log("vals",vals.join(":"));
+        return vals.join(":")
     }
 
 }
