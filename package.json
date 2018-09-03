@@ -29,7 +29,8 @@
     "react-intl": "^2.4.0",
     "tz_mobile": "^1.0.2",
     "umi-plugin-es5-imcompatible-versions": "^0.1.0",
-    "umi-plugin-polyfill": "^0.2.0"
+    "umi-plugin-polyfill": "^0.2.0",
+    "vconsole": "^3.2.0"
   },
   "name": "hotelticket",
   "version": "1.0.0",

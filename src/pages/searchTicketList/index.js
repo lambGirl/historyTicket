@@ -19,6 +19,28 @@ export default class SearchTicketList extends React.Component{
         }
     }
 
+    componentDidMount(){
+        //初始化数据
+        this.clearVal();
+    }
+    UNSAFE_componentWillReceiveProps(nextProps){
+       //console.log("nextProps",nextProps,this.refs.searchInput.value);
+        //if(nextProps.)
+        if(!nextProps.searchListState&&!this.refs.searchInput.value&&this.props.searchTicketList.ticketList.length){
+            this.props.dispatch({
+                type:'searchTicketList/fetch',
+                payload:{
+                    type:false, //默认赋值
+                    postData:{
+                        pageNum: 1,
+                        key: "",
+
+                    },
+                    defaultData:true
+                }
+            });
+        }
+    }
     loadMoreData(){
         //实时加载数据
         let {currPage,totalPage} =  this.props.searchTicketList, {searchVal} =  this.state;
@@ -39,55 +61,76 @@ export default class SearchTicketList extends React.Component{
     }
     getSearchVal(e){
         var _this =  this,value = e.target.value;
-        //当只存在的时候
+        //  return;
+        //  当只存在的时候
+        //  console.log("e1111111111", value);
+        //  return;
         if(value){
+            //alert(value);
+            this.setState({
+                "searchVal":value
+            },()=>{
+                this.throttle(this.changeSearchData(value),16);
+            })
+           // console.log("this.refs.indexScroll",indexScroll)
+            return;
+        }
+
+       // console.log("value", value);
+       //setTimeout(()=>{
+        this.setState({
+            "searchVal": value
+        },()=>{
             this.props.dispatch({
                 type:'searchTicketList/fetch',
                 payload:{
                     type:false, //默认赋值
                     postData:{
                         pageNum: 1,
-                        key:  value
-                    }
+                        key:  value,
+                    },
+                    defaultData:true
                 }
             });
-            this.setState({
-                "searchVal":value
-            });
-           // console.log("this.refs.indexScroll",indexScroll)
-          //  this.refs.indexScroll.scrollToElement(_this.refs.header, 300);
-            return;
-        }
-
-       // console.log("searchListState", this.props.searchListState);
-        setTimeout(()=>{
-            this.setState({
-                "searchVal": value
-            },()=>{
-                this.props.dispatch({
-                    type:'searchTicketList/fetch',
-                    payload:{
-                        type:false, //默认赋值
-                        postData:{
-                            pageNum: 1,
-                            key:  value,
-
-                        },
-                        defaultData:true
-                    }
-                });
-            });
-        },300)
-
+        })
+      // },300)
     }
 
+    //修改查询数据
+    changeSearchData(value){
+        this.props.dispatch({
+            type:'searchTicketList/fetch',
+            payload:{
+                type:false, //默认赋值
+                postData:{
+                    pageNum: 1,
+                    key:  value
+                }
+            }
+        });
+    }
+
+    //节流
+    throttle(func, wait) {
+        var timeout;
+        return function () {
+            var context = this;
+            if(!timeout) {
+                timeout = setTimeout(function(){
+                    timeout = null;
+                    func.call(context)
+                }, wait);
+            }
+        }
+    }
     chooseTicket(item){
         router.push(`/ticketDetail?point=${item.pointNo}`)
     }
     clearVal(){
+        this.refs.searchInput.value = "";
         this.setState({
             "searchVal":''
-        });
+        })
         this.props.dispatch({
             type:'searchTicketList/fetch',
             payload:{
@@ -108,13 +151,13 @@ export default class SearchTicketList extends React.Component{
         return <div className={Styles["searchTicketList"]}>
            <div className={Styles['searchHeader']} ref='header'>
                <div className={Styles["search-left"]} onClick={()=>{router.push("/")}}>
-                   <i className="fa fa-angle-left fa-lg" style={{"color":'#3E3E3E'}}></i>
+                   <i className={Styles["headerleftIconBlack"]}></i>
                </div>
                <div className={Styles["search-input"]}>
                    <div className={Styles['search-icon']}>
-                    <i className="fa fa-search fa-lg"></i>
+                    <div className={Styles["icon"]}></div>
                    </div>
-                    <input type="text" placeholder='景点名称' value={this.state.searchVal} onChange={this.getSearchVal.bind(this)}/>
+                    <input type="text" placeholder='景点名称' onChange={this.getSearchVal.bind(this)} ref='searchInput'/>
                    {
                        this.state.searchVal&&<div className={Styles['search-input-close']} onClick={this.clearVal.bind(this)}>
                             <i className="fa fa-times-circle" aria-hidden="true"></i>
@@ -122,21 +165,26 @@ export default class SearchTicketList extends React.Component{
                    }
                </div>
            </div>
-            <div className={classNames(Styles['scroll-content'],Styles["defaultHeight"])}  >
-                {ticketList.length && <Scroll
+
+                {ticketList.length &&  <div className={Styles["searchTicketList"]}><Scroll
+                                              class={Styles["wrapper"]}
                                               ref='indexScroll'
                                               needMore={true}
+                                              height="100%"
                                               currPage={currPage}
                                               totalPage={totalPage}
                                               loadMoreData={this.loadMoreData.bind(this)}>
-                    <ul className={Styles[ "orderList" ]}>
-                        {
-                            ticketList.length&& ticketList.map((item,index)=>{
-                                return <AttractionSingle key={'ticketListSearch_'+index} item={item} clickItem={this.chooseTicket.bind(this)}></AttractionSingle>
-                            })
-                        }
-                    </ul>
-                </Scroll>||''
+                  {/*  <div className={classNames(Styles["wrapper_content"],Styles["defaultHeight"])}  >*/}
+                        <ul className={classNames(Styles[ "orderList" ],Styles[ 'scroll-cotent-bottom' ])}>
+                            {
+                                ticketList.length&& ticketList.map((item,index)=>{
+                                    return <AttractionSingle key={'ticketListSearch_'+index} item={item} clickItem={this.chooseTicket.bind(this)}></AttractionSingle>
+                                })
+                            }
+                        </ul>
+                   {/* </div>*/}
+                </Scroll></div>||''
+
                 }
                 {
                     !ticketList.length && <div className={Styles['search-nothing-content']}>
@@ -151,6 +199,5 @@ export default class SearchTicketList extends React.Component{
                     </div>
                 }
             </div>
-        </div>
     }
 }

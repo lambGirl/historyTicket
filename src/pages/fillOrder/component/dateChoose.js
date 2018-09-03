@@ -55,6 +55,7 @@ export  default class DateChoose extends React.Component{
         if(!fillOrderDetail){
             return null;
         }
+        console.log("effectiveDate",effectiveDate);
         return <div className={Styles['fillOrderDate']}>
             <div className={ClassNames(Styles['fontIconStyle'])}>
                 <span className={Styles['fontIcon']}></span>
@@ -63,7 +64,7 @@ export  default class DateChoose extends React.Component{
             <div className={Styles['chooseDateList']}>
 
                 {
-                    effectiveDate.date.map((item,index)=>{
+                    effectiveDate.date.length&&effectiveDate.date.map((item,index)=>{
                         return <div onClick={this.switchTime.bind(this, index, item)} key={'chooseDateList'+index} className={ClassNames(Styles['common'],{
                             [Styles["default"]]:item.use,
                             [Styles["active"]]: effectiveDate.index === index,
@@ -72,7 +73,7 @@ export  default class DateChoose extends React.Component{
                             <div>{index === 0&&"今天"||index === 1&&"明天"||""}{item.date.substr(5,item.date.length)}{index !== 0&&index !== 1&&Date.parse1(item.date).getweek()} </div>
                             <div style={{"whiteSpace": "nowrap","overflow":"hidden","width":"100%","textOverflow": "inherit"}}>{item.use&&`¥${item.price}`||"不可订"}</div>
                         </div>
-                    })
+                    })||''
                 }
                 <div className={ClassNames(Styles['moreDate'])} onClick={this.getChooseDate.bind(this)}>
                     <div>更多日期</div>
@@ -83,7 +84,7 @@ export  default class DateChoose extends React.Component{
             </div>
             <div className={Styles['moreDate-remark']}>
                 <p className={ClassNames(Styles['font24'], Styles['color_3e'],Styles['mgBottom12'])}>{this.renderDateDetialShow()}</p>
-                <p className={Styles['remarks']}>*此产品可在2017年7月19日 16:00前退款</p>
+                {/*<p className={Styles['remarks']}>*此产品可在2017年7月19日 16:00前退款</p>*/}
             </div>
         </div>
     }

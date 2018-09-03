@@ -30,7 +30,7 @@ export default class TicketOrderDetail extends React.Component{
         }
     }
     UNSAFE_componentWillMount(){
-        //console.log("now");
+        console.log("now");
         let orderNo =  Router.location.query.orderNum,
         userToken =  baseUtil.get("cdqcp_opid");
 
@@ -47,13 +47,15 @@ export default class TicketOrderDetail extends React.Component{
 
     UNSAFE_componentWillReceiveProps(nextProps){
         let {orderDetail} =  nextProps.orderDetail,_this =  this;
+        this.timeIntervar&&clearInterval(this.timeIntervar);
+        this.lock_interval&&clearInterval(this.lock_interval);
        /*orderDetail&&!orderStatus&&(orderDetail.state = "sell_succeed");*/
         //开启一个方法去轮训，直到不等于booking，此时就去重新触发一次查询订单详情的接口
         if(orderDetail&&orderDetail.state === "booking"&&!orderStatus){
             let orderNo =  Router.location.query.orderNum,
                 userToken =  baseUtil.get("cdqcp_opid");
             orderStatus =  true;
-           this.state.timeIntervar =  setInterval(()=>{
+           this.timeIntervar =  setInterval(()=>{
                // console.log("------------------");
                 Request('/api?server=trip_getOrderState',{
                     method: "post",
@@ -73,19 +75,23 @@ export default class TicketOrderDetail extends React.Component{
                                 userToken: userToken
                             }
                         });
-                        clearInterval(_this.state.timeIntervar)
+                        clearInterval(_this.timeIntervar)
                     }
                 })
+
             },4000);
             return;
         }
 
         //待支付的情况，开启定时器计算时间
+       // console.log("orderDetail",orderDetail, paying);
         if(orderDetail&&orderDetail.state === "book_succeed"&&!paying){
             //这里就需要去开启定时器并设置时间
             this.setPayTime(orderDetail);
+           // console.log("来了嘛");
             return;
         }
+
 
     }
     setPayTime(orderDetail){
@@ -106,6 +112,8 @@ export default class TicketOrderDetail extends React.Component{
         }
     }
     getTimeOut(orderDetail){
+        //orderDetail.expireTime = "2018-08-31 17:47";
+       // orderDetail.serverTime = "2018-08-31 17:46";
         var expirationDate = new Date(orderDetail.expireTime.replace(/-/g,"/"));
         var serverTime = new Date(orderDetail.serverTime.replace(/-/g,"/"));
         var dateTimess = expirationDate.getUnixTimeStamp() - serverTime.getUnixTimeStamp();
@@ -143,25 +151,25 @@ export default class TicketOrderDetail extends React.Component{
         this.lock_interval = setInterval(function(){
             /*if (!_this._reactInternalInstance){
                 clearInterval(_this.lock_interval);
-                /!*_this.props.dispatch({
+                _this.props.dispatch({
                     type:'orderDetail/fetch',
                     payload:{
                         orderNo:_this.state.orderNo,
                         userToken: _this.state.userToken
                     }
-                });*!/
+                });
                 return;
             }*/
             if (_this.state.returntime <= 1){
 
                 clearInterval(_this.lock_interval);
-                /*_this.props.dispatch({
+                _this.props.dispatch({
                     type:'orderDetail/fetch',
                     payload:{
                         orderNo:_this.state.orderNo,
                         userToken: _this.state.userToken
                     }
-                });*/
+                });
 
                 return;
             }
@@ -169,6 +177,7 @@ export default class TicketOrderDetail extends React.Component{
             var ac = _this.state.returntime;
             ac--;
             _this.setState({returntime:ac});
+            console.log("timeOut 1000")
         },1000)
     }
     //格式化时间
@@ -342,7 +351,7 @@ export default class TicketOrderDetail extends React.Component{
             return <div className={Styles["ticketOrderDetail-Main"]}>
                 <Header
                     mode="common"
-                    leftContent={ <i className="fa fa-angle-left fa-lg" style={{"color":"#fff"}}></i>}
+                    leftContent={ <i className={Styles["headerleftIconWhite"]}></i>}
                     leftClick={()=>{Router.push(`/orderList`)}}
                 >
                     <div style={{"textAlign":'center','color':'#fff'}}>订单详情</div>
@@ -355,7 +364,7 @@ export default class TicketOrderDetail extends React.Component{
         return <div className={Styles["ticketOrderDetail-Main"]}>
             <Header
                 mode="common"
-                leftContent={ <i className="fa fa-angle-left fa-lg" style={{"color":"#fff"}}></i>}
+                leftContent={ <i className={Styles["headerleftIconWhite"]}></i>}
                 leftClick={()=>{Router.push(`/orderList`)}}
             >
                 <div style={{"textAlign":'center','color':'#fff'}}>订单详情</div>
@@ -529,7 +538,8 @@ export default class TicketOrderDetail extends React.Component{
     }
 
     //页面销毁前
-    componentWillUnmount(){
-        this.state.timeIntervar&&clearInterval(this.state.timeIntervar);
+    componentWillUnmount() {
+        this.timeIntervar&&clearInterval(this.timeIntervar);
+        this.lock_interval&&clearInterval(this.lock_interval);
     }
 }

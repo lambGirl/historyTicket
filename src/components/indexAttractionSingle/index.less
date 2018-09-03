@@ -2,12 +2,63 @@
 //景区门票列表selectBarModel
 
   .ticketsList{
-    height: @base*300rem;
-    border-radius: 8px;
-    position: relative;
+    height: @base*240rem;
+    border-radius:@base*8rem;
+    /*position: relative;*/
     color: #fff;
     margin-bottom: @base*30rem;
-    img{
+    overflow: hidden;
+    border: none;
+    background:rgba(255,255,255,1);
+    box-shadow:0px 2px 10px 0px rgba(0,0,0,0.1);
+    display: flex;
+    /*justify-content: space-between;*/
+    box-sizing: border-box;
+    padding: @base*20rem;
+    >div{
+      height:100%;
+    }
+    >:first-child{
+      width: @base*220rem;
+      height: 100%;
+      >img{
+        width: @base*220rem;
+        height: 100%;
+        border-radius:4px;
+      }
+      padding-right: @base*29rem;
+    }
+    >:nth-child(2){
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding:@base*18rem 0 ;
+      box-sizing: border-box;
+      flex: 1;
+      >:first-child{
+        color: #3E3E3E;
+        font-size: @font32;
+        word-break: break-all;
+        text-overflow: ellipsis;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        overflow: hidden;
+      }
+      >:nth-child(2){
+        display: flex;
+        justify-content: space-between;
+        height: @base*40rem;
+        align-items: baseline;
+        .remarks{
+          .font24;
+          color: #949494;
+        }
+        >:nth-child(2){
+          text-align: right;
+        }
+      }
+    }
+   /* img{
       height: 100%;
       width: 100%;
     }
@@ -15,24 +66,46 @@
       position: absolute;
       bottom:0;
       width: 100%;
+      !*height: @base*120rem;*!
       padding: 0 @base*20rem;
       box-sizing: border-box;
-      padding-bottom: @base*16rem;
-      background:linear-gradient(87deg,rgba(0,0,0,0.6),rgba(0,0,0,0));
-      p{
-        padding-bottom: @base*8rem;
-        font-size: @font36;
-        color: #fff;
-      }
-      .remarks{
-        color: #ccc;
-        font-size: @font24;
-      }
-      >div{
+
+      background-image: -webkit-linear-gradient( 90deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
+      background-image: -moz-linear-gradient( 90deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
+      background-image: -ms-linear-gradient( 90deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
+      background:linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+      .bottom-detail{
+        height: @base*100rem;
         display: flex;
-        width: 100%;
-        justify-content: space-between;
-        align-items: center;
+        justify-content: flex-end;
+        flex-direction: column;
+        padding-bottom: @base*20rem;
+        box-sizing: border-box;
+        align-items:baseline;
+        >:first-child{
+         !* padding-bottom: @base*8rem;*!
+          font-size: @font36;
+          color: #fff;
+        }
+        >:nth-child(2){
+          display: flex;
+          width: 100%;
+          justify-content: space-between;
+       !*   align-items: baseline;*!
+         !* line-height: @base*36rem;*!
+          height: @base*38rem;
+          >div{
+            height:100%;
+          }
+         !* overflow: hidden;*!
+          .remarks{
+            color: #ccc;
+            font-size: @font24;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+          }
+        }
       }
-    }
+    }*/
   }

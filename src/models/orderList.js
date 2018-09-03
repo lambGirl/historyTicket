@@ -15,15 +15,17 @@ export default orderList = {
 
     subscriptions: {
         setup({ dispatch, history }) {
+            baseUtil.setSession("jqmp_activeIndex","0");
             history.listen(location => {
-                    location.query.userToken&&baseUtil.set("cdqcp_opid", location.query.userToken);
-                    location.query.openId&&baseUtil.set("cdqcp_opid", location.query.userToken);
+                let openId =  location.query.openId||location.query.opid||location.query.userToken
+                    location.query.openId&&baseUtil.set("cdqcp_opid", openId);
                     location.query.from&&baseUtil.set("cdqcp_channel", location.query.from);
                     location.query.wxcode&&baseUtil.set("cdqcp_wxopenId", location.query.wxcode);
                  if(location.pathname.indexOf("/orderList") != -1){
                      //获取token
-                     let  userToken = baseUtil.get("cdqcp_opid")||location.query.userToken;
-
+                     let  userToken = baseUtil.get("cdqcp_opid");
+                     let activeIndex =  baseUtil.getSession("jqmp_activeIndex")?parseInt(baseUtil.getSession("jqmp_activeIndex")):0,
+                         state_Session =  activeIndex === 1 ? "sell_succeed":activeIndex===2&&"consume_succeed"||"";
                      //默认初始化为全部
                      dispatch({
                          type:'fetch',
@@ -31,7 +33,7 @@ export default orderList = {
                              tag: false,
                              postData:{
                                  userToken:userToken,
-                                 state:"",
+                                 state:state_Session,
                                  pageNum:"1",
                                  pageSize:"10"
                              }
@@ -102,7 +104,7 @@ export default orderList = {
         save(state, action) {
           //  console.log('1111111111')
             let {saveData, tag} = action.data;
-            //console.log("saveData",saveData, tag);
+           // console.log("saveData",saveData, tag);
             if(saveData.pubResponse.code === "0000"&&!tag){
                 state.pageNum = saveData.body.pageNum;
                 state.pages =  saveData.body.pages;
@@ -111,7 +113,8 @@ export default orderList = {
             if(saveData.pubResponse.code === "0000"&&tag){
                 state.pageNum = saveData.body.pageNum;
                 state.pages =  saveData.body.pages;
-                state.orderList.concat(saveData.body.list);
+                state.orderList = state.orderList.concat(saveData.body.list);
+               // console.log("saveData",state, tag);
                 return { ...state};
             }
             Toast.info(saveData.pubResponse.msg);

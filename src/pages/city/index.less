@@ -56,16 +56,23 @@ ul li{
   height: 2.2rem;
   justify-content: space-between;
   align-items: center;
-  padding-right: @base*80rem;
-  .locationIocn{
-    width: 1rem;
-    height: 1rem;
-    display: inline-block;
-    background-image: url(../../assets/img/gai_location.png);
-    background-repeat: no-repeat;
-    background-size: 100%;
+  /*padding-right: @base*80rem;*/
+  >:nth-child(2){
     vertical-align: middle;
+    height: 100%;
+    width: 47px;
+    text-align: right;
+    line-height: 2.2rem;
+    .locationIocn{
+      width: 1rem;
+      height: 1rem;
+      display: inline-block;
+      background-image: url(../../assets/img/gai_location.png);
+      background-repeat: no-repeat;
+      background-size: 100%;
+    }
   }
+
 }
 
 .listview {
@@ -181,6 +188,7 @@ ul li{
   padding: 0 @base*15rem;
   position: relative;
   border-radius: @base*10rem;
+  overflow: hidden;
   .icon-search{
     font-size:@base *23rem;
     height:100%;
@@ -188,7 +196,7 @@ ul li{
     line-height: @base*64rem;
     color:#949494;
     i{
-      vertical-align: middle;
+      vertical-align: baseline;
     }
   }
   .icon-close{

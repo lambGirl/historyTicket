@@ -19,6 +19,7 @@ export default {
         //获取所有的singles
         *fetchCity({ payload }, { call, put,select }) {
             let {cityListInit} =  yield select(_=>_.city),initData;
+          //  console.log("cityListInit",cityListInit);
             if(!cityListInit.length){
                 initData =  yield call(queryAllCitys, payload);
             }

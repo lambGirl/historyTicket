@@ -11,6 +11,10 @@
       line-height: @base*90rem;
       text-align: center;
       font-size: @base*42rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
     .search-input{
       width:84%;
@@ -21,8 +25,19 @@
         height:100%;
         width:@base*72rem;
         text-align: center;
-        font-size: @base*32rem;
+        /*font-size: @base*32rem;*/
         color:#BFBFBF;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        >.icon{
+          height: @base*32rem;
+          width: @base*32rem;
+          background: url("../../assets/img/btn_search.png") no-repeat;
+          background-size: 100% 100%;
+        }
+
       }
       input{
         padding-left:@base*72rem;
@@ -48,6 +63,15 @@
         color:#CCCCCC;
       }
     }
+  }
+  .orderList{
+    padding: 0 @base*20rem;
+  }
+  .searchTicketList{
+    position: relative;
+    box-sizing: border-box;
+    height:calc(100% - @base*190rem);
+    padding-bottom:@base*100rem;
   }
 }
 .defaultHeight{

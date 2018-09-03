@@ -21,7 +21,7 @@ export default searchTicketList = {
 
     effects: {
         *fetch({ payload }, { call, put }) {
-             console.log("initData",payload);
+           //console.log("initData",payload);
             let postData = {
                         sortType: '1',
                         longitude: "",

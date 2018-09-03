@@ -6,7 +6,7 @@ import { baseUtil, Date } from "../../utils/util"
 import { connect } from "dva"
 import global from "../../models/global";
 import Request from "../../utils/request"
-
+import Styles  from '../../assets/css/var.less'
 @connect(({fillOrder,loading})=>({
     fillOrder,
     loading
@@ -85,7 +85,7 @@ export default class DateIndex extends React.Component{
         return <div style={{height:"100%"}}>
             {/*<Header   />*/}
             <Header      mode="light"
-                         leftContent={<i className="fa fa-angle-left fa-lg"></i>}
+                         leftContent={<i className={Styles["headerleftIconBlack"]}></i>}
                          leftClick={() => window.history.go(-1)}
             >
                 <div style={{"textAlign":"center"}}>日期</div>

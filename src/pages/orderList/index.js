@@ -19,17 +19,23 @@ const prompt = Modal.alert;
 export default class TicketOrder extends React.Component{
     constructor(props){
         super(props);
-        let userToken =  Router.location.query.opid
+        let userToken =  Router.location.query.opid;
+        let activeIndex =  baseUtil.getSession("jqmp_activeIndex")?parseInt(baseUtil.getSession("jqmp_activeIndex")):0,
+            state_Session =  activeIndex === 1 ? "sell_succeed":activeIndex===2&&"consume_succeed"||"";
         this.state = {
-            activeIndex:0,
-            state:"",
+            activeIndex:activeIndex,
+            state:state_Session,
             userToken: baseUtil.get("cdqcp_opid")||userToken
         }
     }
     //这里就执行分页的查询过程
     getOrderList(){
         let { pageNum,pages} =  this.props.orderList
-       // console.log("pageNum",pageNum);
+        //console.log("pageNum",pageNum,pages);
+        //console.log("this.state.state",this.state.state);
+        if(pageNum == pages){
+            return;
+        }
         pageNum++;
         //这里表示要重新去请求数据了
         let  userToken = baseUtil.get("cdqcp_opid");
@@ -103,7 +109,7 @@ export default class TicketOrder extends React.Component{
     }
     renderTab(index){
         let {orderList, pageNum, pages} = this.props.orderList;
-
+       // console.log("pageNum",pageNum, pages);
         return <div className={ClassNames(Styles['scroll-content'],Styles["defaultHeight"])}>
             {orderList.length&&<Scroll needMore={orderList.length && true || false}
                      currPage={pageNum}
@@ -141,6 +147,7 @@ export default class TicketOrder extends React.Component{
         }, ()=>{
             //这里表示要重新去请求数据了
             let  userToken = baseUtil.get("cdqcp_opid");
+            baseUtil.setSession("jqmp_activeIndex", index)
             //默认初始化为全部
             this.props.dispatch({
                 type:'orderList/fetch',
@@ -169,7 +176,7 @@ export default class TicketOrder extends React.Component{
         return <div className={Styles["ticketOrder-Main"]}>
             <Header
                 mode="common"
-                leftContent={ <i className="fa fa-angle-left fa-lg" style={{"color":"#fff"}}></i>}
+                leftContent={ <i className={Styles["headerleftIconWhite"]}></i>}
                 leftClick={this.goHomeOrderList.bind(this)}
             >
                 <div style={{"textAlign":'center','color':'#fff'}}>景区门票订单</div>

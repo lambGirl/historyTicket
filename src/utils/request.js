@@ -1,5 +1,5 @@
 import fetch from 'dva/fetch';
-
+import { baseUtil } from './util'
 function parseJSON(response) {
   return response.json();
 }
@@ -22,6 +22,14 @@ function checkStatus(response) {
  * @return {object}           An object containing either "data" or "err"
  */
 export default function request(url, options) {
+   // console.log("options",options);
+    if(options.method === "post"){
+        options.body = JSON.parse(options.body); //设置options
+        options.body._p_from = baseUtil.get("cdqcp_channel");
+        options.body.channelTokenName = baseUtil.getSession("channelTokenName");
+        options.body =  JSON.stringify(options.body);
+    }
+    //console.log("options------",options);
   return fetch(url, options)
     .then(checkStatus)
     .then(parseJSON)

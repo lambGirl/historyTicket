@@ -128,24 +128,29 @@ export default globalAct = {
                  * 还要一个标识判断用户是否主动选择过，如果选择过了，
                  * 日期就用用户选择的日期
                  */
-                allowDateList.map(function(item){
+                //console.log("allowDateList",allowDateList);
+                allowDateList.map(function(item,index){
+                    //console.log("item", item);
                     if(item.sellDate === day){
                         actionDate.date[0].date = item.sellDate;
                         actionDate.date[0].price = item.sellPrice;
                         actionDate.date[0].use = true;
-                        i++;
+                      // i =  index;
                     }
                     if(item.sellDate === tomorror){
                         actionDate.date[1].date = item.sellDate;
                         actionDate.date[1].price = item.sellPrice;
                         actionDate.date[1].use = true;
-                        i++;
+                       //i = index;
+                    }
+                    //console.log("actionDate.date",actionDate.date);
+                    if(item.sellDate !== day  && item.sellDate !== tomorror && actionDate.date.length < 3){
+                        actionDate.date.push({
+                            date:allowDateList[index].sellDate,price:allowDateList[index].sellPrice,use:true
+                        });
                     }
                 });
 
-                actionDate.date.push({
-                    date:allowDateList[i].sellDate,price:allowDateList[i].sellPrice,use:true
-                });
 
                 for(var i = 0; i< actionDate.date.length; i++){
                     if(actionDate.date[i].use){

@@ -49,6 +49,7 @@ export  default  class cityChoose  extends  React.Component{
         }
     }
     componentDidMount(){
+        //console.log("没有执行嘛");
         this.props.dispatch({type: 'city/fetchCity'});
         this._calculateHeight()
     }
@@ -273,9 +274,12 @@ export  default  class cityChoose  extends  React.Component{
                     <title>选择城市</title>
                 </Helmet>
                 <Header  mode="light"
-                         leftContent={<i className="fa fa-angle-left fa-lg"></i>}
+                         leftContent={<i className={Styles["headerleftIconBlack"]}></i>}
                          leftClick={() => window.history.go(-1)}
                 ><div style={{"textAlign":"center"}}>选择城市</div></Header>
+                {
+                    (this.props.fetchCity)&&<Loading/>||''
+                }
             </div>
         }
         return <div style={{"height":"100%","background":'#ECF0F4'}}>
@@ -284,7 +288,7 @@ export  default  class cityChoose  extends  React.Component{
                             <title>选择城市</title>
                         </Helmet>
                         <Header  mode="light"
-                                 leftContent={<i className="fa fa-angle-left fa-lg"></i>}
+                                 leftContent={<i className={Styles["headerleftIconBlack"]}></i>}
                                  leftClick={() => window.history.go(-1)}
                         ><div style={{"textAlign":"center"}}>选择城市</div></Header>
                         <div  className={classNames(Styles["city-search"])}>

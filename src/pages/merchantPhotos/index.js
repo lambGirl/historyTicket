@@ -25,7 +25,7 @@ export  default class MerchartPhotos extends  React.Component{
       <div className={Styles['photosListShow']}>
           <Header
             mode="light"
-            leftContent={<i className={ClassNames("fa fa-angle-left")} style={{"color":"#3E3E3E","fontSize":"24px"}}></i>}
+            leftContent={ <i className={Styles["headerleftIconBlack"]}></i>}
             leftClick={()=>{window.history.go(-1)}}
           >
             <div style={{"textAlign":'center','color':'#3E3E3E'}} className={Styles["font36"]}>商家相册</div>

@@ -16,6 +16,7 @@ import Dynamic from 'umi/dynamic';
 import { baseUtil } from "../utils/util";
 @connect(({globalAct,loading})=>({
     globalAct,
+    loading,
     getLocation:  loading.effects['globalAct/getInit'],
 }))
 
@@ -27,7 +28,7 @@ class IndexPage extends React.Component{
                 currPageY: 0    //当前页面滚动的Y坐标
             },
             headerConfig:{          //headerConfig配置
-                mode:"transparent",
+                mode:"none",
                 color:'#fff'
             },
             IndexModelSelectBarStatus: [false,false], //IndexModelSelectBar，model什么时候显示
@@ -91,8 +92,22 @@ class IndexPage extends React.Component{
         this.setState({
             pageStatus:pageStatus
         })
-        //console.log("123123", (pos.y+(-40)),(-clientHeight)+5)
-        if((-clientHeight)+5>=(pos.y+(-60))){
+
+      //  console.log("pos.y",pos.y)
+        if(-(pos.y) > 40&&(-clientHeight)+5<(pos.y+(-60))){
+          //  console.log("pos.y",pos.y)
+            this.setState({
+                headerConfig:{
+                    mode:"transparent",
+                    color:'#fff'
+                },
+                selectBarModelFixed:false
+            })
+            return;
+        }
+
+        //console.log("123123", pos.y);
+        if((-clientHeight)+5>=(pos.y+(-40))){
             this.setState({
                 headerConfig:{
                     mode:"light",
@@ -104,10 +119,11 @@ class IndexPage extends React.Component{
         }
        // console.log("clientHeight", (pos.y+(-40)),(-clientHeight));
 
-        if(headerConfig.mode != "transparent"){
+
+        if(-(pos.y) < 40&&headerConfig.mode != "none"){
             this.setState({
                 headerConfig:{
-                    mode:"transparent",
+                    mode:"none",
                     color:'#fff'
                 },
               selectBarModelFixed:false
@@ -135,7 +151,7 @@ class IndexPage extends React.Component{
             { currPageY } = this.state.pageStatus,time = !selectBarModelFixed&&100||0;
         if(currPageY >= -(clientHeight)) {
             //设置滚动
-            indexScroll.refs.scrollSwipe.scrollToElement(this.refs.searchBarModel, 300, 0, -searchBarHeight + 6);
+            indexScroll.refs.scrollSwipe.scrollToElement(this.refs.searchBarModel, 300, 0, -searchBarHeight + 10);
         }
 
         let {SelectBarData } =  this.props.globalAct;
@@ -232,6 +248,9 @@ class IndexPage extends React.Component{
             allBarColor = (SelectBarData["all"].activeIndex||IndexModelSelectBarStatus[0])?'#37A0F1':"#DBDBDB",
             zlpxColor =  (SelectBarData["zlpx"].activeIndex||IndexModelSelectBarStatus[1])?'#37A0F1':"#DBDBDB";
         let ListArrHeight = this.initticketsListArrHeight();
+
+       // console.log("getPoints",this.props.loading);
+
         return (
             <div className={styles["container_page"]}>
                 <Helmet>
@@ -244,7 +263,10 @@ class IndexPage extends React.Component{
                           id='headers'
                             positionType ='positionAbolute'
                             mode={this.state.headerConfig.mode}
-                            leftContent={ <i className="fa fa-angle-left fa-lg" style={{"color":`${this.state.headerConfig.color}`}}></i>}
+                            leftContent={ <i className={classnames({
+                                [styles["headerleftIconWhite"]]: this.state.headerConfig.mode != "light",
+                                [styles["headerleftIconBlack"]]: this.state.headerConfig.mode == "light"
+                            })}></i>}
                             rightContent={
                                 <span style={{"color":`${this.state.headerConfig.color}`}}>
                                     <span style={{"paddingRight":'4px'}} className={styles["headerCityName"]}>{SelectBarData.cityName}</span>
@@ -286,14 +308,14 @@ class IndexPage extends React.Component{
                            {doorList.length&&<div className={styles[ "ticketsListArr" ]}>
                                 {
                                     doorList.map((item, index) => {
-                                        return <AttractionSingle key={index} item={item}
-                                                                 clickItem={this.chooseTicket.bind(this)}/>
+                                        return (<AttractionSingle key={index} item={item}
+                                                                 clickItem={this.chooseTicket.bind(this)}/>)
                                     })
                                 }
                             </div>||''
                             }
                             {
-                                this.props.getLocation&&<div className={styles["loading"]}>
+                                (this.props.getLocation)&&<div className={styles["loading"]}>
                                     <div className={styles['loading-icon']}></div>
                                     <div className={styles['loading-content']}>
                                         <div className={styles['loading-left']}></div>

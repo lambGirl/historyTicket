@@ -250,7 +250,7 @@ export default globalAct = {
             });
         }
 
-        console.log("currentCity",currentCity);
+       // console.log("currentCity",currentCity);
         let  {data, activeIndex} = SelectBarData["zlpx"];
         let  allData = SelectBarData["all"]["data"],allActiveIndex = SelectBarData["all"]["activeIndex"];
       //  return;

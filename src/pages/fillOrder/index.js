@@ -232,9 +232,9 @@ export default class FillOrder extends  React.Component{
        // return;
         var opid = baseUtil.get('cdqcp_opid'),choosePassager = "/user/jqmppassenger?allowIdCardType=01&allowTicketType=0,1,2&tzType=new&tzBuss=jpmp_ChoosePerson";  //用户登陆的opid是否为空
         if(!opid){
-            let appFrom =  baseUtil.getSession("appFrom");
-            let originHref =  encodeURIComponent(`${window.location.origin}/${Router.location.pathname}?connName=1##needLogIn=1`)
-            let locationHref = ("iOS" == appFrom || "Android" == appFrom )?choosePassager+`&backUrl=${originHref}`:"/user/login?tzType=new&tzBuss=jpmp_ChoosePerson";
+            let appFrom =  baseUtil.getSession("appFrom")||baseUtil.get("cdqcp_channel");
+            let originHref =  encodeURIComponent(`${window.location.origin}${Router.location.pathname}?connName=1##needLogIn=1`)
+            let locationHref = ("iOS" == appFrom || "Android" == appFrom )?choosePassager+`##needLogIn=1`:"/user/login?tzType=new&tzBuss=jpmp_ChoosePerson";
             //这里要判断是否是ios或android
             window.location.href= locationHref;
             return;
@@ -274,7 +274,7 @@ export default class FillOrder extends  React.Component{
         return <div className={Styles['fillOrder-main']}>
             <Header
                 mode="light"
-                leftContent={ <i className="fa fa-angle-left fa-lg" style={{"color":"#3E3E3E"}}></i>}
+                leftContent={ <i className={Styles["headerleftIconBlack"]}></i>}
                 leftClick={this.goLastPage.bind(this)}
             >
                 <div style={{"textAlign":'center','color':'#3E3E3E'}} >订单填写</div>
