@@ -1,6 +1,7 @@
 import { queryOrderDetail, queryOrderStatus,obsoleteOrder,refundTicket} from '../services/orderDetail'
 import {baseUtil} from "../utils/util";
 import { Toast } from 'antd-mobile';
+import Router from "umi/router"
 
 var orderDetail = {};
 export default orderDetail = {
@@ -34,7 +35,7 @@ export default orderDetail = {
         *obsoleteOrder({ payload }, { call, put }) {
 
             let initData =  yield call(obsoleteOrder,{payload});
-           // console.log("initData",initData);
+            // console.log("initData",initData);
             /**
              * 这里来验证此时的订单是什么状态，
              * 如果此时booking的状态则就轮训知道不是booking状态为止
@@ -43,11 +44,15 @@ export default orderDetail = {
              * 这里验证作废成功与失败
              */
             if(initData.data.pubResponse.code === "0000"){
-                Toast.info("订单作废成功");
-                yield put({
+                Toast.info("订单作废成功",1);
+               /* yield put({
                     type: 'fetch',
                     payload: payload
-                });
+                });*/
+               setTimeout(()=>{
+                   //window.location.href="/mtTicket/#/orderList";
+                   Router.push("/orderList")
+               },1200)
                 return;
             }
             Toast.info(initData.data.pubResponse.msg);

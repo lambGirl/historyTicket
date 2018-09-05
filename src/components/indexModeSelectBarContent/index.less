@@ -17,20 +17,29 @@
       height: @base*100rem;
       font-size: @font30;
       color:#3E3E3E;
-      border-bottom: 1px solid #E5E5E5;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      .checked{
-        width: @base*26rem;
-        height:@base*20rem;
-        background: url("../../assets/img/cityChecked.png") no-repeat;
-        background-size: cover;
+
+      >div{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 100%;
+        border-bottom: @base*1rem solid #E5E5E5;
+        .checked{
+          width: @base*26rem;
+          height:@base*20rem;
+          background: url("../../assets/img/cityChecked.png") no-repeat;
+          background-size: cover;
+        }
       }
+
+
     }
     .active{
       background: #F2F2F7 ;
       color:#37A0F1;
+      >div{
+        border:none;
+      }
     }
   }
 }

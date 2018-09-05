@@ -26,11 +26,13 @@ export default class TicketOrderDetail extends React.Component{
             returntime:0,        //判断支付时间是否已经过期
             orderNo: Router.location.query.orderNum,
             userToken: baseUtil.get("cdqcp_opid")||Router.location.query.opid,
-            voucherIndex:0
+            voucherIndex:0,
+            priceDetailStatus: false,
+            refundMoneyState: false //控制退钱的弹框不允许多次弹出
         }
     }
     UNSAFE_componentWillMount(){
-        console.log("now");
+       // console.log("now");
         let orderNo =  Router.location.query.orderNum,
         userToken =  baseUtil.get("cdqcp_opid");
 
@@ -160,16 +162,16 @@ export default class TicketOrderDetail extends React.Component{
                 });
                 return;
             }*/
-            if (_this.state.returntime <= 1){
+            if (_this.state.returntime <= 0){
 
                 clearInterval(_this.lock_interval);
-                _this.props.dispatch({
+               /* _this.props.dispatch({
                     type:'orderDetail/fetch',
                     payload:{
                         orderNo:_this.state.orderNo,
                         userToken: _this.state.userToken
                     }
-                });
+                });*/
 
                 return;
             }
@@ -177,7 +179,7 @@ export default class TicketOrderDetail extends React.Component{
             var ac = _this.state.returntime;
             ac--;
             _this.setState({returntime:ac});
-            console.log("timeOut 1000")
+           // console.log("timeOut 1000",ac)
         },1000)
     }
     //格式化时间
@@ -195,11 +197,15 @@ export default class TicketOrderDetail extends React.Component{
     //基本信息
     renderBaseInfo(){
         let {orderDetail} =  this.props.orderDetail;
-
-        return <div className={Styles['writeOrder-cardContent']}>
+        let voucherTimes = orderDetail.voucherTimes.map((item)=>{
+            return item.beginTime+"-"+item.endTime
+        });
+        return <div className={ClassNames(Styles['writeOrder-cardContent'],Styles['cardContent-bottom-padding'])}>
             <div>
                 <div className={Styles["name"]}>商品名称</div>
-                <div>{orderDetail.productName}</div>
+                <div className={Styles["doubleLine"]} style={{"WebkitBoxOrient":"vertical","boxOrient":'vertical',"MozBoxOrient":"vertical","msboxOrient":'vertical'}}>
+                    {orderDetail.productName}
+                </div>
             </div>
             <div>
                 <div className={Styles["name"]}>入园日期</div>
@@ -207,27 +213,33 @@ export default class TicketOrderDetail extends React.Component{
             </div>
             <div>
                 <div className={Styles["name"]}>有效期</div>
-                <div>{orderDetail.voucherDateEnd}</div>
+                <div>{baseUtil.getValidate(1,'2018-09-05',10)}</div>
             </div>
             <div>
                 <div className={Styles["name"]}>换票时间</div>
-                <div>{orderDetail.travelDate}</div>
+                <div>{
+                    voucherTimes.join(";")
+                }</div>
             </div>
             <div>
                 <div className={Styles["name"]}>退改规则</div>
-                <div>安仁古镇门票</div>
+                <div>{baseUtil.productRefundRule(orderDetail.productRefundRule.refundType)}</div>
             </div>
-            <div>
+            {orderDetail.ticketGetAddress[0]&&<div>
                 <div className={Styles["name"]}>换票地址</div>
-                <div>{orderDetail.ticketGetAddress[0]}</div>
-            </div>
-            <div>
+                <div style={{"lineHeight":"1.2rem"}}>
+                    {orderDetail.ticketGetAddress[0]}
+                </div>
+            </div>||''}
+            {orderDetail.getInAddress[0]&&<div>
                 <div className={Styles["name"]}>入园地址</div>
-                <div>{orderDetail.getInAddress[0]}</div>
-            </div>
+                <div style={{"lineHeight":"1.2rem"}}>
+                    {orderDetail.getInAddress[0]}
+                </div>
+            </div>||''}
             <div>
-                <div className={Styles["name"]}>成人票</div>
-                <div>安仁古镇门票</div>
+                <div className={Styles["name"]}>出票明细</div>
+                <div>{`¥${orderDetail.unitPrice}x${orderDetail.sellQuantity}份`}</div>
             </div>
         </div>
     }
@@ -289,7 +301,7 @@ export default class TicketOrderDetail extends React.Component{
         if(orderDetail.state === "sell_failed"){
             return <div>请耐心等待，票款将在<span>7个工作日</span>内返回您的帐上</div>;
         }
-        return con.content;
+        return con.statusContent;
     }
 
     renderpz(top){
@@ -347,6 +359,7 @@ export default class TicketOrderDetail extends React.Component{
 
     render(){
         let { orderDetail } =  this.props.orderDetail;
+
         if(!orderDetail){
             return <div className={Styles["ticketOrderDetail-Main"]}>
                 <Header
@@ -358,9 +371,35 @@ export default class TicketOrderDetail extends React.Component{
                 </Header>
             </div>
         }
-        //console.log("top", orderDetail);
+        /**
+         * 设置一下费用明细
+         */
+        var priceDetail=[];
+        priceDetail.push({
+            name:'商品单价',
+            value: '¥'+baseUtil.numFixed1(orderDetail.unitPrice),
+            nameClass: ClassNames(Styles['font30'],Styles['color_9B']),
+            valueClass:'font30 color_3e'
+        });
+
+        priceDetail.push({
+            name:'游客人数',
+            value: orderDetail.sellQuantity+"人",
+            nameClass:ClassNames(Styles['font30'],Styles['color_9B']),
+            valueClass:ClassNames(Styles['font30'],Styles['color_3e'])
+        });
+
+        priceDetail.push({
+            name:'合计',
+            value: '¥'+baseUtil.numFixed1(orderDetail.totalPrice),
+            nameClass:ClassNames(Styles['font30'],Styles['color_3e']),
+            valueClass:ClassNames(Styles['font40'],Styles['color_FF6920'])
+        });
+        //console.log("top", priceDetail);
+       // orderDetail.state="sell_succeed";
         let top =  baseUtil.orderDetailStatus(orderDetail.state);
-        //console.log("top", top);
+        //console.log("top", top, this.state.returntime);
+
         return <div className={Styles["ticketOrderDetail-Main"]}>
             <Header
                 mode="common"
@@ -384,11 +423,13 @@ export default class TicketOrderDetail extends React.Component{
                                         [Styles["used"]]:top.icon === 'used',
                                         [Styles["retired"]]:top.icon === 'retired'
                                     })}></i>
-                                    <span>{top.status}</span>
+                                    <span>{orderDetail.state === "book_succeed"&&this.state.returntime<=0&&"已过期" || top.status}</span>
                                 </div>
                                 <div>
-                                    <span>¥{orderDetail.totalPrice}</span>
-                                    <i className={Styles['orderStatus-warning']}></i>
+                                    <span>¥{baseUtil.numFixed1(orderDetail.totalPrice)}</span>
+                                    <i className={Styles['orderStatus-warning']} onClick={()=>{this.setState({
+                                        priceDetailStatus:true
+                                    })}}></i>
                                 </div>
                             </div>
                             {top.mangLine&&<div className={Styles['orderDetail-status-detail']}>{this.getContent(orderDetail, top)}</div>||""}
@@ -429,7 +470,7 @@ export default class TicketOrderDetail extends React.Component{
                 </Scroll>
             </div>
             {
-                top.doubleBtn&&<div className={Styles["footer-fixed-paying"]}>
+                top.doubleBtn&&(orderDetail.state === "book_succeed"&&this.state.returntime > 0)&&<div className={Styles["footer-fixed-paying"]}>
                     <div>
                         <div onClick={this.obsolete.bind(this)}>作废订单</div>
                         <div onClick={this.payload.bind(this)}>继续支付</div>
@@ -441,6 +482,21 @@ export default class TicketOrderDetail extends React.Component{
                     重新购买
                 </div>||''
             }
+            {this.state.priceDetailStatus&&<div className={Styles["model-show"]} >
+                <div className={Styles['model']} onClick={(e)=>{e.preventDefault(); e.stopPropagation();this.setState({"priceDetailStatus":false})}}></div>
+                <div className={Styles["model-content"]}>
+                    <p>费用明细</p>
+                    <div className={Styles["priceDetail"]}>
+                        {priceDetail.map((item,index)=>{
+                            return <div key={'priceDetail'+index}>
+                                <div className={item.nameClass}>{item.name}</div>
+                                <div className={item.valueClass}>{item.value}</div>
+                            </div>
+                        })}
+                    </div>
+                    <div className={Styles['priceFooter']} onClick={(e)=>{e.preventDefault(); e.stopPropagation();this.setState({"priceDetailStatus":false})}}>我知道了</div>
+                </div>
+            </div>}
         </div>
     }
     //申请退票
@@ -449,6 +505,12 @@ export default class TicketOrderDetail extends React.Component{
          * 这里需要查询退票详情
          */
         let _this =  this;
+        if(this.state.refundMoneyState){
+            return;
+        }
+
+
+
         Request("/api?server=trip_refundTicketQuery",{
             method: "post",
             headers: {
@@ -457,12 +519,20 @@ export default class TicketOrderDetail extends React.Component{
             body:JSON.stringify({
                 orderNo:this.state.orderNo, userToken: this.state.userToken})
         }).then((result)=>{
+
+
             if(result.data.pubResponse.code === "0000"){
+                _this.setState({
+                    "refundMoneyState": true
+                });
                 prompt(<div className={Styles["doubleModelTitle"]}>你确定要申请退款么?</div>, <div className={Styles["doubleModelContent"]}>
-                    本次退票手续费 <span>{result.data.body.refundFee}</span>元,
+                    {Number(result.data.body.refundFee)&& <span>本次退票手续费 <span>{result.data.body.refundFee}</span>元,</span>||''}
                     实退金额 <span>{result.data.body.refundPrice}</span>元
                 </div>, [
                     { text: <span className={Styles["confirm_7c"]}>确定</span>, onPress: () => {
+                            _this.setState({
+                                "refundMoneyState": false
+                            });
                             Request("/api?server=trip_refundTicket",{
                                 method: "post",
                                 headers: {
@@ -481,7 +551,9 @@ export default class TicketOrderDetail extends React.Component{
                                 Toast.info(result.data.pubResponse.msg);
                             })
                         }, style:'' },
-                    { text: <span className={Styles["confirm_0d"]}>再想想</span>, onPress: () => console.log('ok') },
+                    { text: <span className={Styles["confirm_0d"]}>再想想</span>, onPress: () => { _this.setState({
+                            "refundMoneyState": false
+                        });} },
                 ])
                 return;
             }
@@ -524,7 +596,7 @@ export default class TicketOrderDetail extends React.Component{
                     channelName: from,
                     wxOpenId:baseUtil.get("cdqcp_wxopenId"),
                     orderNum:orderDetail.orderNo,
-                    manualBackUrl:encodeURIComponent(window.location.origin+"/mtTicket/#/orderList/[from,wxcode,opid]"),
+                    manualBackUrl:encodeURIComponent(window.location.origin+`/mtTicket/#/ticketOrderDetail/[orderNum,opid,from]`),
                     backUrl:encodeURIComponent(window.location.origin+`/mtTicket/#/ticketOrderDetail/[orderNum,opid,from]`)
                 };
                 var href = result["payHref"] + '/index.html?';

@@ -44,7 +44,13 @@
       >:last-child{
         .font36;
         .orderStatus-warning{
-
+          display: inline-block;
+          width: @base*32rem;
+          height: @base*32rem;
+          background: url("../../assets/img/price_detail.png") no-repeat;
+          background-size: cover;
+          margin-left: @base*10rem;
+          vertical-align: center;
         }
       }
     }
@@ -136,7 +142,7 @@
       text-align: center;
       color: #3e3e3e;
       font-size: @font30;
-      padding-bottom: @base*29rem;
+      padding-bottom: @base*19rem;
     }
     .show-voucher-Img{
       width: @base*160rem;
@@ -153,7 +159,7 @@
       width: @base*120rem;
       height: @base*120rem;
       right:-@base*60rem;
-      top: -@base*100rem;
+      top: -@base*80rem;
       background: url("../../assets/img/ico_used@2x.png") no-repeat;
       background-size: cover;
     }
@@ -162,7 +168,7 @@
       width: @base*120rem;
       height: @base*120rem;
       right:-@base*60rem;
-      top: -@base*100rem;
+      top: -@base*80rem;
       z-index: 0;
       background: url("../../assets/img/ico_backing@2x.png") no-repeat;
       background-size: cover;
@@ -172,7 +178,7 @@
       width: @base*120rem;
       height: @base*120rem;
       right:-@base*60rem;
-      top: -@base*100rem;
+      top: -@base*80rem;
       background: url("../../assets/img/ico_backed@2x.png") no-repeat;
       background-size: cover;
     }
@@ -206,4 +212,66 @@
       color: #fff;
     }
   }
+}
+
+
+.model-show{
+  height:100%;
+  width: 100%;
+  position:absolute;
+  >.model{
+    position:absolute;
+    top:0;
+    left:0;
+    height:100%;
+    width: 100%;
+    background:rgba(0,0,0,.4);
+  }
+  z-index: 1000;
+  top:0;
+  left:0;
+  .model-content{
+    position: fixed;
+    bottom:0;
+    background: #fff;
+    width: 100%;
+    p{
+      color:#3E3E3E;
+      font-size: @base*32rem;
+      padding: @base*30rem 0;
+      text-align: center;
+    }
+    .priceDetail{
+      >div{
+        display: flex;
+        justify-content: space-between;
+        padding: 0 @base*32rem @base*32rem @base*32rem;
+        align-items: center;
+      }
+      >:last-child{
+        padding-bottom: @base*45rem;
+      }
+    }
+    .priceFooter{
+      height: @base*90rem;
+      background: #F48831;
+      color: #fff;
+      font-size: @base*32rem;
+      text-align: center;
+      line-height: @base*90rem;
+    }
+  }
+}
+/*.cardContent-bottom-padding{
+    padding-bottom: @base*40rem;
+}*/
+
+.doubleLine{
+  max-height: @base*60rem;
+  line-height: @base*32rem;
+  overflow: hidden;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  display: -webkit-box!important;
+  -webkit-line-clamp: 2!important;
 }

@@ -55,7 +55,7 @@ export  default class DateChoose extends React.Component{
         if(!fillOrderDetail){
             return null;
         }
-        console.log("effectiveDate",effectiveDate);
+        //console.log("effectiveDate",effectiveDate);
         return <div className={Styles['fillOrderDate']}>
             <div className={ClassNames(Styles['fontIconStyle'])}>
                 <span className={Styles['fontIcon']}></span>

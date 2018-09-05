@@ -303,7 +303,7 @@ const baseUtil = {
    ConfigFind:function(name){
         let globalConfig = baseUtil.getSession('globalConfig');
         if (!globalConfig){
-            console.error('没有访问首页--缓存配置项目');
+          //  console.error('没有访问首页--缓存配置项目');
             return '';
         } else {
             for(let i = 0; i < globalConfig.length; i++) {
@@ -331,7 +331,7 @@ const baseUtil = {
                 break;
             case "3":val='购买后不可退票';
                 break;
-            case "4":val='有条件退(时间节点限制、手续费限制、只能整单退等)';
+            case "4":val='退票条件以景区实际情况为准';
                 break;
         }
 
@@ -471,7 +471,7 @@ const baseUtil = {
                 pzClass:'used',
                 statusContent:"",
                 refundMoney:false,
-                icon:'useing',
+                icon:'used',
                 orderListGroupBtn:{
                     show:true,
                     btnList:{
@@ -482,17 +482,17 @@ const baseUtil = {
             };break;
             case "backed":detail = {
                 status:'已退款',
-                singleLine:true,
-                mangLine: false,
-                statusColor:'#3E3E3E',
+                singleLine:false,
+                mangLine: true,
+                statusColor:'#ACACAC',
                 singleBtn:false,
                 doubleBtn:false,
-                statusContent:"",
+                statusContent:"7个工作日内退款返还至您的账户，请耐心等待~",
                 pz:true,   //凭证模块是否显示
                 pzDisable: true, //凭证模块是否颜色禁用
                 pzClass:'backed',
                 refundMoney:false,
-                icon:'used',
+                icon:'retired',
                 orderListGroupBtn:{
                     show:true,
                     btnList:{
@@ -502,12 +502,12 @@ const baseUtil = {
             };break;
             case "backing":detail = {
                 status:'退票中',
-                singleLine:true,
+                singleLine:false,
                 statusColor:'#3E3E3E',
-                mangLine: false,
+                mangLine: true,
                 singleBtn:false,
                 doubleBtn:false,
-                statusContent:"",
+                statusContent:"请耐心等待，正在为您退票",
                 pz:true,   //凭证模块是否显示
                 pzDisable: true, //凭证模块是否颜色禁用
                 pzClass:'backing',
@@ -571,6 +571,29 @@ const baseUtil = {
         vals[1] = vals[1]<10&&vals[1].length==1?'0'+vals[1]:vals[1];
        // console.log("vals",vals.join(":"));
         return vals.join(":")
+    },
+    numFixed:function(v,n){
+        return n=n||2,n=Math.pow(10,n),Math.round(v*n)/n;
+    },
+    numFixed1:function(v){
+        var newv=this.numFixed(v,1);
+        return parseInt(newv)==newv?newv+".0":newv;
+    },
+    getValidate(bookType,travelDate,validDays){
+        /**
+         * bookType: 预定模式：0 有效期模式；1 预约模式
+         */
+        var date =  Date.parse1(travelDate);
+        if(bookType == 0){
+            return date.format("yyyy年MM月dd日")+'之前有效'
+        }
+
+        if(validDays == 1){
+            return `仅${date.format('yyyy年MM月dd日')}当天有效`;
+        }
+
+        var endDate =  new Date(date).addDays(validDays);
+        return `${date.format('yyyy年MM月dd日')}-${endDate.format('yyyy年MM月dd日')}有效`
     }
 
 }

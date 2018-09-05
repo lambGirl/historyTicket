@@ -79,8 +79,8 @@ p{
 
 //cardBox下中的信息
 .writeOrder-cardContent{
-  div{
-    margin-bottom:5px;
+  >div{
+    padding-bottom:@base*18rem;
     color:#949494;
     display: flex;
     /*min-height: @base*60rem;*/
@@ -93,9 +93,14 @@ p{
       flex:1
     }
     >:last-child{
-      flex:2
+      flex:3;
+      color:#3E3E3E;
+      font-size: @font26;
     }
   }
+  /*>div:last-child{
+    margin-bottom:0;
+  }*/
   .line{
     border-top: 1px solid #E5E5E5;
     margin-left: @base*30rem;

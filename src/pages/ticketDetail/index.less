@@ -5,7 +5,7 @@
   width: 100%;
   .ticketTop{
     position: relative;
-    height: @base*300rem;
+    height: @base*320rem;
    /* overflow: hidden;*/
 
     .leftBtnCircle{
@@ -134,10 +134,11 @@
     height: @base*300rem !important;
   }
   .swiper-single-a{
+
     img{
-      width:100%;
-      height: @base*300rem;
+      height: @base*320rem;
     }
+
   }
 }
 
@@ -163,6 +164,7 @@
       height: @base*28rem;
       background: #37A0F1;
       margin-right: @base*10rem;
+      border-radius: @base*2rem;
     }
   }
   .card-content{
@@ -179,7 +181,7 @@
   width: 100%;
   box-sizing: border-box;
   &.borderBottom{
-    border-bottom: 1px solid #E5E5E5;
+    border-bottom: @base*1rem solid #E5E5E5;
   }
   >:first-child{
     display: flex;
@@ -202,12 +204,12 @@
     align-items: center;
     .ticket-buy{
       width: @base*140rem;
-      height: @base*60rem;
+      height: @base*64rem;
       background: #F48831;
       color: #fff;
       font-size: @font24;
       border-radius: @base*4rem;
-      line-height: @base*60rem;
+      line-height: @base*64rem;
       text-align: center;
     }
   }
@@ -339,9 +341,19 @@
           display: flex;
           font-size: @font24;
           color:#949494;
-          margin-bottom: @base*22rem;
+          margin-bottom: @base*6rem;
           >:first-child{
             margin-right: @base*16rem;
+            max-width: @base*120rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 20%;
+            line-height: 1.2rem;
+          }
+          >:last-child{
+            width: 78%;
+            line-height: 1.2rem;
           }
 
         }

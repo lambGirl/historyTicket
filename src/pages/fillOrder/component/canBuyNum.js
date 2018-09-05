@@ -15,9 +15,13 @@ export default  class CanBuyNum extends React.Component{
                 购买数量
             </div>
             <div>
-                <div className={ClassNames(Styles['common'], Styles['reduce'],Styles['mgright20'])} onClick={this.addReduceNum.bind(this,-1)}>-</div>
+                <div className={ClassNames(Styles['common'], Styles['reduce'],Styles['mgright20'],{
+                    [Styles["disable"]]:this.props.reduceDisable|| false
+                })} onClick={this.addReduceNum.bind(this,-1)}>-</div>
                 <div className={ClassNames(Styles['numberShow'],Styles['mgright20'])}>{this.props.initNum}</div>
-                <div className={ClassNames(Styles['common'], Styles['add'])} onClick={this.addReduceNum.bind(this,1)}>+</div>
+                <div className={ClassNames(Styles['common'], Styles['add'],{
+                    [Styles["disable"]]: this.props.addDisable||false
+                })} onClick={this.addReduceNum.bind(this,1)}>+</div>
             </div>
         </div>
     }

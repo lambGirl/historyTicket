@@ -72,18 +72,18 @@ export  default class ticketDetail extends  React.Component{
       if(tag === "gpxz"){
           return <div className={Styles['ticketDetial-cardContent']}>
               <div>
-                  <div className={Styles["name"]}>订票须知：</div>
+                  <div className={Styles["name"]}>订票须知:</div>
                   <div>
-                      {productBookRule.aheadTimeType == "1"?"预定后立即可用":`预定${baseUtil.getHours(productBookRule.aheadMinutes)}后可用`}<br/>
+                      {productBookRule.aheadTimeType == "1"?"预定后立即可用":`需要提前${baseUtil.getHours(productBookRule.aheadMinutes)}购买`}<br/>
                       {productBookRule.aheadNote&& `(注: ${productBookRule.aheadNote})`}
                   </div>
               </div>
               <div>
-                  <div className={Styles["name"]}>换票须知：</div>
+                  <div className={Styles["name"]}>换票须知:</div>
                   <div>{productUseRule.needTicket=="1"&&"持团子电子票 先换票再入园"||"无需换票，持团子电子票直接入园"}</div>
               </div>
               <div>
-                  <div className={Styles["name"]}>退票须知：</div>
+                  <div className={Styles["name"]}>退票须知:</div>
                   <div>{
                     baseUtil.productRefundRule(productRefundRule.refundType)
                   }</div>
@@ -94,13 +94,13 @@ export  default class ticketDetail extends  React.Component{
           return <div className={Styles['ticketDetial-cardContent']}>
               {
                   showModelContent.costIncludeNote&&<div>
-                  <div className={Styles[ "name" ]}>费用包含：</div>
+                  <div className={Styles[ "name" ]}>费用包含:</div>
                   <div>{showModelContent.costIncludeNote}</div>
               </div>
               }
               {
                   showModelContent.costExcludeNote&&<div>
-                    <div className={Styles[ "name" ]}>费用不含：</div>
+                    <div className={Styles[ "name" ]}>费用不含:</div>
                     <div>{showModelContent.costExcludeNote}</div>
                   </div>
               }
@@ -115,19 +115,19 @@ export  default class ticketDetail extends  React.Component{
           return <div className={Styles['ticketDetial-cardContent']}>
               {
                   productUseRule.voucherTimes&&<div>
-                    <div className={Styles[ "name" ]}>换票时间：</div>
+                    <div className={Styles[ "name" ]}>换票时间:</div>
                     <div>{`${productUseRule.voucherTimes[0].beginTime+"-"+productUseRule.voucherTimes[0].endTime}`}</div>
                   </div>
               }
               {
                   productUseRule.ticketGetAddress.length&&<div>
-                      <div className={Styles[ "name" ]}>换票地址：</div>
+                      <div className={Styles[ "name" ]}>换票地址:</div>
                       <div>{productUseRule.ticketGetAddress[0]}</div>
                   </div>||null
               }
               {
                   productUseRule.getInAddress.length&&<div>
-                      <div className={Styles[ "name" ]}>入园地址：</div>
+                      <div className={Styles[ "name" ]}>入园地址:</div>
                       <div>{productUseRule.getInAddress[0]}</div>
                   </div>||null
               }
@@ -158,12 +158,12 @@ export  default class ticketDetail extends  React.Component{
                       href="javascript:;"
                       onClick={_this.showPhotosList.bind(_this,index)}
                       className={Styles['swiper-single-a']}
-                      style={{ display: 'inline-block', width: '100%', height: this.state.imgHeight }}
+                      style={{ display: 'block', position: 'relative', width: '100%',  height: "auto",}}
                   >
                       <img
                           src={val}
                           alt=""
-                          style={{ width: '100%', verticalAlign: 'top' }}
+                          style={{ width: '100%', verticalAlign: 'top'}}
                           onLoad={() => {
                               // fire window resize event to change height
                               window.dispatchEvent(new Event('resize'));
@@ -215,7 +215,7 @@ export  default class ticketDetail extends  React.Component{
                           <div className={ClassNames(Styles['font28'],Styles['color_3e'])}>{item.productName}</div>
                           <div>
                               <span className={ClassNames(Styles['font20'],Styles['color_F60'])}>¥</span>
-                              <span className={ClassNames(Styles['font34'],Styles['color_F60'])}>{item.showPrice}</span>
+                              <span className={ClassNames(Styles['font34'],Styles['color_F60'])}>{baseUtil.numFixed1(item.showPrice)}</span>
                               <span className={ClassNames(Styles['font20'],Styles['color_94'])}>起</span>
                           </div>
                       </div>
@@ -277,14 +277,14 @@ export  default class ticketDetail extends  React.Component{
                                       content={this.renderBaseInfo('gpxz')}
                                   />
                               </div>
-                              {(showModelContent.costIncludeNote||showModelContent.costExcludeNote)&&<div className={Styles[ 'mgtop20' ]}>
+                              {(showModelContent.costIncludeNote||showModelContent.costExcludeNote)&&<div>
                                   <CardBox
                                       cardTitleIcon={true}
                                       cardTitle="费用包含"
                                       content={this.renderBaseInfo('fybh')}
                                   />
                               </div>||''}
-                              <div className={Styles[ 'mgtop20' ]}>
+                              <div>
                                   <CardBox
                                       cardTitleIcon={true}
                                       cardTitle="使用说明"
@@ -396,10 +396,10 @@ export  default class ticketDetail extends  React.Component{
               <LineBox
                   leftIcon={true}
                   leftContent={<span className={ClassNames(Styles['font28'],Styles['color_3e'])}>安全须知</span>}
-                  righIcon={true}
+                  rightIcon={true}
                   clickType='1'
                   clickTap={()=>{window.location.href='/article/article_pub?key=trip_safety_notice&server=queryProtocolDetail&temp_title=安全须知'}}
-                  rightContent={<span className={ClassNames(Styles['color_94'],Styles['font28'])}>了解详情</span>}
+                  rightContent={<span className={ClassNames(Styles['color_94'],Styles['font28'])} style={{"verticalAlign":"middle"}}>了解详情</span>}
 
               />
           </div>

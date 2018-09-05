@@ -24,7 +24,7 @@ export default class FillOrder extends  React.Component{
     constructor(props){
         super(props);
         this.state = {
-            reduceAddBtn: [ true, true ],
+            reduceAddBtn: baseUtil.getSession("reduceAddBtn")||[ true, true ],
             passengers:[],
             total:0, //总票价
             priceDetails:[],
@@ -34,6 +34,19 @@ export default class FillOrder extends  React.Component{
     }
     chooseInsurance(){
         Router.push("/insuranceList")
+    }
+    UNSAFE_componentWillReceiveProps(nextProps){
+        let {fillOrderDetail, canBuy} = nextProps.fillOrder;
+        //console.log("fillOrderDetail",fillOrderDetail);
+        if(fillOrderDetail){
+            let{productBookRule} = fillOrderDetail.productDetail;
+            this.setState({
+                reduceAddBtn:[canBuy != productBookRule.minBuyCount,canBuy != productBookRule.maxBuyCount ]
+            },()=>{
+                baseUtil.setSession("reduceAddBtn",this.state.reduceAddBtn);
+            })
+        }
+
     }
     onPayClicked(){
         if(this.state.commitOrderStatus){
@@ -189,7 +202,7 @@ export default class FillOrder extends  React.Component{
          */
         let {fillOrderDetail, canBuy} = this.props.fillOrder,
             {productBookRule} = fillOrderDetail.productDetail;
-      // console.log("canBuy", (typeof canBuy));
+      // console.log("canBuy", canBuy, productBookRule.maxBuyCount);
       // return;
         /**
          * 先处理减的情况
@@ -198,19 +211,32 @@ export default class FillOrder extends  React.Component{
          *  做加法， 如果做加法，同理
          */
         canBuy  =  parseInt(canBuy);
+
         if(num === -1&&(productBookRule.minBuyCount === -1 && (canBuy-1) === 0||(canBuy-1)<productBookRule.minBuyCount )){
            // console.log("1");
-            this.setState({reduceAddBtn:[false, true]});
-            Toast.info(`该门票至少购买${canBuy}张`,2)
+           // this.setState({reduceAddBtn:[false, true]});
+           // Toast.info(`该门票至少购买${canBuy}张`,2)
             return;
         }
+
         if(num === 1&&((canBuy+1)>productBookRule.maxBuyCount)){
            // console.log("2");
-            Toast.info(`该门票限购${canBuy}张`,2);
-            this.setState({reduceAddBtn:[true, false]});
+           // Toast.info(`该门票限购${canBuy}张`,2);
+           // this.setState({reduceAddBtn:[true, false]});
             return;
         }
-        this.setState({reduceAddBtn:[true, true]});
+        if(num === -1&&(productBookRule.minBuyCount === -1 && (canBuy-1) === 0||(canBuy-1)<=productBookRule.minBuyCount )){
+            this.setState({reduceAddBtn:[false, true]},()=>{
+                baseUtil.setSession("reduceAddBtn",this.state.reduceAddBtn);
+            });
+        }
+        if(num === 1&&((canBuy+1)>=productBookRule.maxBuyCount)){
+            this.setState({reduceAddBtn:[true, false]},()=>{
+                baseUtil.setSession("reduceAddBtn",this.state.reduceAddBtn);
+            });
+        }
+
+        //this.setState({reduceAddBtn:[true, true]});
         this.props.dispatch({
             type:'fillOrder/canBuy',
             payload:num
@@ -271,6 +297,7 @@ export default class FillOrder extends  React.Component{
         let {passengers,total,priceDetails} =  this.state,{visitorInfoType} = fillOrderDetail.productDetail.productBookRule;
 
         let onlyPersonNum =  (visitorInfoType == 1||visitorInfoType == 2)&&1||canBuy;
+        //console.log("reduceAddBtn",this.state.reduceAddBtn);
         return <div className={Styles['fillOrder-main']}>
             <Header
                 mode="light"
@@ -286,7 +313,7 @@ export default class FillOrder extends  React.Component{
                             <Title detail={fillOrderDetail["productDetail"]}/>
                             <DateChoose fillOrderDetail={fillOrderDetail} effectiveDate={actionDate} switchTime={this.switchTime.bind(this)}/>
                             <div className={Styles["centerLine"]}></div>
-                            <CanBuyNum initNum={canBuy} clickItem={this.controlBtn.bind(this)} fillOrderDetail={fillOrderDetail}/>
+                            <CanBuyNum initNum={canBuy} reduceDisable={!this.state.reduceAddBtn[0]}  addDisable={!this.state.reduceAddBtn[1]} clickItem={this.controlBtn.bind(this)} fillOrderDetail={fillOrderDetail}/>
                         </div>
                         <LineBox
                             leftContent={<div className={ClassNames(Styles['color_333'],Styles['font28'],Styles['addPassager'])}>添加游客<span>需<i>{onlyPersonNum}位</i>实际出行的游客信息</span></div>}

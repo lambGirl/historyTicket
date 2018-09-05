@@ -15,7 +15,7 @@ export default class LineBox extends React.Component{
             <div onClick={clickType=="2"&& ((e)=>{e.stopPropagation(); e.preventDefault();clickTap()})||(()=>{return false})}>
                {/* <span className={ClassNames(Styles['color_94'],Styles['font28'])}>了解详情</span>*/}
                 {rightContent}
-                {rightIcon&&<i className="fa fa-angle-right fa-lg" style={{"color":"#cacaca"}}></i>}
+                {rightIcon&&<i className={ClassNames("fa fa-angle-right")} style={{"color":"#cacaca","verticalAlign":"middle","fontSize":"26px"}}></i>}
             </div>
         </div>
     }
