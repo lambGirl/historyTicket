@@ -15,7 +15,7 @@ orderList{
   display: flex;
   flex-direction: column;
   background: #fff;
-  margin-top: @base*20rem;
+  /*margin-top: @base*20rem;*/
   margin-bottom: 10px;
   >div{
     padding: 0 @base*30rem;
@@ -70,9 +70,12 @@ orderList{
     height: @base*74rem;
     line-height: @base*74rem;
     text-align: right;
+    display: flex;
+    justify-content: flex-end;
     border-top: 1px solid #E5E5E5;
+    align-items: center;
     >div{
-      display: inline-block;
+     /* display: inline-block;*/
       width: @base*136rem;
       height: @base*50;
       margin-left: @base*50rem;
@@ -83,6 +86,7 @@ orderList{
     .remove, .cancel {
       width: @base*116rem;
       color: #cacaca;
+      height: @base*50rem;
       border: 1px solid #cacaca;
       font-size: @font24;
       line-height: @base*50rem;
@@ -92,6 +96,7 @@ orderList{
     .payment {
       width: @base*136rem;
       color: #ff6137;
+      height: @base*50rem;
       border: 1px solid #ff6137;
       font-size: @font24;
       line-height: @base*50rem;

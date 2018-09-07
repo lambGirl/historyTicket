@@ -62,13 +62,18 @@ p{
 .fontIconStyle{
   .color_2B;
   font-size: @font28;
-  span{
+  display: flex;
+  align-items: center;
+  .fontIcon{
     display: inline-block;
     width: @base*4rem;
-    height: @base*28rem;
+    height: @base*26rem;
     background: #37A0F1;
     margin-right: 0.25rem;
     vertical-align: middle;
+  }
+  .name{
+    letter-spacing: .5px;
   }
 }
 
@@ -77,35 +82,7 @@ p{
   border-top: 1px solid #e6e6e6;
 }
 
-//cardBox下中的信息
-.writeOrder-cardContent{
-  >div{
-    padding-bottom:@base*18rem;
-    color:#949494;
-    display: flex;
-    /*min-height: @base*60rem;*/
-    font-size: @font24;
-    >:first-child{
-      width: @base*180rem;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      flex:1
-    }
-    >:last-child{
-      flex:3;
-      color:#3E3E3E;
-      font-size: @font26;
-    }
-  }
-  /*>div:last-child{
-    margin-bottom:0;
-  }*/
-  .line{
-    border-top: 1px solid #E5E5E5;
-    margin-left: @base*30rem;
-  }
-}
+
 
 .paddingLR30{
   padding: 0 @base*30rem;

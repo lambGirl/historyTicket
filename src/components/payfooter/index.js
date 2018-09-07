@@ -23,7 +23,7 @@ export default  class PayFooter extends  React.Component{
         }
         modal.display = this.state.isShow ? "block" : "none";
         modal.opacity = this.state.isShow ? "0.7" : "0";
-        var bottom =  this.state.isShow?"2.5rem":'-400px';
+        var bottom =  this.state.isShow?"3.348rem":'-400px';
 
         this.firstChange();
         return <div>

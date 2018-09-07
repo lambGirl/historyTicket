@@ -175,7 +175,7 @@ export  default class ticketDetail extends  React.Component{
           </Carousel>
           <div className={Styles['swiper-bottom']}>
               <div>
-                  <div><div style={{"WebkitBoxOrient":"vertical","boxOrient":'vertical',"MozBoxOrient":"vertical","msboxOrient":'vertical'}}>{ticketDetail.pointAddress}</div></div>
+                  <div><div style={{"WebkitBoxOrient":"vertical","boxOrient":'vertical',"MozBoxOrient":"vertical","msboxOrient":'vertical'}}>{ticketDetail.pointName}</div></div>
                   <div><div>{this.state.slideIndex+1}/{ticketDetail.images.length}张</div></div>
               </div>
           </div>
@@ -183,13 +183,13 @@ export  default class ticketDetail extends  React.Component{
   }
   renderPhone(){
       let {ticketDetail} =  this.props.ticketDetail, {servicePhones} = ticketDetail;
-      return <div className={Styles["ticketAddress"]}  onClick={this.callPhone.bind(this)}>
+      return <div className={Styles["ticketAddress"]}  >
           <div>
               <div className={Styles["address_Icon"]}></div>
               <div>{ticketDetail.pointAddress}</div>
           </div>
           {
-              servicePhones&&servicePhones.length&&<div>
+              servicePhones&&servicePhones.length&&<div onClick={this.callPhone.bind(this)}>
               <div className={Styles["ticketDetail_phone"]}></div>
           </div>||''
           }
@@ -203,8 +203,8 @@ export  default class ticketDetail extends  React.Component{
       }
       return    <div className={Styles['card']}>
           <div className={Styles['card-Title']}>
-             {/* <span className={Styles['card-title-leftIcon']}></span>*/}
-              门票
+            {/*  <div className={Styles['card-title-leftIcon']}></div>*/}
+              <div className={ClassNames(Styles["name"], Styles["border_left"])}><span>门票</span></div>
           </div>
           <div className={Styles['card-content']}>
               {ticketDetail.productDetails.map((item,index)=>{
@@ -342,24 +342,24 @@ export  default class ticketDetail extends  React.Component{
     }
     //console.log("servicePhones",servicePhones);
     return <div className={ClassNames(Styles['ticketDetailContent'])}>
-        <div className={Styles['ticketTop']}>
-          <Header
-            positionType ='positionAbolute'
-            mode="none"
-            leftContent={ <span className={Styles['leftBtnCircle']}><i className="fa fa-angle-left fa-lg" style={{"color":"#fff"}}></i></span>}
-            leftClick={()=>{Router.push("/")}}
-          ></Header>
-            {this.renderTop()}
-        </div>
       <div className={ClassNames(Styles['scroll-content'],Styles["defaultHeight"])}>
         <Scroll class={Styles['wrapper']}>
-          <div className={Styles['scroll-cotent-bottom']}>
+          <div className={Styles['scroll-cotent-bottom']} style={{"paddingBottom":"0"}}>
+              <div className={Styles['ticketTop']}>
+                  <Header
+                      positionType ='positionAbolute'
+                      mode="none"
+                      leftContent={ <span className={Styles['leftBtnCircle']}><i className="fa fa-angle-left fa-lg" style={{"color":"#fff"}}></i></span>}
+                      leftClick={()=>{Router.push("/")}}
+                  ></Header>
+                  {this.renderTop()}
+              </div>
               {this.renderPhone()}
               {this.renderTicketDetial()}
               {ticketDetail.pointOpenInfo&&<div className={Styles[ 'card' ]}>
                   <div className={Styles[ 'card-Title' ]}>
-                      <div className={Styles[ 'card-title-leftIcon' ]}></div>
-                      <div>开放时间</div>
+                    {/*  <div className={Styles[ 'card-title-leftIcon' ]}></div>*/}
+                      <div className={ClassNames(Styles["name"], Styles["border_left"])}><span>开放时间</span></div>
                   </div>
                   <div className={Styles[ 'card-content' ]}>
                       <div className={Styles[ 'card-content-text' ]}>
@@ -371,8 +371,8 @@ export  default class ticketDetail extends  React.Component{
               }
               <div className={Styles['card']}>
                   <div className={Styles['card-Title']}>
-                      <span className={Styles['card-title-leftIcon']}></span>
-                      景点状态
+                     {/* <div className={Styles['card-title-leftIcon']}></div>*/}
+                      <div className={ClassNames(Styles["name"], Styles["border_left"])}><span>景点状态</span></div>
                   </div>
                   <div className={Styles['card-content']}>
                       <div className={Styles['card-content-text']}>
@@ -384,8 +384,8 @@ export  default class ticketDetail extends  React.Component{
               </div>
               {ticketDetail.pointDes&&<div className={Styles['card']}>
                   <div className={Styles['card-Title']}>
-                      <span className={Styles['card-title-leftIcon']}></span>
-                      景点介绍
+                     {/* <div className={Styles['card-title-leftIcon']}></div>*/}
+                      <div className={ClassNames(Styles["name"], Styles["border_left"])}><span>景点介绍</span></div>
                   </div>
                   <div className={Styles['card-content']}>
                       <div className={Styles['card-content-text']}>
@@ -395,7 +395,7 @@ export  default class ticketDetail extends  React.Component{
               </div>||''}
               <LineBox
                   leftIcon={true}
-                  leftContent={<span className={ClassNames(Styles['font28'],Styles['color_3e'])}>安全须知</span>}
+                  leftContent={<span className={ClassNames(Styles['font32'],Styles['color_3e'])}>安全须知</span>}
                   rightIcon={true}
                   clickType='1'
                   clickTap={()=>{window.location.href='/article/article_pub?key=trip_safety_notice&server=queryProtocolDetail&temp_title=安全须知'}}

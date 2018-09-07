@@ -261,12 +261,14 @@ class IndexPage extends React.Component{
                    <div  ref='headers'>
                         <Header
                           id='headers'
+                            headerInput={true}
                             positionType ='positionAbolute'
                             mode={this.state.headerConfig.mode}
                             leftContent={ <i className={classnames({
                                 [styles["headerleftIconWhite"]]: this.state.headerConfig.mode != "light",
                                 [styles["headerleftIconBlack"]]: this.state.headerConfig.mode == "light"
                             })}></i>}
+
                             rightContent={
                                 <span style={{"color":`${this.state.headerConfig.color}`}}>
                                     <span style={{"paddingRight":'4px'}} className={styles["headerCityName"]}>{SelectBarData.cityName}</span>

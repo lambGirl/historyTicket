@@ -23,7 +23,7 @@ export  default  class OrderItem extends React.Component{
                 </div>
                 <div>
                     <div className={ClassNames(Styles["color_3e"],
-                        Styles["font32"])}>¥{item.totalPrice}</div>
+                        Styles["font32"])} style={{"fontWeight":"bolder"}}>¥{item.totalPrice}</div>
                     <div className={ClassNames(Styles["color_3e"],
                         Styles["font28"])}>共{item.sellQuantity}张票</div>
                 </div>

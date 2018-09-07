@@ -94,6 +94,7 @@ export  default  class cityChoose  extends  React.Component{
     }
 
     _scrollTo(index){
+        //console.log("index",index);
         const DomList = document.getElementsByClassName(Styles['list-group'])
 
         if (!index && index !== 0){
@@ -471,26 +472,20 @@ export  default  class cityChoose  extends  React.Component{
             }
             var cityNames = item.parentRegionName;
             if (item.cityName.indexOf(v) !== 0 && item.cityName.indexOf(v) !== -1 ) {
-                //console.log("222222222222222222222222");
                 c2.push(<li key={"renderSearchContent"+index}><p className={Styles["city"]}
-                                                   onClick={this.switchCity.bind(this, item)}>{hot1}<i>{hot}</i>{hotc}
+                                                   onClick={this.switchCity.bind(this, item)}>{`${hot1}`}<i>{`${hot}`}</i>{`${hotc}`}
                     <span className={Styles["cityName_car"]}>{cityNames}</span>
                 </p>
-                    {itemss[ index ]}
                 </li>)
             } else if ( (item.cityName.indexOf(v) === 0 || item.fullName === v || item.fullName.indexOf(v) !== -1 || item.shortName.indexOf(v) === 0) ) {
-                //console.log("1111111111111111111111111111");
-                c1.push(<li key={"renderSearchContent"+index}><p className={Styles["city"]} onClick={this.switchCity.bind(this, item, 1)}><i>{hot}</i>{hotc}
+                c1.push(<li key={"renderSearchContent"+index}><p className={Styles["city"]} onClick={this.switchCity.bind(this, item, 1)}>{`${hot1}`}<i>{`${hot}`}</i>{`${hotc}`}
                     <span className={Styles["cityName_car"]}>{cityNames}</span>
                 </p>
-                    {itemss[ index ]}
                 </li>)
             } else if (item.cityName.indexOf(v) === -1 && (item.fullName !== v || item.fullName.indexOf(v) === -1) && item.shortName.indexOf(v) !== 0 ) {
-                //console.log("333333333333333333333333333",itemss);
                 c3.push(<li key={"renderSearchContent"+index}><p className={Styles["city"]}
                                onClick={this.switchCity.bind(this, item)}>{item.cityName}<span
                     className={Styles["cityName_car"]}>{cityNames}</span></p>
-                    {itemss[ index ]}
                 </li>)
             }
         })

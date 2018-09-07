@@ -128,8 +128,9 @@ export default class TicketOrder extends React.Component{
             </Scroll>||<div className={Styles['search-nothing-content']}>
                 <div
                     className={ClassNames(Styles["searchContentIcon"],{
-                        [Styles["noData"]]:true,
+                        [Styles["noData"]]:false,
                         [Styles["noSearch"]]:false,
+                        [Styles["noOrderList"]]: true
                     })}></div>
                 <div className={Styles['search-nothing-font']}>
                     暂无订单

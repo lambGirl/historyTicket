@@ -11,25 +11,106 @@
     line-height: @base*80rem;
     color: #2b2b2b;
     padding: 0 @base*30rem;
-    font-size: @base*28rem;
+    font-size: @base*32rem;
     box-sizing: border-box;
     display: flex;
     align-items: center;
-    .card-title-leftIcon{
+   /* .card-title-leftIcon{
       display: inline-block;
       width: @base*4rem;
-      height: @base*28rem;
+      height: @base*30rem;
       background: #37A0F1;
       margin-right: @base*10rem;
       vertical-align: middle;
       border-radius:@base*2rem;
+    }*/
+    /*.name{
+
+    }*/
+    .name{
+      line-height: @base*32rem;
+      height: @base*32rem;
+      font-size:0;
+      /* height: 100%;
+       display: flex;
+       justify-content: center;
+       flex-direction: column;*/
+      span{
+        display: inline-block;
+        vertical-align: middle;
+        height: @base*32rem;
+        font-size:  @base*32rem;
+      }
+    }
+    .border_left{
+      &::before{
+        content: "";
+        display: inline-block;
+        width: @base*4rem;
+        height: @base*32rem;
+        background: #37A0F1;
+        border-radius: @base*4rem;
+        margin-right:@base*10rem;
+        vertical-align: middle;
+      }
+    }
+
+    .disabled{
+      color:#CCC !important;
+      &::before{
+        content: "";
+        display: inline-block;
+        width: @base*4rem;
+        height: @base*32rem;
+        background: #fff;
+        border-radius: @base*4rem;
+        margin-right:@base*10rem;
+        vertical-align: middle;
+      }
     }
   }
-  .disabled{
-      color:#CCC !important;
-      .card-title-leftIcon{
-        background: #CCC !important;
+  .CardBoxDefault{
+    .name{
+      line-height: @base*30rem;
+      height: @base*30rem;
+      font-size:0;
+      /* height: 100%;
+       display: flex;
+       justify-content: center;
+       flex-direction: column;*/
+      span{
+        display: inline-block;
+        vertical-align: middle;
+        height: @base*30rem;
+        font-size:  @base*30rem;
       }
+    }
+    .border_left{
+      &::before{
+        content: "";
+        display: inline-block;
+        width: @base*4rem;
+        height: @base*30rem;
+        background: #37A0F1;
+        border-radius: @base*4rem;
+        margin-right:@base*10rem;
+        vertical-align: middle;
+      }
+    }
+
+    .disabled{
+      color:#CCC !important;
+      &::before{
+        content: "";
+        display: inline-block;
+        width: @base*4rem;
+        height: @base*30rem;
+        background: #ccc;
+        border-radius: @base*4rem;
+        margin-right:@base*10rem;
+        vertical-align: middle;
+      }
+    }
   }
   .borderBottom{
     border-bottom: @base*1rem solid #E5E5E5;

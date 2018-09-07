@@ -265,10 +265,41 @@
 /*.cardContent-bottom-padding{
     padding-bottom: @base*40rem;
 }*/
+//cardBox下中的信息
+.writeOrder-cardContent{
+  >div{
+    padding-bottom:@base*10rem;
+    color:#949494;
+    display: flex;
+    /*min-height: @base*60rem;*/
+    font-size: @font24;
+    line-height: 1.2rem;
+    >:first-child{
+      width: @base*180rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex:1
+    }
+    >:last-child{
+      flex:3;
+      color:#3E3E3E;
+      font-size: @font26;
+    }
+  }
+  /*>div:last-child{
+    margin-bottom:0;
+  }*/
+  .line{
+    border-top: 1px solid #E5E5E5;
+    margin-left: @base*30rem;
+  }
+}
 
 .doubleLine{
-  max-height: @base*60rem;
-  line-height: @base*32rem;
+  max-height: @base*70rem;
+  /*line-height: @base*32rem;*/
+  line-height: 1.2rem;
   overflow: hidden;
   word-break: break-all;
   text-overflow: ellipsis;

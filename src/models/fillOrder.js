@@ -17,7 +17,7 @@ export default globalAct = {
         },
 
         actionDate:baseUtil.getSession("jpmp_dates")||{
-            index:0,
+            index:"",
             flag: false,
             date:[]
         }
@@ -111,7 +111,7 @@ export default globalAct = {
                 let day =  new Date().format("yyyy-MM-dd"),
                     tomorror =  new Date().add(1).format("yyyy-MM-dd"),i=0,allowDateList = action.data.initData.body.productDatePrices;
                 let actionDate = {
-                    index:0,
+                    index:"",
                     flag: false,
                     date:[
                         {date:day,price:0,use:false},

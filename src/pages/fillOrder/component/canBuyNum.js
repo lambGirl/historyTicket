@@ -11,8 +11,8 @@ export default  class CanBuyNum extends React.Component{
 
         return  <div className={Styles['buyNum']}>
             <div className={ClassNames(Styles['fontIconStyle'])}>
-                <span className={Styles['fontIcon']}></span>
-                购买数量
+                <div className={Styles['fontIcon']}></div>
+                <div className={Styles["name"]}>购买数量</div>
             </div>
             <div>
                 <div className={ClassNames(Styles['common'], Styles['reduce'],Styles['mgright20'],{

@@ -188,7 +188,7 @@ export default class FillOrder extends  React.Component{
 
         //这里还需要加上保险的价格
         //console.log(price,'22222222222222')
-        total += parseFloat(price)*totalPerson;
+        total += price&&parseFloat(price)*totalPerson;
 
         this.setState({
             total: baseUtil.formatNumber(total),

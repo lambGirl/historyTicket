@@ -147,7 +147,8 @@ class Scroll extends Component {
       preventDefaultException,
       eventPassthrough,
       bounce:false,
-      momentum:true
+      momentum:true,
+      useTransition: false
     }
 
     let wrapper = document.querySelector("."+`${Styles['b-wrapper']}`)

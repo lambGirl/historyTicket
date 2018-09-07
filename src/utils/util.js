@@ -41,6 +41,16 @@ Date.prototype.getweek = function(){
     }
     return ' 周' + '日一二三四五六'.charAt(this.getDay());
 };
+Date.prototype.week = function () {
+    if(this.format('yyyy/MM/dd')==new Date().format('yyyy/MM/dd')){
+        return '今天'
+    }
+    if(this.format('yyyy/MM/dd')==new Date((new Date()/1000+86400)*1000).format('yyyy/MM/dd')){
+        return '明天'
+    }
+    return ' 星期' + '日一二三四五六'.charAt(this.getDay());
+};
+
 Date.prototype.getUnixTimeStamp=function(){
     return Math.round(this.getTime()/1000);
 }
@@ -325,9 +335,9 @@ const baseUtil = {
         let val = "";
         //console.log("val",tag);
         switch (tag){
-            case "1":val='随时可退，过期自动退';
+            case "1":val='随时可退';
                     break;
-            case "2":val='随时可退，过期自动退';
+            case "2":val='随时可退';
                 break;
             case "3":val='购买后不可退票';
                 break;
@@ -585,15 +595,29 @@ const baseUtil = {
          */
         var date =  Date.parse1(travelDate);
         if(bookType == 0){
-            return date.format("yyyy年MM月dd日")+'之前有效'
+            return date.addDays(1).format("yyyy年MM月dd日")+'之前有效'
         }
 
         if(validDays == 1){
             return `仅${date.format('yyyy年MM月dd日')}当天有效`;
         }
-
-        var endDate =  new Date(date).addDays(validDays);
+        var endDate =  new Date(date).addDays(validDays-1);
         return `${date.format('yyyy年MM月dd日')}-${endDate.format('yyyy年MM月dd日')}有效`
+    },
+    str4Join(str){
+        /**
+         * 字符串以每四个就加一个空格
+         */
+        var Str="";
+        for(var i = 1; i<=str.length; i++){
+            //console.log("i", str[i]);
+            if(i%4 === 0){
+                Str+=str[i-1]+" "
+                continue;
+            }
+            Str+=str[i-1];
+        }
+        return Str;
     }
 
 }

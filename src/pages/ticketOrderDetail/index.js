@@ -53,7 +53,7 @@ export default class TicketOrderDetail extends React.Component{
         this.lock_interval&&clearInterval(this.lock_interval);
        /*orderDetail&&!orderStatus&&(orderDetail.state = "sell_succeed");*/
         //开启一个方法去轮训，直到不等于booking，此时就去重新触发一次查询订单详情的接口
-        if(orderDetail&&orderDetail.state === "booking"&&!orderStatus){
+        if(orderDetail&&(orderDetail.state === "booking"||orderDetail.state === "selling")){
             let orderNo =  Router.location.query.orderNum,
                 userToken =  baseUtil.get("cdqcp_opid");
             orderStatus =  true;
@@ -81,7 +81,7 @@ export default class TicketOrderDetail extends React.Component{
                     }
                 })
 
-            },4000);
+            },2000);
             return;
         }
 
@@ -197,8 +197,9 @@ export default class TicketOrderDetail extends React.Component{
     //基本信息
     renderBaseInfo(){
         let {orderDetail} =  this.props.orderDetail;
-        let voucherTimes = orderDetail.voucherTimes.map((item)=>{
-            return item.beginTime+"-"+item.endTime
+        let voucherTimes = [];
+        orderDetail.voucherTimes.map((item)=>{
+            item.beginTime&&item.endTime&&voucherTimes.push(item.beginTime+"-"+item.endTime)
         });
         return <div className={ClassNames(Styles['writeOrder-cardContent'],Styles['cardContent-bottom-padding'])}>
             <div>
@@ -209,18 +210,18 @@ export default class TicketOrderDetail extends React.Component{
             </div>
             <div>
                 <div className={Styles["name"]}>入园日期</div>
-                <div>{orderDetail.travelDate}{Date.parseTimeStr(orderDetail.travelDate).getweek()}</div>
+                <div>{Date.parse1(orderDetail.travelDate).format("yyyy-MM-dd")}  {Date.parse1(orderDetail.travelDate).week()}</div>
             </div>
             <div>
                 <div className={Styles["name"]}>有效期</div>
-                <div>{baseUtil.getValidate(1,'2018-09-05',10)}</div>
+                <div>{baseUtil.getValidate(orderDetail.bookType,orderDetail.travelDate,orderDetail.validDays)}</div>
             </div>
-            <div>
+            {voucherTimes.length&&<div>
                 <div className={Styles["name"]}>换票时间</div>
                 <div>{
                     voucherTimes.join(";")
                 }</div>
-            </div>
+            </div>||''}
             <div>
                 <div className={Styles["name"]}>退改规则</div>
                 <div>{baseUtil.productRefundRule(orderDetail.productRefundRule.refundType)}</div>
@@ -317,7 +318,7 @@ export default class TicketOrderDetail extends React.Component{
             let travellers =  orderDetail.travellers[0];
             return <div className={Styles["voucher-List-content"]}>
                 <div className={Styles['voucher-List']}>
-                    <div>{travellers.voucherText}</div>
+                    <div>{baseUtil.str4Join(travellers.voucherText)}</div>
                     <div className={Styles['show-voucher-Img']}>
                         <img src={travellers.voucherPics} alt=""/>
                         {top.pzClass&&<div className={Styles[`icon_${top.pzClass}`]}></div>||''}
@@ -328,7 +329,7 @@ export default class TicketOrderDetail extends React.Component{
         let travellers = orderDetail.travellers,{voucherIndex} =  this.state;
         return <div className={Styles["voucher-List-content"]}>
                 <div className={Styles['voucher-List']} >
-                    <div>{travellers[voucherIndex].voucherText}</div>
+                    <div>{baseUtil.str4Join(travellers[voucherIndex].voucherText)}</div>
                     <div className={Styles['show-voucher-Img']}>
                         <img src={travellers[voucherIndex].voucherPics} alt=""/>
                         {top.pzClass&&<div className={Styles[`icon_${top.pzClass}`]}></div>||''}
@@ -436,6 +437,7 @@ export default class TicketOrderDetail extends React.Component{
                         </div>
                         <div className={Styles['mgtop20']}>
                             <CardBox
+                                CardBoxDefault={true}
                                 cardTitleIcon={true}
                                 cardTitle="基本信息"
                                 content={this.renderBaseInfo()}
@@ -443,6 +445,7 @@ export default class TicketOrderDetail extends React.Component{
                         </div>
                         {top.pz&&<div className={Styles['mgtop20']}>
                             <CardBox
+                                CardBoxDefault={true}
                                 cardTitleIcon={true}
                                 cardTitle="使用凭证"
                                 content={this.renderpz(top)}
@@ -451,6 +454,7 @@ export default class TicketOrderDetail extends React.Component{
                         </div>||''}
                         <div className={Styles['mgtop20']}>
                             <CardBox
+                                CardBoxDefault={true}
                                 noPadding={true}
                                 cardTitleIcon={true}
                                 cardTitle="出游人信息"
@@ -459,6 +463,7 @@ export default class TicketOrderDetail extends React.Component{
                         </div>
                         <div className={Styles['mgtop20']}>
                             <CardBox
+                                CardBoxDefault={true}
                                 cardTitleIcon={true}
                                 cardTitle="订单信息"
                                 content={this.renderOrderInfo()}
@@ -494,7 +499,7 @@ export default class TicketOrderDetail extends React.Component{
                             </div>
                         })}
                     </div>
-                    <div className={Styles['priceFooter']} onClick={(e)=>{e.preventDefault(); e.stopPropagation();this.setState({"priceDetailStatus":false})}}>我知道了</div>
+                    <div className={Styles['priceFooter']} onClick={(e)=>{e.preventDefault(); e.stopPropagation();this.setState({"priceDetailStatus":false})}}>知道了</div>
                 </div>
             </div>}
         </div>

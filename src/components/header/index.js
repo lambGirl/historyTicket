@@ -30,17 +30,19 @@ class Header extends  React.Component{
   }
 
   render(){
-    let {parentOutClass,positionType,mode,leftContent, rightContent,centerContentType,ref} =  this.props;
+    let {parentOutClass,positionType,mode,leftContent, rightContent,centerContentType,ref,headerInput} =  this.props;
     return  <div ref={ref} className={classnames(styles["header-parent"],{
       [styles["positionAbolute"]]:positionType === 'positionAbolute',
       [styles["positionFixed"]]:positionType === 'positionFixed'
     },parentOutClass)}>
-      <div className={classnames(styles['header-common'],{
+      <div className={classnames({
         [styles["transparent"]]: mode==="transparent"||false,
         [styles["light"]]: mode === 'light',
         [styles["colorE6e6e6"]]: mode === 'colorE6e6e6',
         [styles["common"]]:(mode === 'common'||!mode)||false,
-        [styles["none"]]:mode === 'none'
+        [styles["none"]]:mode === 'none',
+        [styles["header-Input"]]: headerInput,
+        [styles['header-common']]:!headerInput
       })}>
         <div  className={styles['left-header']} onClick={this.leftClick.bind(this)}>
          {/* <i className="fa fa-angle-left fa-lg" style={{"color":"#fff"}}></i>*/}

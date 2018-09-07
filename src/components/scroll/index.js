@@ -46,6 +46,11 @@ class Scroll extends React.Component {
             /* flickLimitDistance:10000,*/
             bounce: false,
             momentum: true,
+            mouseWheel: {
+                speed: 20,
+                invert: false,
+                easeTime: 300
+            }
         });
         this.scroll.on('scroll', (pos) => {
             // console.log("pos",pos);
