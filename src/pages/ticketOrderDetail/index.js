@@ -20,28 +20,29 @@ let orderStatus =  false, paying =  false;
 export default class TicketOrderDetail extends React.Component{
     constructor(props){
         super(props);
+        let orderNo =  Router.location.query.orderNum;
         this.state = {
             data: ['AiyWuByWklrrUDlFignR', 'TekJlZRVCjLFexlOCuWn', 'IJOtIlfsYdTyaDTRVrLI'],
             timeIntervar:"",
             returntime:0,        //判断支付时间是否已经过期
-            orderNo: Router.location.query.orderNum,
+            orderNo: baseUtil.contrastArray(orderNo)?orderNo[0]: orderNo,
             userToken: baseUtil.get("cdqcp_opid")||Router.location.query.opid,
             voucherIndex:0,
             priceDetailStatus: false,
             refundMoneyState: false //控制退钱的弹框不允许多次弹出
         }
     }
+
     UNSAFE_componentWillMount(){
-       // console.log("now");
+       // console.log("now",Router.location.query);
         let orderNo =  Router.location.query.orderNum,
         userToken =  baseUtil.get("cdqcp_opid");
-
          /* 这里去查询此时订单的状态
          */
         this.props.dispatch({
             type:'orderDetail/fetch',
             payload:{
-                orderNo:orderNo,
+                orderNo:baseUtil.contrastArray(orderNo)?orderNo[0]: orderNo ,
                 userToken: userToken
             }
         })
@@ -219,7 +220,7 @@ export default class TicketOrderDetail extends React.Component{
             {voucherTimes.length&&<div>
                 <div className={Styles["name"]}>换票时间</div>
                 <div>{
-                    voucherTimes.join(";")
+                    voucherTimes.join("；")
                 }</div>
             </div>||''}
             <div>
@@ -426,11 +427,11 @@ export default class TicketOrderDetail extends React.Component{
                                     })}></i>
                                     <span>{orderDetail.state === "book_succeed"&&this.state.returntime<=0&&"已过期" || top.status}</span>
                                 </div>
-                                <div>
+                                <div onClick={()=>{this.setState({
+                                    priceDetailStatus:true
+                                })}}>
                                     <span>¥{baseUtil.numFixed1(orderDetail.totalPrice)}</span>
-                                    <i className={Styles['orderStatus-warning']} onClick={()=>{this.setState({
-                                        priceDetailStatus:true
-                                    })}}></i>
+                                    <i className={Styles['orderStatus-warning']} ></i>
                                 </div>
                             </div>
                             {top.mangLine&&<div className={Styles['orderDetail-status-detail']}>{this.getContent(orderDetail, top)}</div>||""}

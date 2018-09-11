@@ -13,6 +13,10 @@
     //多行
     .orderDetail-status-Content{
       display: flex;
+      display:-webkit-box;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
       align-items: center;
       justify-content: space-between;
       >:first-child{
@@ -43,6 +47,9 @@
       }
       >:last-child{
         .font36;
+        span{
+          vertical-align: middle;
+        }
         .orderStatus-warning{
           display: inline-block;
           width: @base*32rem;
@@ -50,7 +57,7 @@
           background: url("../../assets/img/price_detail.png") no-repeat;
           background-size: cover;
           margin-left: @base*10rem;
-          vertical-align: center;
+          vertical-align: middle;
         }
       }
     }
@@ -88,6 +95,10 @@
     width: 100%;
     >:first-child{
       display: flex;
+      display:-webkit-box;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
       height: @base*104rem;
       line-height: @base*104rem;
       width:100%;
@@ -133,6 +144,10 @@
   .voucher-List{
     width: 100%;
     display: flex;
+    display:-webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -188,6 +203,10 @@
     height: 100%;
     text-align: center;
     display: flex;
+    display:-webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
     justify-content: center;
     padding-bottom: @base*40rem;
     >div{
@@ -244,6 +263,10 @@
     .priceDetail{
       >div{
         display: flex;
+        display:-webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
         justify-content: space-between;
         padding: 0 @base*32rem @base*32rem @base*32rem;
         align-items: center;
@@ -271,6 +294,10 @@
     padding-bottom:@base*10rem;
     color:#949494;
     display: flex;
+    display:-webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
     /*min-height: @base*60rem;*/
     font-size: @font24;
     line-height: 1.2rem;
@@ -286,6 +313,9 @@
       color:#3E3E3E;
       font-size: @font26;
     }
+  }
+  >div:last-child{
+    padding-bottom:@base*20rem;
   }
   /*>div:last-child{
     margin-bottom:0;

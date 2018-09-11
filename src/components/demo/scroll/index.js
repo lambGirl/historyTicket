@@ -146,9 +146,14 @@ class Scroll extends Component {
       pullUpLoad: _pullUpLoad,
       preventDefaultException,
       eventPassthrough,
-      bounce:false,
+      bounce:true,
       momentum:true,
-      useTransition: false
+      bounceLock:false,
+      flickLimitDistance:80,
+      swipeTime:550,
+      useTransform: true, //是否使用CSS形变
+      useTransition: false,
+      swipeBounceTime: 300
     }
 
     let wrapper = document.querySelector("."+`${Styles['b-wrapper']}`)

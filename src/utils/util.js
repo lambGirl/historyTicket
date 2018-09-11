@@ -618,6 +618,12 @@ const baseUtil = {
             Str+=str[i-1];
         }
         return Str;
+    },
+    splitNull(str){
+        return str?str.replace(/\s*/g,""):'';
+    },
+    contrastArray(val){
+        return val instanceof Array
     }
 
 }

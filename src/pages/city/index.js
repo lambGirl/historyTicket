@@ -319,7 +319,7 @@ export  default  class cityChoose  extends  React.Component{
                                     <ul>
                                         {/*定位导航栏*/}
                                         <li  className={Styles["list-group"]}>
-                                            <h2 className={Styles["list-group-title"]}>当前定位城市</h2>
+                                            <h2 className={Styles["list-group-title"]} style={{"color":'#707070'}}>当前定位城市</h2>
                                             <div className={Styles['positionAdress']} onClick={this.switchCity.bind(this, currentCity)}>
                                                 <div>{currentCity.cityName}</div>
                                                 <div><i className={Styles["locationIocn"]} onClick={this.locationPos.bind(this)}></i></div>
@@ -352,8 +352,8 @@ export  default  class cityChoose  extends  React.Component{
                                                                     return (
                                                                         <li onClick={_this.switchCity.bind(_this, item)} key={itemIndex + 'list-group-item' + groupIndex} className={Styles["list-group-item"]} >
                                                                           {/*  <img className={Styles["avatar"]} src={item.avatar}/>*/}
-                                                                            <span className={Styles["name"]}>{item.cityName}</span>
-                                                                            <span className={Styles['parentRegion']}>{item.parentRegionName}</span>
+                                                                            <span className={Styles["name"]}>{baseUtil.splitNull(item.cityName)}</span>
+                                                                            <span className={Styles['parentRegion']}>{baseUtil.splitNull(item.parentRegionName)}</span>
                                                                         </li>
                                                                     )
                                                                 })
@@ -470,7 +470,7 @@ export  default  class cityChoose  extends  React.Component{
                 hot = "";
                 hot1 = "";
             }
-            var cityNames = item.parentRegionName;
+            var cityNames = item.parentRegionName,hot = baseUtil.splitNull(hot),hotc =  baseUtil.splitNull(hotc), hot1 = baseUtil.splitNull(hot1);
             if (item.cityName.indexOf(v) !== 0 && item.cityName.indexOf(v) !== -1 ) {
                 c2.push(<li key={"renderSearchContent"+index}><p className={Styles["city"]}
                                                    onClick={this.switchCity.bind(this, item)}>{`${hot1}`}<i>{`${hot}`}</i>{`${hotc}`}

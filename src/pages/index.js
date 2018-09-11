@@ -307,6 +307,7 @@ class IndexPage extends React.Component{
                                     IndexModelSelectBarStatus={this.state.IndexModelSelectBarStatus}
                                 ></IndexSelectBar>
                             </div>
+
                            {doorList.length&&<div className={styles[ "ticketsListArr" ]}>
                                 {
                                     doorList.map((item, index) => {

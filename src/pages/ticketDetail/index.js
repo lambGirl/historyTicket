@@ -38,8 +38,14 @@ export  default class ticketDetail extends  React.Component{
             pointNo:point
         }
     })
-
+    //console.log("scroll",this.refs.scroll);
   }
+
+  UNSAFE_componentWillReceiveProps(){
+      this.refs.scroll.refresh();
+     // console.log("UNSAFE_componentWillReceiveProps")
+  }
+
   scrollFun(){
 
   }
@@ -340,10 +346,11 @@ export  default class ticketDetail extends  React.Component{
             </div>
         </div>
     }
+     // ticketDetail&&(ticketDetail.pointDes = baseUtil.get("pointDes"))
     //console.log("servicePhones",servicePhones);
     return <div className={ClassNames(Styles['ticketDetailContent'])}>
       <div className={ClassNames(Styles['scroll-content'],Styles["defaultHeight"])}>
-        <Scroll class={Styles['wrapper']}>
+        <Scroll class={Styles['wrapper']} ref='scroll'>
           <div className={Styles['scroll-cotent-bottom']} style={{"paddingBottom":"0"}}>
               <div className={Styles['ticketTop']}>
                   <Header
@@ -388,8 +395,7 @@ export  default class ticketDetail extends  React.Component{
                       <div className={ClassNames(Styles["name"], Styles["border_left"])}><span>景点介绍</span></div>
                   </div>
                   <div className={Styles['card-content']}>
-                      <div className={Styles['card-content-text']}>
-                          {ticketDetail.pointDes}
+                      <div className={ClassNames(Styles['card-content-text'],Styles['textStyle'] )} dangerouslySetInnerHTML={{__html:ticketDetail.pointDes}}>
                       </div>
                   </div>
               </div>||''}

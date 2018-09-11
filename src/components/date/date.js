@@ -173,7 +173,7 @@ class DH extends Component {
                                     <div className={classNames(Styles[classActiveStr])}>
                                         <div className={Styles["tip"]}>{_BreakData.playContent}</div>
                                         {dataStr == new Date().format("yyyy-MM-dd")?<div className="cn_fontSize">今天</div>:<div className="en_fontSize">{day.date}</div>}
-                                        <div className={Styles["remark"]}>{_BreakSellDetial.content&&`￥${_BreakSellDetial.content}`}</div>
+                                        <div className={Styles["remark"]}>{_BreakSellDetial.content&&`¥${_BreakSellDetial.content}`}</div>
                                       </div>
                                 </div>
                             )

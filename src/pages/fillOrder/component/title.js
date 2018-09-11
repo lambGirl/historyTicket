@@ -27,7 +27,7 @@ export default  class Title extends React.Component{
             <div className={ClassNames(Styles['color_333'],Styles['@font32'],
                 {
                     [Styles['mg_bottom19']]: true
-                })}>{baseUtil.formatNameStr(18,detail.productName)}</div>
+                })}>{detail.productName.length === 18&&detail.productName||baseUtil.formatNameStr(18,detail.productName)}</div>
            <div className={Styles['remarks']}>{productUseRule.needTicket === "0" &&"无需换票直接入园"||this.entryParkMethod()}</div>
         </div>
     }

@@ -37,17 +37,37 @@ export default class FillOrder extends  React.Component{
     }
     UNSAFE_componentWillReceiveProps(nextProps){
         let {fillOrderDetail, canBuy} = nextProps.fillOrder;
-        //console.log("fillOrderDetail",fillOrderDetail);
+
         if(fillOrderDetail){
             let{productBookRule} = fillOrderDetail.productDetail;
+           // console.log("fillOrderDetail",productBookRule,canBuy);
             this.setState({
-                reduceAddBtn:[canBuy != productBookRule.minBuyCount,canBuy != productBookRule.maxBuyCount ]
+                reduceAddBtn:[canBuy != (productBookRule.minBuyCount == -1? 1:productBookRule.minBuyCount),productBookRule.maxBuyCount == -1?true:canBuy != productBookRule.maxBuyCount ]
             },()=>{
                 baseUtil.setSession("reduceAddBtn",this.state.reduceAddBtn);
             })
         }
 
     }
+
+    /**
+     * 筛选出身份证号
+     */
+    /**
+     * 检验并返回证件最高的第一个证件类型
+     * @param item
+     * @returns {Array}
+     */
+    checkCertificate(nowIdCard){
+        var finallyCertificate = {},allowIdCardType = "01";
+        nowIdCard.forEach(function (itemNow, index) {
+            if (allowIdCardType.indexOf(itemNow.cardType) != -1 && itemNow.cardNo) {
+                finallyCertificate = itemNow;
+            }
+        });
+        return finallyCertificate;
+    }
+
     onPayClicked(){
         if(this.state.commitOrderStatus){
             return;
@@ -70,22 +90,23 @@ export default class FillOrder extends  React.Component{
             travelDate:actionDate["date"][actionDate.index].date,
             travellers:[],  //游玩人列表
             contactPhone:traveller&&traveller[0].phone,
-            contactPhone:traveller&&traveller[0].phone,
             userToken:baseUtil.get("cdqcp_opid")
         }
+
         //组装统计游客信息
         traveller.map((item)=>{
-           // console.log("item", item);
+          //  console.log("item",this.checkCertificate(item.riderCards));
+            //只能去身份证
             payload.travellers.push({
                 travellerType:item.riderType,
                 travellerName:item.userName,
-                cardType:item.cardType,
-                cardNo:item.cardNo,
+                cardType:this.checkCertificate(item.riderCards)["cardType"],
+                cardNo:this.checkCertificate(item.riderCards)["cardNo"],
                 phone:item.phone,
                 gender:item.gender
             })
         })
-
+        //return;
         //这里需要提交订单了
         this.setState({
             "commitOrderStatus":true
@@ -108,10 +129,11 @@ export default class FillOrder extends  React.Component{
             /**
              * 这里就要判断是下单成功是已经成功了 还是处于booking，状态，如果是booking状态就跳转到详情,否则就去同意支付页
              */
-            if(result.data.body.state === "booking"){
+            Router.push(`/ticketOrderDetail?orderNum=${result.data.body.orderNo}`)
+            /*if(result.data.body.state === "booking"){
                 Router.push(`/ticketOrderDetail?orderNum=${result.data.body.orderNo}`)
                 return;
-            }
+            }*/
             //这里就去请求统一支付页面result.data.body.orderNo
         }).catch((err)=>{
             this.setState({
@@ -212,7 +234,7 @@ export default class FillOrder extends  React.Component{
          */
         canBuy  =  parseInt(canBuy);
 
-        if(num === -1&&(productBookRule.minBuyCount === -1 && (canBuy-1) === 0||(canBuy-1)<productBookRule.minBuyCount )){
+        if(num === -1&&(productBookRule.minBuyCount == -1 && canBuy === 1||(canBuy-1)<productBookRule.minBuyCount )){
            // console.log("1");
            // this.setState({reduceAddBtn:[false, true]});
            // Toast.info(`该门票至少购买${canBuy}张`,2)
@@ -225,7 +247,7 @@ export default class FillOrder extends  React.Component{
            // this.setState({reduceAddBtn:[true, false]});
             return;
         }
-        if(num === -1&&(productBookRule.minBuyCount === -1 && (canBuy-1) === 0||(canBuy-1)<=productBookRule.minBuyCount )){
+        if(num === -1&&(productBookRule.minBuyCount == -1 && (canBuy-1) === 0||(canBuy-1)<=productBookRule.minBuyCount )){
             this.setState({reduceAddBtn:[false, true]},()=>{
                 baseUtil.setSession("reduceAddBtn",this.state.reduceAddBtn);
             });

@@ -3,14 +3,24 @@ import classnames from 'classnames'
 import styles from './index.less'
 import {baseUtil} from "../../utils/util";
 export default class AttractTionSingle extends React.Component{
+    constructor(props) {
+        super(props)
+        this.state = { loadedItems: "" }
+    }
+    onLoadImg(url){
+        this.setState(({ loadedItems }) => {
+            return { loadedItems: url }
+        })
+    }
 
     render (){
         const delay = (timeout) => new Promise(resolve => setTimeout(resolve, timeout));
         let {clickItem, item} =  this.props;
         //console.log("item",item);
         return <div className={styles['ticketsList']} onClick={()=>{this.props.clickItem(item)}}>
-            <div>
-                <img src={item.showImage}/>
+            <div >
+                <img src={this.state.loadedItems}/>
+                <img style={{"display":'none'}} src={item.showImage} onLoad={this.onLoadImg.bind(this, item.showImage)}/>
             </div>
             <div>
                 <div style={{"WebkitBoxOrient":"vertical","boxOrient":'vertical',"MozBoxOrient":"vertical","msboxOrient":'vertical'}}>

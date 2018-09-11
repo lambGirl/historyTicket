@@ -17,9 +17,8 @@ class Scroll extends React.Component {
         setTimeout(() => {
             this._initScroll();
         }, 20)
-        window.addEventListener('resize', () => {
-            this.refresh();
-        })
+       // console.log("11111111111111111111");
+        this.refresh();
     }
 
     componentWillUpdate() {
@@ -68,6 +67,7 @@ class Scroll extends React.Component {
 
     //刷新scroll
     refresh() {
+        //console.log("refresh -------")
         this.scroll && this.scroll.refresh()
     }
 }

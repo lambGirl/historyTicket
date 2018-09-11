@@ -13,7 +13,6 @@ export default orderDetail = {
     },
 
     subscriptions: {
-
     },
 
     effects: {

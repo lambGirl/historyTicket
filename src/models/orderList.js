@@ -17,10 +17,7 @@ export default orderList = {
         setup({ dispatch, history }) {
             baseUtil.setSession("jqmp_activeIndex","0");
             history.listen(location => {
-                let openId =  location.query.openId||location.query.opid||location.query.userToken
-                    location.query.openId&&baseUtil.set("cdqcp_opid", openId);
-                    location.query.from&&baseUtil.set("cdqcp_channel", location.query.from);
-                    location.query.wxcode&&baseUtil.set("cdqcp_wxopenId", location.query.wxcode);
+
                  if(location.pathname.indexOf("/orderList") != -1){
                      //获取token
                      let  userToken = baseUtil.get("cdqcp_opid");

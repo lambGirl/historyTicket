@@ -93,7 +93,7 @@ export default globalAct = {
                 let  productDetail = action.data.body["productDetail"],
                     minBuyCount = productDetail["productBookRule"].minBuyCount;
                 state.fillOrderDetail = action.data.body;
-                state.canBuy = minBuyCount == "-1"?0:parseInt(minBuyCount);
+                state.canBuy = minBuyCount == "-1"?1:parseInt(minBuyCount);
 
                 baseUtil.setSession("jcpm_canBuy",state.canBuy);
                 baseUtil.setSession("jcpm_fillOrder",action.data.body);

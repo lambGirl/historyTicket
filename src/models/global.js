@@ -52,14 +52,19 @@ export default globalAct = {
 
         //既然要刷新。 就清楚所有的东西
         history.listen(location => {
-            if(location.pathname === "/"){
-                let { from,openId } = location.query;
-                if(from){
-                    baseUtil.setSession("cdqcp_channel",from);
-                    openId = openId||''
-                    baseUtil.set("cdqcp_opid",openId);
-                }
+            let { from,openId,opid,userToken,wxcode } = location.query;
+            let openId_Token =  openId||opid||userToken;
+            //openId&&baseUtil.set("cdqcp_opid", baseUtil.contrastArray(openId));=
+            //console.log("////////////////////", baseUtil.contrastArray(openId_Token));
+            if(from){
+                console.log("////////////////////", from,openId_Token);
+                baseUtil.setSession("cdqcp_channel",baseUtil.contrastArray(from)?from[0]: from);
+                openId_Token = (baseUtil.contrastArray(openId_Token)?openId_Token[0]:openId_Token)||''
+                baseUtil.set("cdqcp_opid",openId_Token);
+                wxcode&&baseUtil.set("cdqcp_wxopenId", baseUtil.contrastArray(wxcode)?wxcode[0]:wxcode);
             }
+
+            location.query.wxcode&&baseUtil.set("cdqcp_wxopenId", location.query.wxcode);
 
             //全局配置
             let globalConfig =  baseUtil.getSession('globalConfig')
