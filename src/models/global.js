@@ -25,7 +25,7 @@ export default globalAct = {
       currentCity:baseUtil.getSession("jqmp_CurrentCity")||"",   //默认城市
       doorList:'' , //首页门票的列表
       currPage:1,   //门票的分页初始页
-      pageNum:20,   //每一页20条数据
+      pageNum:10,   //每一页20条数据
       totalPage:10,  //门票分页的总页数
       SelectBarData:baseUtil.getSession("jqmp_IndexInit")||{
           cityName:'',
@@ -57,8 +57,8 @@ export default globalAct = {
             //openId&&baseUtil.set("cdqcp_opid", baseUtil.contrastArray(openId));=
             //console.log("////////////////////", baseUtil.contrastArray(openId_Token));
             if(from){
-                console.log("////////////////////", from,openId_Token);
-                baseUtil.setSession("cdqcp_channel",baseUtil.contrastArray(from)?from[0]: from);
+               // console.log("////////////////////", from,openId_Token,baseUtil.contrastArray(from)?from[0]: from);
+                baseUtil.set("cdqcp_channel",baseUtil.contrastArray(from)?from[0]: from);
                 openId_Token = (baseUtil.contrastArray(openId_Token)?openId_Token[0]:openId_Token)||''
                 baseUtil.set("cdqcp_opid",openId_Token);
                 wxcode&&baseUtil.set("cdqcp_wxopenId", baseUtil.contrastArray(wxcode)?wxcode[0]:wxcode);
@@ -292,7 +292,7 @@ export default globalAct = {
                         latitude: point.data&&point.data.lat||"",
                         key:'',
                         pageNum: 1,
-                        pageSize:20,
+                        pageSize:10,
                         cityNo: allData[allActiveIndex].cityNo   //这里到时候要改
                     }
                 },
@@ -381,8 +381,8 @@ export default globalAct = {
 
            return {
                ...state,
-               currPage:initData.body.pageNum,   //门票的分页初始页
-               totalPage:initData.body.pages,  //门票分页的总页数
+               currPage:parseInt(initData.body.pageNum),   //门票的分页初始页
+               totalPage:parseInt(initData.body.pages),  //门票分页的总页数
            }
        }
 

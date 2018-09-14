@@ -298,6 +298,15 @@ const baseUtil = {
         }
         return numStr
     },
+    //格式化数值
+    numFixed1:function(v){
+        var newv=this.numFixed(v,1);
+        return v?(parseInt(newv)==newv?newv+".0":newv):'';
+    },
+    RemoveDecimalPoint:function(v){
+        v = typeof v == "number" && v.toFixed(2).toString()||typeof v == "string" && parseFloat(v).toFixed(2).toString();
+        return v.indexOf(".") == -1&&v||parseFloat(v).toString();
+    },
     formatDateArray(date, num){
         /**
          * 得到date， date值加num

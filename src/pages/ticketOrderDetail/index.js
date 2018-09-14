@@ -35,14 +35,13 @@ export default class TicketOrderDetail extends React.Component{
 
     UNSAFE_componentWillMount(){
        // console.log("now",Router.location.query);
-        let orderNo =  Router.location.query.orderNum,
-        userToken =  baseUtil.get("cdqcp_opid");
+        let  userToken =  baseUtil.get("cdqcp_opid");
          /* 这里去查询此时订单的状态
          */
         this.props.dispatch({
             type:'orderDetail/fetch',
             payload:{
-                orderNo:baseUtil.contrastArray(orderNo)?orderNo[0]: orderNo ,
+                orderNo:this.state.orderNo,
                 userToken: userToken
             }
         })
@@ -59,22 +58,22 @@ export default class TicketOrderDetail extends React.Component{
                 userToken =  baseUtil.get("cdqcp_opid");
             orderStatus =  true;
            this.timeIntervar =  setInterval(()=>{
-               // console.log("------------------");
+               //console.log("------------------开启滚轮");
                 Request('/api?server=trip_getOrderState',{
                     method: "post",
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body:JSON.stringify({
-                        orderNo:orderNo,
+                        orderNo:_this.state.orderNo,
                         userToken: userToken})
                 }).then((result)=>{
-                    //console.log("result", result);
-                    if(result.data.pubResponse.code === "0000"&&result.data.body.state !== "booking"){
+                   // console.log("result", result,result.data.pubResponse.code === "0000"&&result.data.body.state !== "booking"&&orderDetail.state !== "selling");
+                    if(result.data.pubResponse.code === "0000"&&result.data.body.state !== "booking"&&result.data.body.state !== "selling"){
                         _this.props.dispatch({
                             type:'orderDetail/fetch',
                             payload:{
-                                orderNo:orderNo,
+                                orderNo:_this.state.orderNo,
                                 userToken: userToken
                             }
                         });
@@ -241,7 +240,7 @@ export default class TicketOrderDetail extends React.Component{
             </div>||''}
             <div>
                 <div className={Styles["name"]}>出票明细</div>
-                <div>{`¥${orderDetail.unitPrice}x${orderDetail.sellQuantity}份`}</div>
+                <div>{`¥${baseUtil.numFixed1(orderDetail.unitPrice)}x${orderDetail.sellQuantity}份`}</div>
             </div>
         </div>
     }
@@ -300,7 +299,7 @@ export default class TicketOrderDetail extends React.Component{
 
             return  time&&<div>请在<span>{this.renderTime()}</span>内完成支付，逾期将自动取消订单哦~</div>||"超出支付期限，请重新购买!";
         }
-        if(orderDetail.state === "sell_failed"){
+        if(orderDetail.state === "sell_failed"||orderDetail.state === "backed"){
             return <div>请耐心等待，票款将在<span>7个工作日</span>内返回您的帐上</div>;
         }
         return con.statusContent;

@@ -92,9 +92,14 @@ export default globalAct = {
             if(action.data.pubResponse.code === "0000"){
                 let  productDetail = action.data.body["productDetail"],
                     minBuyCount = productDetail["productBookRule"].minBuyCount;
-                state.fillOrderDetail = action.data.body;
+                state.fillOrderDetail = action.data.body
+
+                let {visitorInfoType} = action.data.body.productDetail.productBookRule;
+
                 state.canBuy = minBuyCount == "-1"?1:parseInt(minBuyCount);
 
+                let onlyPersonNum =  (visitorInfoType == 1||visitorInfoType == 2)&&1||state.canBuy;
+                baseUtil.setSession("jcpm_onlyPersonNum",onlyPersonNum);
                 baseUtil.setSession("jcpm_canBuy",state.canBuy);
                 baseUtil.setSession("jcpm_fillOrder",action.data.body);
                 return { ...state,fillOrderDetail:action.data.body};
@@ -181,6 +186,12 @@ export default globalAct = {
         },
         setCanBuy(state, action){
             state.canBuy = parseFloat(state.canBuy)+action.data;
+            //存储可选择的人数
+            let {fillOrderDetail} = state,
+                {visitorInfoType} = fillOrderDetail.productDetail.productBookRule;
+            let onlyPersonNum =  (visitorInfoType == 1||visitorInfoType == 2)&&1||state.canBuy;
+            baseUtil.setSession("jcpm_onlyPersonNum",onlyPersonNum);
+
             baseUtil.setSession("jcpm_canBuy",state.canBuy);
             //console.log("action.data",state);
             return { ...state};

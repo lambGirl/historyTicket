@@ -11,9 +11,17 @@ import Router from 'umi/router';
 import IndexModelSelectBar from '../components/indexModeSelectBarContent';  //点击select 弹出的model
 import IndexSelectBar from '../components/indexSelectBar'   //selectBar
 import Scroll from '../components/demo/index' //分页滚动
-import AttractionSingle from '../components/indexAttractionSingle';
-import Dynamic from 'umi/dynamic';
+import Loadable from 'react-loadable';
+/*import AttractionSingle from '../components/indexAttractionSingle';*/
+import Loading from '../components/loading'
 import { baseUtil } from "../utils/util";
+
+const AttractionSingle = Loadable(
+    {
+        loader:()=>import('../components/indexAttractionSingle'),
+        loading:Loading,
+    });
+
 @connect(({globalAct,loading})=>({
     globalAct,
     loading,
@@ -36,10 +44,11 @@ class IndexPage extends React.Component{
         }
     }
     componentWillMount(){
-        //console.log("222222222222222")
+       // console.log("222222222222222")
     }
 
     componentDidMount(){
+       // console.log("444444444444");
         /*this.props.dispatch({
             type:'globalAct/getInit',
         });*/
@@ -55,6 +64,7 @@ class IndexPage extends React.Component{
         all = SelectBarData["all"];
         //执行这里就去负责加一个页
         currPage++;
+        //console.log("currPage", currPage>totalPage)
         if(currPage>totalPage){
             return;
         }
@@ -69,7 +79,7 @@ class IndexPage extends React.Component{
                     latitude: point.data&&point.data.lat||"",
                     key:'',
                     pageNum: currPage,
-                    pageSize:20,
+                    pageSize:10,
                     cityNo:all.data[all.activeIndex].cityNo    //这里到时候要改
                 },
                 currentCity: currentCity
@@ -239,7 +249,7 @@ class IndexPage extends React.Component{
          * 这里要判断是不是ios， android
          * @type {string}
          */
-        let from  =  baseUtil.getSession("cdqcp_channel")||router.location.query.from;
+        let from  =  baseUtil.get("cdqcp_channel")||router.location.query.from;
         ("iOS" == from || "Android" == from )? window.location.href = "##backToVC=1" : window.location.href="/";
     }
 
@@ -249,7 +259,7 @@ class IndexPage extends React.Component{
             zlpxColor =  (SelectBarData["zlpx"].activeIndex||IndexModelSelectBarStatus[1])?'#37A0F1':"#DBDBDB";
         let ListArrHeight = this.initticketsListArrHeight();
 
-       // console.log("getPoints",this.props.loading);
+       // console.log("getPoints",currPage,totalPage);
 
         return (
             <div className={styles["container_page"]}>

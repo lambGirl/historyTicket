@@ -27,10 +27,12 @@
     background-color: #f48831;
     text-align: center;
     color: #fff;
+    font-size: @base*30rem;
+    width: 40%;
   }
   .train-pay-content {
     color: #000;
-    padding-left: .75rem;
+    /*padding-left: .75rem;*/
     display: flex;
     display:-webkit-box;
     display: -moz-box;
@@ -47,6 +49,9 @@
       display: -ms-flexbox;
       display: -webkit-flex;
       justify-content: space-between;
+      width: 60%;
+      padding-left: .75rem;
+      box-sizing: border-box;
       >:first-child{
         display: flex;
         display:-webkit-box;
@@ -56,20 +61,21 @@
         flex-direction: column;
         justify-content: center;
         color: #3E3E3E;
+        font-size: @base*30rem;
         >:nth-child(2){
           color: #3E3E3E;
-          font-size: @font24;
+
           padding-top: @base*9rem;
         }
         >div{
           line-height:@font30;
           i{
             color:#F48831;
+            font-size: @base*30rem;
             font-style: normal;
           }
           .foot-price-new{
             font-size: @font36;
-
           }
         }
       }
@@ -83,9 +89,15 @@
     .train-pay-detail {
       text-align: right;
       color: #7C7C7C;
+      font-size: @base*26rem;
+     /* display: flex;
+      align-items: center;*/
+      >:first-child{
+        vertical-align: middle;
+      }
       .ui-icon {
         width: .8rem;
-        height: .8rem;
+        height: .4rem;
         margin-right: .55rem;
         margin-left: .25rem;
         display: inline-block;
@@ -93,12 +105,12 @@
       }
       .ui-icon-pay-up1 {
         background: url(../../assets/img/icon_arrowdown@2x.png) no-repeat;
-        background-position-y: center;
+        background-position-y: top;
         background-size: @base*22rem @base*12rem;
       }
       .ui-icon-pay-down1 {
         background: url(../../assets/img/icon_arrowdown1@2x.png) no-repeat;
-        background-position-y: center;
+        background-position-y: top;
         background-size: @base*22rem @base*12rem;
       }
     }

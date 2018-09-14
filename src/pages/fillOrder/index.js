@@ -77,9 +77,17 @@ export default class FillOrder extends  React.Component{
          */
         let {pointNo,productNo} =  baseUtil.getSession("jqmp_ticketDetail");
         let {fillOrderDetail, canBuy,chooseInsurance,actionDate} = this.props.fillOrder,
-            {productDetail} = fillOrderDetail,priceDetails=[],total = 0,traveller=baseUtil.get("cdqcp_passengers")||[];
+            {productDetail} = fillOrderDetail,priceDetails=[],total = 0,traveller=baseUtil.get("cdqcp_passengers")||[],
+            {visitorInfoType} = fillOrderDetail.productDetail.productBookRule;
+
+        let onlyPersonNum =  (visitorInfoType == 1||visitorInfoType == 2)&&1||canBuy;
+       // console.log("canBuy",canBuy);
         if(!traveller||!traveller.length){
             Toast.info("请完善信息",2)
+            return;
+        }
+        if(traveller.length < onlyPersonNum){
+            Toast.info(`需添加${onlyPersonNum}位游客`,2)
             return;
         }
         //组装数据
@@ -192,7 +200,7 @@ export default class FillOrder extends  React.Component{
             label:"单价",
             num:"" ,
             desc:'',
-            value:`¥${price}`
+            value:`¥${baseUtil.numFixed1(price)}`
         });
         priceDetails.push({
             label:"总人数",
@@ -209,11 +217,11 @@ export default class FillOrder extends  React.Component{
         })
 
         //这里还需要加上保险的价格
-        //console.log(price,'22222222222222')
+
         total += price&&parseFloat(price)*totalPerson;
 
         this.setState({
-            total: baseUtil.formatNumber(total),
+            total: baseUtil.numFixed1(total),
             priceDetails: priceDetails
         })
     }
@@ -278,7 +286,7 @@ export default class FillOrder extends  React.Component{
          */
        // console.log("Router", Router.location)
        // return;
-        var opid = baseUtil.get('cdqcp_opid'),choosePassager = "/user/jqmppassenger?allowIdCardType=01&allowTicketType=0,1,2&tzType=new&tzBuss=jpmp_ChoosePerson";  //用户登陆的opid是否为空
+        var opid = baseUtil.get('cdqcp_opid'),choosePassager = `/user/jqmppassenger?allowIdCardType=01&allowTicketType=0,1,2&tzType=new&tzBuss=jpmp_ChoosePerson`;  //用户登陆的opid是否为空
         if(!opid){
             let appFrom =  baseUtil.getSession("appFrom")||baseUtil.get("cdqcp_channel");
             let originHref =  encodeURIComponent(`${window.location.origin}${Router.location.pathname}?connName=1##needLogIn=1`)
@@ -305,11 +313,11 @@ export default class FillOrder extends  React.Component{
     goLastPage(){
         //进行二次确认
         alert('', '订单未填写完成，放弃填写？', [
-            { text: <span className={Styles["confirm_7c"]}>去意已绝</span>, onPress: () => {
+            { text: <span className={Styles["confirm_0d"]}>去意已决</span>, onPress: () => {
                     let {pointNo} =  baseUtil.getSession("jqmp_ticketDetail");
                     Router.push(`/ticketDetail?point=${pointNo}`)
                 } },
-            { text: <span className={Styles["confirm_0d"]}>在想想</span>, onPress: () => console.log('ok') },
+            { text: <span className={Styles["confirm_7c"]}>再想想</span>, onPress: () => console.log('ok') },
         ])
     }
 

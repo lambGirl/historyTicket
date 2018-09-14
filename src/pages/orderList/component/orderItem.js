@@ -10,7 +10,7 @@ export  default  class OrderItem extends React.Component{
         if(!item){
             return;
         }
-        console.log("orderItem",orderItem);
+        //console.log("orderItem",orderItem);
         return <li className={Styles['orderListSingle']} onClick={(e)=>{e.stopPropagation(); e.preventDefault();this.props.ClickItem(item)}}>
             <div className={Styles["orderListStatus"]}><span
             style={{"color":`${orderItem.statusColor}`}}>{orderItem.status}</span></div>
@@ -23,7 +23,7 @@ export  default  class OrderItem extends React.Component{
                 </div>
                 <div>
                     <div className={ClassNames(Styles["color_3e"],
-                        Styles["font32"])} style={{"fontWeight":"bolder"}}>¥{item.totalPrice}</div>
+                        Styles["font32"])} style={{"fontWeight":"bolder"}}>¥{baseUtil.numFixed1(item.totalPrice)}</div>
                     <div className={ClassNames(Styles["color_3e"],
                         Styles["font24"])}>共{item.sellQuantity}张票</div>
                 </div>

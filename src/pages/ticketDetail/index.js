@@ -305,7 +305,7 @@ export  default class ticketDetail extends  React.Component{
                   <div>
                       <div>
                           <span className={ClassNames(Styles[ 'color_F48831' ], Styles[ 'font24' ])}>¥</span>
-                          <span className={ClassNames(Styles[ 'color_F48831' ], Styles[ 'font40' ])}>{showModelContent.showPrice}</span>
+                          <span className={ClassNames(Styles[ 'color_F48831' ], Styles[ 'font40' ])}>{baseUtil.numFixed1(showModelContent.showPrice)}</span>
                           <span className={ClassNames(Styles[ 'color_94' ], Styles[ 'font24' ])}>起</span>
                       </div>
                       <div onClick={this.writeOrder.bind(this, showModelContent)}>填写订单</div>
@@ -376,9 +376,9 @@ export  default class ticketDetail extends  React.Component{
                   </div>
               </div>||''
               }
-              <div className={Styles['card']}>
+              {/*<div className={Styles['card']}>
                   <div className={Styles['card-Title']}>
-                     {/* <div className={Styles['card-title-leftIcon']}></div>*/}
+                      <div className={Styles['card-title-leftIcon']}></div>
                       <div className={ClassNames(Styles["name"], Styles["border_left"])}><span>景点状态</span></div>
                   </div>
                   <div className={Styles['card-content']}>
@@ -388,7 +388,7 @@ export  default class ticketDetail extends  React.Component{
                           </div>
                       </div>
                   </div>
-              </div>
+              </div>*/}
               {ticketDetail.pointDes&&<div className={Styles['card']}>
                   <div className={Styles['card-Title']}>
                      {/* <div className={Styles['card-title-leftIcon']}></div>*/}

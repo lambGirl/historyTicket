@@ -149,11 +149,11 @@ class Scroll extends Component {
       bounce:true,
       momentum:true,
       bounceLock:false,
-      flickLimitDistance:80,
+      flickLimitDistance:500,
       swipeTime:550,
       useTransform: true, //是否使用CSS形变
       useTransition: false,
-      swipeBounceTime: 300
+      swipeBounceTime: 300,
     }
 
     let wrapper = document.querySelector("."+`${Styles['b-wrapper']}`)
@@ -288,7 +288,7 @@ class Scroll extends Component {
       // console.log("sdfsdf", )
       //滚动的页数如果等于当前页面了则结束滚动
       // console.log("水电费水电费11111", now_isPullUpLoad);
-      //console.log("currPage",currPage, totalPage)
+      //console.log("currPage",currPage>=totalPage)
       if(currPage >= totalPage){
          this.setState({
               isPullUpLoad: false,
@@ -334,7 +334,7 @@ class Scroll extends Component {
 
   renderPullUpLoad () {
     let { pullUpLoad, isPullUpTipHide, currPage, totalPage } = this.props
-     // console.log("currPage",currPage, totalPage);
+    //  console.log("currPage",pullUpLoad,parseInt(currPage)>=parseInt(totalPage));
     if (pullUpLoad && isPullUpTipHide ) {
       return (
         <div className={Styles["b-pullup-wrapper"]}>

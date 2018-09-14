@@ -107,6 +107,7 @@ export default class TicketOrder extends React.Component{
         }
 
     }
+
     renderTab(index){
         let {orderList, pageNum, pages} = this.props.orderList;
        // console.log("pageNum",pageNum, pages);

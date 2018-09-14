@@ -178,7 +178,7 @@
     height: @base*80rem;
   /*  line-height: @base*80rem;*/
     color: #2b2b2b;
-    border-bottom: 1px solid #E5E5E5;
+    border-bottom: @base*1rem solid #e5e5e5;
     font-size: @base*32rem;
     display: flex;
     display:-webkit-box;
@@ -445,7 +445,7 @@
           }
 
         }
-        border-bottom: 1px solid #E5E5E5;
+        border-bottom: @base*1rem solid #e5e5e5;
         >:last-child{
           margin-bottom: 0;
         }
@@ -463,7 +463,7 @@
     }
   }
   .writerOrder-btn{
-    height:@base*100rem;
+    height:@base*108rem;
     position: absolute;
     bottom:0;
     width: 100%;
@@ -478,8 +478,8 @@
       width:100%;
       background: #fff;
       box-sizing: border-box;
-      height:@base*100rem;
-
+      height:100%;
+     /* height:@base*100rem;*/
       &>:first-child{
         flex: 2;
         padding-left: @base*30rem;
@@ -490,12 +490,13 @@
       &>:last-child{
        /* flex: 1;*/
         height:100%;
-        width: @base*310rem;
+        width: 40%;
         background: #F48831;
         text-align: center;
         color: #fff;
-        line-height:@base*100rem;
+        line-height:@base*108rem;
         border-top: 1px solid #F48831;
+        font-size: @font30;
       }
     }
   }
