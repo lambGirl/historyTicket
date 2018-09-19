@@ -298,6 +298,7 @@ const baseUtil = {
         }
         return numStr
     },
+
     //格式化数值
     numFixed1:function(v){
         var newv=this.numFixed(v,1);
@@ -633,6 +634,10 @@ const baseUtil = {
     },
     contrastArray(val){
         return val instanceof Array
+    },
+    //替换图片地址
+    replaceImgUrl(url){
+        return url?url.replace(/^http:/g,"https:"):'';
     }
 
 }

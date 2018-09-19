@@ -320,7 +320,7 @@ export default class TicketOrderDetail extends React.Component{
                 <div className={Styles['voucher-List']}>
                     <div>{baseUtil.str4Join(travellers.voucherText)}</div>
                     <div className={Styles['show-voucher-Img']}>
-                        <img src={travellers.voucherPics} alt=""/>
+                        <img src={baseUtil.replaceImgUrl(travellers.voucherPics)} alt=""/>
                         {top.pzClass&&<div className={Styles[`icon_${top.pzClass}`]}></div>||''}
                     </div>
                 </div>
@@ -331,7 +331,7 @@ export default class TicketOrderDetail extends React.Component{
                 <div className={Styles['voucher-List']} >
                     <div>{baseUtil.str4Join(travellers[voucherIndex].voucherText)}</div>
                     <div className={Styles['show-voucher-Img']}>
-                        <img src={travellers[voucherIndex].voucherPics} alt=""/>
+                        <img src={baseUtil.replaceImgUrl(travellers[voucherIndex].voucherPics)} alt=""/>
                         {top.pzClass&&<div className={Styles[`icon_${top.pzClass}`]}></div>||''}
                     </div>
                 </div>

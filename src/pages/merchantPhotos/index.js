@@ -4,7 +4,7 @@ import Styles from './index.less'
 import Scroll from '../../components/scroll'
 import Header from '../../components/header'
 import Router from 'umi/router'
-
+import {baseUtil} from "../../utils/util";
 import { connect } from 'dva'
 
 @connect(({ticketDetail,loading})=>({
@@ -37,7 +37,7 @@ export  default class MerchartPhotos extends  React.Component{
                       {
                           ticketDetail.images.map((item,index)=>{
                               return <div key={"item"+index} className={Styles['photoList-single']} onClick={this.showPhoto.bind(this,index)}>
-                                  <img src={item}/>
+                                  <img src={baseUtil.replaceImgUrl(item)}/>
                               </div>
                           })
                       }

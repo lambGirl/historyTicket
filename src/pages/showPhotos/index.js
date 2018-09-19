@@ -4,6 +4,7 @@ import ClassNames  from 'classnames';
 import { Carousel } from 'antd-mobile';
 import Styles from './index.less'
 import { connect } from 'dva'
+import { baseUtil } from "../../utils/util";
 @connect(({ticketDetail,loading})=>({
     ticketDetail,
     loading
@@ -35,7 +36,7 @@ export default class ShowPhotos extends React.Component{
                     <div className={Styles['photos_marks']}>{parseInt(this.state.slideIndex)+1}/{images.length}</div>
                     <Carousel
                         autoplay={false}
-                        infinite
+                        infinite={false}
                         dots={false}
                         className={Styles['photosCarousel']}
                         selectedIndex={this.state.slideIndex}
@@ -50,7 +51,7 @@ export default class ShowPhotos extends React.Component{
                                 style={{ display: 'inline-block'}}
                             >
                                 <img
-                                    src={val}
+                                    src={baseUtil.replaceImgUrl(val)}
                                     alt=""
                                     onLoad={() => {
                                         // fire window resize event to change height

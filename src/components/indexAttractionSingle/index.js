@@ -11,7 +11,7 @@ export default class AttractTionSingle extends React.Component{
     }
     onLoadImg(url){
         this.setState(({ loadedItems }) => {
-            return { loadedItems: url }
+            return { loadedItems: baseUtil.replaceImgUrl(url) }
         })
     }
 
@@ -21,7 +21,7 @@ export default class AttractTionSingle extends React.Component{
         //console.log("item",item);
         return <div className={styles['ticketsList']} onClick={()=>{this.props.clickItem(item)}}>
             <div >
-              {/*  <img src={item.showImage}/>*/}
+              {/* <img src={item.showImage}/>*/}
                 <img src={this.state.loadedItems||Tz} onLoad={this.onLoadImg.bind(this, item.showImage)}/>
             </div>
             <div>

@@ -137,6 +137,12 @@ export  default class ticketDetail extends  React.Component{
                       <div>{productUseRule.getInAddress[0]}</div>
                   </div>||null
               }
+              {
+                  productUseRule.otherNote&&<div>
+                      <div className={Styles[ "name" ]}>注意事项:</div>
+                      <div>{productUseRule.otherNote}</div>
+                  </div>||null
+              }
           </div>
       }
 
@@ -152,7 +158,7 @@ export  default class ticketDetail extends  React.Component{
       return <div style={{"height":"100%"}}>
           <Carousel
               className={Styles["carousel"]}
-              autoplay={true}
+              autoplay={false}
               infinite
               dots={false}
               selectedIndex={this.state.slideIndex}
@@ -167,7 +173,7 @@ export  default class ticketDetail extends  React.Component{
                       style={{ display: 'block', position: 'relative', width: '100%',  height: "auto",}}
                   >
                       <img
-                          src={val}
+                          src={baseUtil.replaceImgUrl(val)}
                           alt=""
                           style={{ width: '100%', verticalAlign: 'top'}}
                           onLoad={() => {
@@ -262,7 +268,7 @@ export  default class ticketDetail extends  React.Component{
               <div className={Styles[ 'detail_title' ]}>
                   <div>
                       <div>
-                        <img src={ticketDetail.images[0]}
+                        <img src={baseUtil.replaceImgUrl(ticketDetail.images[0])}
                              alt=""/>
                       </div>
                   </div>
