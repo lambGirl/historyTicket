@@ -9,20 +9,33 @@ export default class AttractTionSingle extends React.Component{
         super(props)
         this.state = { loadedItems: "" }
     }
-    onLoadImg(url){
-        this.setState(({ loadedItems }) => {
-            return { loadedItems: baseUtil.replaceImgUrl(url) }
-        })
+
+    UNSAFE_componentWillReceiveProps(props){
+       // console.log("props",props.item.showImage==this.state.loadedItems);
+        // if(this.state.loadedItems){
+        //     this.setState({
+        //         loadedItems:''
+        //     })
+        // }
     }
+    onLoadImg(url){
+       // console.log("url", url);
+        /*this.setState({
+            "loadedItems": baseUtil.replaceImgUrl(url)
+        },()=>{
+            console.log("loadedItems", this.state.loadedItems);
+        })*/
+    }
+
 
     render (){
         const delay = (timeout) => new Promise(resolve => setTimeout(resolve, timeout));
         let {clickItem, item} =  this.props;
-        //console.log("item",item);
+       // console.log("item-----------",this.state.loadedItems);
         return <div className={styles['ticketsList']} onClick={()=>{this.props.clickItem(item)}}>
             <div >
-              {/* <img src={item.showImage}/>*/}
-                <img src={this.state.loadedItems||Tz} onLoad={this.onLoadImg.bind(this, item.showImage)}/>
+              {/* <img src={this.state.loadedItems||Tz} onLoad={this.onLoadImg.bind(this, item.showImage)}/>*/}
+              <img src={item.showImage&&baseUtil.replaceImgUrl(item.showImage)||Tz} />
             </div>
             <div>
                 <div style={{"WebkitBoxOrient":"vertical","boxOrient":'vertical',"MozBoxOrient":"vertical","msboxOrient":'vertical'}}>

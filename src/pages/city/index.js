@@ -322,7 +322,7 @@ export  default  class cityChoose  extends  React.Component{
                                             <h2 className={Styles["list-group-title"]} style={{"color":'#707070'}}>当前定位城市</h2>
                                             <div className={Styles['positionAdress']} onClick={this.switchCity.bind(this, currentCity)}>
                                                 <div>{currentCity.cityName}</div>
-                                                <div><i className={Styles["locationIocn"]} onClick={this.locationPos.bind(this)}></i></div>
+                                                <div onClick={this.locationPos.bind(this)}><i className={Styles["locationIocn"]} ></i></div>
                                             </div>
                                         </li>
                                         {/*热门城市*/}

@@ -51,8 +51,10 @@ class Header extends  React.Component{
         <div className={styles['center-header']} onClick={this.centerClick.bind(this)}>
           {
             centerContentType == '1'&&<div className={styles['search-input']}>
-              <i className="fa fa-search fa-lg"></i>
-              <input type="text" className={styles["searchInputText"]} name='searchAll' placeholder='景点名称'/>
+                <div className={styles['search-icon']}>
+                    <div className={styles["icon"]}></div>
+                </div>
+                <input type="text" className={styles["searchInputText"]} name='searchAll' placeholder='景点名称'/>
             </div>
           }
           {

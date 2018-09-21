@@ -318,24 +318,38 @@ export default class TicketOrderDetail extends React.Component{
             let travellers =  orderDetail.travellers[0];
             return <div className={Styles["voucher-List-content"]}>
                 <div className={Styles['voucher-List']}>
-                    <div>{baseUtil.str4Join(travellers.voucherText)}</div>
-                    <div className={Styles['show-voucher-Img']}>
+                    {travellers.voucherText&&<div>{baseUtil.str4Join(travellers.voucherText)}</div>||''}
+                    {travellers.voucherPics&&<div className={ClassNames(Styles['show-voucher-Img'],
+                        {
+                            [Styles["mgtop40"]]: !travellers.voucherText
+                        })}>
                         <img src={baseUtil.replaceImgUrl(travellers.voucherPics)} alt=""/>
                         {top.pzClass&&<div className={Styles[`icon_${top.pzClass}`]}></div>||''}
-                    </div>
+                    </div>||''}
                 </div>
             </div>
         }
-        let travellers = orderDetail.travellers,{voucherIndex} =  this.state;
+        let travellers = orderDetail.travellers,{voucherIndex} =  this.state, btnShow=false;
+        /**
+         * 这里还需要判断返回的数据中，至少有一条数据是存在的
+         */
+        travellers.length>1&&travellers.map(function(item){
+            if(item.voucherText||item.voucherPics){
+                btnShow =  true;
+            }
+        })
         return <div className={Styles["voucher-List-content"]}>
                 <div className={Styles['voucher-List']} >
-                    <div>{baseUtil.str4Join(travellers[voucherIndex].voucherText)}</div>
-                    <div className={Styles['show-voucher-Img']}>
+                    {travellers[voucherIndex].voucherText&&<div>{baseUtil.str4Join(travellers[voucherIndex].voucherText)}</div>||''}
+                    {travellers[voucherIndex].voucherPics&&<div className={ClassNames(Styles['show-voucher-Img'],
+                        {
+                            [Styles["mgtop40"]]: !travellers[voucherIndex].voucherText
+                        })}>
                         <img src={baseUtil.replaceImgUrl(travellers[voucherIndex].voucherPics)} alt=""/>
                         {top.pzClass&&<div className={Styles[`icon_${top.pzClass}`]}></div>||''}
-                    </div>
+                    </div>||''}
                 </div>
-            {travellers.length>1&&<div className={Styles["voucherControlBtn"]}>
+            {travellers.length>1&&btnShow&&<div className={Styles["voucherControlBtn"]}>
                     <div className={ClassNames({
                         [Styles["disabled"]]: voucherIndex === 0
                     })} onClick={this.changeVoucherList.bind(this,travellers, -1)}>上一条</div>
@@ -356,6 +370,27 @@ export default class TicketOrderDetail extends React.Component{
             voucherIndex: voucherIndex+(tag)
         })
 
+    }
+    renderPzMenu(top){
+        /**
+         * 这里还需要判断返回的数据中，至少有一条数据是存在的
+         */
+        let { orderDetail } =  this.props.orderDetail,btnShow = false;
+        let travellers = orderDetail.travellers
+        travellers.map(function(item){
+            if(item.voucherText||item.voucherPics){
+                btnShow =  true;
+            }
+        });
+      return btnShow&&<div className={Styles['mgtop20']}>
+          <CardBox
+              CardBoxDefault={true}
+              cardTitleIcon={true}
+              cardTitle="使用凭证"
+              content={this.renderpz(top)}
+              disabled={top.pzClass||false}
+          />
+      </div>||''
     }
 
     render(){
@@ -443,15 +478,7 @@ export default class TicketOrderDetail extends React.Component{
                                 content={this.renderBaseInfo()}
                             />
                         </div>
-                        {top.pz&&<div className={Styles['mgtop20']}>
-                            <CardBox
-                                CardBoxDefault={true}
-                                cardTitleIcon={true}
-                                cardTitle="使用凭证"
-                                content={this.renderpz(top)}
-                                disabled={top.pzClass||false}
-                            />
-                        </div>||''}
+                        {top.pz&&this.renderPzMenu(top)||''}
                         <div className={Styles['mgtop20']}>
                             <CardBox
                                 CardBoxDefault={true}

@@ -113,31 +113,56 @@
 //header中间的search
 .search-input{
   height: @base*60rem;
+  line-height: @base*60rem;
   width: 100%;
   background: #f5f5f9;
   border-radius: 30px;
   padding-left: @base*24rem;
-  box-sizing: border-box;
+  position:relative;
+  /*box-sizing: border-box;
   display: flex;
   display:-webkit-box;
   display: -moz-box;
   display: -ms-flexbox;
   display: -webkit-flex;
-  align-items: center;
-  i{
-    color: #fff;
-    font-size: 1rem;
-    color: #BFBFBF;
-    vert-align: middle;
+  justify-content: left;
+  align-items: center;*/
+  .search-icon{
+    position:absolute;
+    width:@base*32rem;
+    text-align: center;
+    /*font-size: @base*32rem;*/
+    color:#BFBFBF;
+    display: flex;
+    display:-webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height:100%;
+    >.icon{
+      height: @base*32rem;
+      width: @base*32rem;
+      background: url("../../assets/img/btn_search.png") no-repeat;
+      background-size: 100% 100%;
+    }
+
   }
   input{
-    font-size: @base*28rem;
-    height: 100%;
     width: calc(100% - 16);
+   /* padding-left:@base*44rem;*/
+    height: @base*60rem;
     border: none;
-    outline:none;
     background: none;
-    vert-align: middle;
-    padding-left: @base*10rem;
+    color:#3E3E3E;
+    box-sizing: border-box;
+    outline:none;
+    border-radius:@base*30rem;
+    font-size:@font28;
+    padding:.55rem 0 .4rem @base*44rem;
   }
+
+
 }

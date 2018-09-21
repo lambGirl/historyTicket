@@ -138,9 +138,9 @@ export  default class ticketDetail extends  React.Component{
                   </div>||null
               }
               {
-                  productUseRule.otherNote&&<div>
-                      <div className={Styles[ "name" ]}>注意事项:</div>
-                      <div>{productUseRule.otherNote}</div>
+                  productUseRule.otherNote.length&&<div>
+                      <div className={Styles[ "name" ]}>入园地址:</div>
+                      <div>{productUseRule.getInAddress[0]}</div>
                   </div>||null
               }
           </div>
@@ -173,7 +173,7 @@ export  default class ticketDetail extends  React.Component{
                       style={{ display: 'block', position: 'relative', width: '100%',  height: "auto",}}
                   >
                       <img
-                          src={baseUtil.replaceImgUrl(val)}
+                          src={val}
                           alt=""
                           style={{ width: '100%', verticalAlign: 'top'}}
                           onLoad={() => {
@@ -268,7 +268,7 @@ export  default class ticketDetail extends  React.Component{
               <div className={Styles[ 'detail_title' ]}>
                   <div>
                       <div>
-                        <img src={baseUtil.replaceImgUrl(ticketDetail.images[0])}
+                        <img src={ticketDetail.images[0]}
                              alt=""/>
                       </div>
                   </div>
