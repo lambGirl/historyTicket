@@ -49,7 +49,7 @@ export default globalAct = {
 
   subscriptions: {
     setup({ dispatch, history }) {
-
+        baseUtil.setSession("channelTokenName",'gzhtrip');  //贵州环境
         //既然要刷新。 就清楚所有的东西
         history.listen(location => {
             let { from,openId,opid,userToken,wxcode } = location.query;

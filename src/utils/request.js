@@ -22,13 +22,14 @@ function checkStatus(response) {
  * @return {object}           An object containing either "data" or "err"
  */
 export default function request(url, options) {
-   // console.log("options",options);
+    //console.log("options",options,url);
     if(options.method === "post"){
         options.body = JSON.parse(options.body); //设置options
         options.body._p_from = baseUtil.get("cdqcp_channel");
         options.body.channelTokenName = baseUtil.getSession("channelTokenName");
         options.body =  JSON.stringify(options.body);
     }
+    //console.log("post",url);
     //console.log("options------",options);
   return fetch(url, options)
     .then(checkStatus)

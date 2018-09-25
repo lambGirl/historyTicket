@@ -173,7 +173,7 @@ export  default class ticketDetail extends  React.Component{
                       style={{ display: 'block', position: 'relative', width: '100%',  height: "auto",}}
                   >
                       <img
-                          src={val}
+                          src={baseUtil.replaceImgUrl(val)}
                           alt=""
                           style={{ width: '100%', verticalAlign: 'top'}}
                           onLoad={() => {
@@ -268,7 +268,7 @@ export  default class ticketDetail extends  React.Component{
               <div className={Styles[ 'detail_title' ]}>
                   <div>
                       <div>
-                        <img src={ticketDetail.images[0]}
+                        <img src={baseUtil.replaceImgUrl(ticketDetail.images[0])}
                              alt=""/>
                       </div>
                   </div>
