@@ -139,8 +139,8 @@ export  default class ticketDetail extends  React.Component{
               }
               {
                   productUseRule.otherNote.length&&<div>
-                      <div className={Styles[ "name" ]}>入园地址:</div>
-                      <div>{productUseRule.getInAddress[0]}</div>
+                      <div className={Styles[ "name" ]}>注意事项:</div>
+                      <div>{productUseRule.otherNote}</div>
                   </div>||null
               }
           </div>

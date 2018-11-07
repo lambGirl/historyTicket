@@ -3,6 +3,7 @@ import Styles from '../index.less'
 import ClassNames from 'classnames'
 import Router from 'umi/router'
 import {baseUtil} from "../../../utils/util";
+import { Toast } from 'antd-mobile';
 
 export  default class DateChoose extends React.Component{
     constructor(props){
@@ -14,6 +15,9 @@ export  default class DateChoose extends React.Component{
 
     getChooseDate(){
         let {effectiveDate} = this.props,{date,index} =  effectiveDate;
+        if(effectiveDate.index === ""){
+            return Toast.info("没有可用日期",2);
+        }
         let defaultDate = date[effectiveDate.index].date;
         Router.push(`/date?defaultDate=${defaultDate}`);
     }
@@ -38,6 +42,10 @@ export  default class DateChoose extends React.Component{
              </span>
          }
          if(effectiveDate&&effectiveDate.date.length){
+             if(effectiveDate['index'] === ""){
+                 return '';
+             }
+
              let date =  effectiveDate.date[effectiveDate['index']].date;
 
               let dateArray =  baseUtil.formatDateArray(date, productDetail.bookType);

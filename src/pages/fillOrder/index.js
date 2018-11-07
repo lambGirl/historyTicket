@@ -284,9 +284,12 @@ export default class FillOrder extends  React.Component{
         /**
          * 先要验证是否登陆
          */
-       // console.log("Router", Router.location)
-       // return;
+        let {actionDate} =  this.props.fillOrder;
+        if(actionDate.index === ""){
+            return Toast.info("没有可用日期,无法选择乘车人",2);
+        }
         var opid = baseUtil.get('cdqcp_opid'),choosePassager = `/user/jqmppassenger?allowIdCardType=01&allowTicketType=0,1,2&tzType=new&tzBuss=jpmp_ChoosePerson`;  //用户登陆的opid是否为空
+
         if(!opid){
             let appFrom =  baseUtil.getSession("appFrom")||baseUtil.get("cdqcp_channel");
             let originHref =  encodeURIComponent(`${window.location.origin}${Router.location.pathname}?connName=1##needLogIn=1`)
